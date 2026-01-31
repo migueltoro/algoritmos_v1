@@ -1,8 +1,7 @@
 package us.lsi.ag.mochila;
 
 import java.util.List;
-
-import us.lsi.ag.AuxiliaryAg;
+import us.lsi.ag.Distances;
 import us.lsi.ag.RangeIntegerData;
 import us.lsi.ag.agchromosomes.Chromosomes.ChromosomeType;
 import us.lsi.mochila.datos.DatosMochila;
@@ -30,7 +29,7 @@ public class DatosMochilaAGRange implements RangeIntegerData<SolucionMochila> {
 	@Override
 	public Double fitnessFunction(List<Integer> dc) {
 		calcula(dc);
-		fitness = valor - 100*AuxiliaryAg.distanceToGeZero(DatosMochila.capacidadInicial - peso);
+		fitness = valor - 100*Distances.distanceToGeZero(DatosMochila.capacidadInicial - peso);
 		return fitness;
 	}
 

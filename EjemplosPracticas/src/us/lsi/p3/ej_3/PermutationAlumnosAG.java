@@ -2,7 +2,7 @@ package us.lsi.p3.ej_3;
 
 import java.util.List;
 
-import us.lsi.ag.AuxiliaryAg;
+import us.lsi.ag.Distances;
 import us.lsi.ag.PermutationData;
 import us.lsi.ag.agchromosomes.Chromosomes.ChromosomeType;
 
@@ -23,7 +23,7 @@ public class PermutationAlumnosAG implements PermutationData<SolucionAlumnos> {
 			else
 				errores++;
 		}		
-		return afinidad_total - 10000 * AuxiliaryAg.distanceToEqZero(1.*errores);
+		return afinidad_total - 10000 * Distances.distanceToEqZero(1.*errores);
 	}
 
 	@Override

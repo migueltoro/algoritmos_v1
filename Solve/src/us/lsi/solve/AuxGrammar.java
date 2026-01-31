@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -607,6 +609,9 @@ public class AuxGrammar {
 	}
 	
 	public static void generate(Class<?> dataClass, String model, String outFile) throws IOException {
+		if (!Files.exists(Paths.get(model))) {
+	        throw new IOException(String.format("El archivo %s no existe", model));
+	    }
 		AuxGrammar.dataClass = dataClass;
 		PLIModelLexer lexer = new PLIModelLexer(CharStreams.fromFileName(model));
 		PLIModelParser parser = new PLIModelParser(new CommonTokenStream(lexer));

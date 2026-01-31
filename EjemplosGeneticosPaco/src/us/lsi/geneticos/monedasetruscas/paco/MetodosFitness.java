@@ -1,0 +1,20 @@
+package us.lsi.geneticos.monedasetruscas.paco;
+
+import java.util.List;
+import java.util.stream.IntStream;
+
+public class MetodosFitness {
+	
+	public static double pesoTotal(List<Integer> cr) {
+		int n = cr.size();
+		return IntStream.range(0, n)
+		.mapToDouble(i -> cr.get(i)*Datos.getPeso(i)).sum();
+	}
+	
+	public static double valorTotal(List<Integer> cr) {
+		int n = cr.size();
+		return IntStream.range(0, n)
+		.mapToDouble(i -> cr.get(i)*Datos.getValor(i)).sum();
+	}
+
+}

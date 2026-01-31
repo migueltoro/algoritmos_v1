@@ -11,6 +11,7 @@ module ejemplospracticas {
 	exports us.lsi.p3.ej_1;
 	exports us.lsi.p3.ej_2;
 	exports us.lsi.p3.ej_3;
+	exports us.lsi.p4.ej_2;
 	exports us.lsi.p4.ej_2.manual;
 
 	requires transitive datos_compartidos;

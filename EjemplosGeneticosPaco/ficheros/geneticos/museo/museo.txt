@@ -1,0 +1,25 @@
+(2,3); (3,4); (4,5); (2,3); (3,4)
+Abastracto: 2
+Impresionista:2
+Surrealista:2
+Abastracto: 3
+Impresionista:3
+Surrealista:3
+Abastracto: 4
+Impresionista:4
+Surrealista:4
+Abastracto: 5
+Impresionista:5
+Surrealista:5
+Abastracto: 6
+Impresionista:6
+Surrealista:6
+Abastracto: 7
+Impresionista:7
+Surrealista:7
+Abastracto: 8
+Impresionista:8
+Surrealista:8
+Abastracto: 9
+Impresionista:9
+Surrealista:9

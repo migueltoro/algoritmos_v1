@@ -20,7 +20,7 @@ import us.lsi.gurobi.GurobiLp;
 import us.lsi.gurobi.GurobiSolution;
 import us.lsi.solve.AuxGrammar;
 
-public class VertexEdgeCoverPLI {
+public class VertexCover {
 	
 	public static SimpleWeightedGraph<Ciudad,Carretera> graph;
 	public static IntegerVertexGraphView<Ciudad, Carretera> g;
@@ -44,8 +44,16 @@ public class VertexEdgeCoverPLI {
 		return c;
 	}
 	
+	public static Carretera carretera(String s) {
+		String[] partes = s.split("_");
+		Ciudad c1 = g.getVertex(Integer.parseInt(partes[1]));
+		Ciudad c2 = g.getVertex(Integer.parseInt(partes[2]));
+		Carretera c = graph.getEdge(c1,c2);
+		return c;
+	}
+	
 	public static void vertex_cover_model() throws IOException {
-		VertexEdgeCoverPLI.leeDatos("data/andalucia.txt");
+		VertexCover.leeDatos("data/andalucia.txt");
 		System.out.println(GraphData.graph);
 		AuxGrammar.generate(GraphData.class, "modelos/vertex_cover.lsi", "ficheros/vertex_cover.lp");
 		Optional<GurobiSolution> solution = GurobiLp.gurobi("ficheros/vertex_cover.lp");
@@ -60,37 +68,10 @@ public class VertexEdgeCoverPLI {
 			System.out.println("\n\n*****Modelo sin solución****");
 		}
 	}
-	
-	public static Carretera carretera(String s) {
-		String[] partes = s.split("_");
-		Ciudad c1 = g.getVertex(Integer.parseInt(partes[1]));
-		Ciudad c2 = g.getVertex(Integer.parseInt(partes[2]));
-		Carretera c = graph.getEdge(c1,c2);
-		return c;
-	}
-	
-	public static void edge_cover_model() throws IOException {
-		VertexEdgeCoverPLI.leeDatos("data/andalucia.txt");
-		System.out.println(GraphData.graph);
-		AuxGrammar.generate(GraphData.class, "modelos/edge_cover.lsi", "ficheros/edge_cover.lp");
-		Optional<GurobiSolution> solution = GurobiLp.gurobi("ficheros/edge_cover.lp");
-		if (solution.isPresent()) {
-			System.out.println(solution.get().toString((s, d) -> d > 0.));
-			Set<Carretera> carreteras = solution.get().values.keySet().stream()
-					.filter(s -> solution.get().values.get(s) > 0)
-					.map(s -> carretera(s))
-					.collect(Collectors.toSet());
-			GraphColors.toDot(graph, "ficheros/edge_cover.gv", v -> v.nombre(), e -> e.nombre(),
-					v -> GraphColors.color(Color.black),
-					e -> GraphColors.colorIf(Color.red, Color.black, carreteras.contains(e)));
-		} else {
-			System.out.println("\n\n*****Modelo sin solución****");
-		}
 
-	}
 	
 	public static void main(String[] args) throws IOException {
-		edge_cover_model();
+		vertex_cover_model();
 	}
 
 }

@@ -2,8 +2,7 @@ package us.lsi.ag.reinas;
 
 import java.util.List;
 import java.util.Set;
-
-import us.lsi.ag.AuxiliaryAg;
+import us.lsi.ag.Distances;
 import us.lsi.ag.PermutationData;
 import us.lsi.ag.agchromosomes.Chromosomes.ChromosomeType;
 import us.lsi.common.List2;
@@ -39,7 +38,7 @@ public class DatosReinasAG implements PermutationData<List<Reina>> {
 			dp.add(ls.get(i)-i);
 			ds.add(ls.get(i)+i);
 		}
-		return -100*AuxiliaryAg.distanceToEqZero(2.*DatosReinasAG.numeroDeReinas-dp.size()-ds.size());
+		return -100*Distances.distanceToEqZero(2.*DatosReinasAG.numeroDeReinas-dp.size()-ds.size());
 	}
 
 	@Override
