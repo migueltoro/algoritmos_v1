@@ -7,4 +7,6 @@ public interface Poblacion<E extends Cromosoma<E>> {
 	Integer size();
 	List<E> individuals();
 	void add(E e);
+	Poblacion<E> reboot();
+	E best();
 }

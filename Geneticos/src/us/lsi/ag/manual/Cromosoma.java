@@ -4,11 +4,11 @@ import java.util.Random;
 
 public interface Cromosoma<E extends Cromosoma<E>> {
 	Double fitness();
-	E generarIndividuo();
-	void mutate();
-	void repair();
+	E generateIndividual();	
+	E mutate();
+	E repair();
 	E crossover(E other);
-	E copy();
+	E deepCopy();
 	Poblacion<E> emptyPoblacion();
 	public static Random rand = new Random();
 }

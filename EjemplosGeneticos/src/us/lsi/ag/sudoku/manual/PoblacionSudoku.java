@@ -2,12 +2,15 @@ package us.lsi.ag.sudoku.manual;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 import us.lsi.ag.manual.Poblacion;
 
 public class PoblacionSudoku implements Poblacion<Sudoku>{
+	
+	public static Double porcentaje_conservacion_reboot = 0.05;
 	
 	public static PoblacionSudoku of(List<Sudoku> individuos) {
 		return new PoblacionSudoku(individuos);
@@ -55,7 +58,27 @@ public class PoblacionSudoku implements Poblacion<Sudoku>{
 	public void add(Sudoku e) {
 	    this.individuals.add(e);		
 	}
-	
-	
+
+	@Override
+	public PoblacionSudoku reboot() {
+		Integer n = this.size();
+		Integer s1 = (int)(n*porcentaje_conservacion_reboot);
+		Integer ind = Sudoku.rand.nextInt(n);
+		Sudoku sd = this.individuals.get(ind);
+		List<Sudoku> crs = this.individuals.stream()
+				.sorted(Comparator.comparing(Sudoku::fitness))
+				.limit(s1)
+				.collect(Collectors.toList());
+		for (int i = s1; i < n; i++) {
+			crs.add(sd.generateIndividual());
+		}
+		return PoblacionSudoku.of(crs);
+	}
+
+	@Override
+	public Sudoku best() {
+		return this.individuals.stream()
+				.min(Comparator.comparing(Sudoku::fitness)).get();
+	}
 
 }

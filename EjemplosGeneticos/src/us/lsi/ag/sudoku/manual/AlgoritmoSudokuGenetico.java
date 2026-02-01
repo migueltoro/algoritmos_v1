@@ -6,31 +6,38 @@ public class AlgoritmoSudokuGenetico {
     static final int MAX_GEN = 15000;
     static final double PROB_CROSS = 0.8;
     static final double PROB_MUT = 0.3;
+    public Sudoku initial;
+    
 	
+	public AlgoritmoSudokuGenetico() {
+		super();
+	}
+
 	// ============================
     // Algoritmo Genético principal
     // ============================
-    public static Sudoku solve(Sudoku initial) {
+    public Sudoku solve(Sudoku initial) {
+    	
+    	this.initial = initial;
 
         PoblacionSudoku poblacion = PoblacionSudoku.of();
         for (int i = 0; i < POP_SIZE; i++)
-            poblacion.add(initial.generarIndividuo());
-
+            poblacion.add(initial.generateIndividual());
+        
+        int ngr = 0;
+        double error = 1.0;
+        
+        int bestFit = Integer.MAX_VALUE;
+        int lastFit = -1;
+        Sudoku mejor = poblacion.best();
+        
         for (int gen = 0; gen < MAX_GEN; gen++) {
 
             // Evaluar mejor individuo (elitismo)
-        	Sudoku mejor = null;
-            int bestFit = Integer.MAX_VALUE;
+			mejor = poblacion.best();
+			bestFit = mejor.fitness().intValue();            
 
-            for (Sudoku ind : poblacion.individuals()) {
-                int fit = ind.fitness().intValue();
-                if (fit < bestFit) {
-                    bestFit = fit;
-                    mejor = ind;
-                }
-            }
-
-            System.out.println("Generación " + gen + " Mejor fitness: " + bestFit + "\n" +mejor);
+            System.out.println("Generación " + gen + " Mejor fitness: " + bestFit);
             
             if (bestFit == 0) {
                 System.out.println("Solución encontrada en generación " + gen);
@@ -41,7 +48,7 @@ public class AlgoritmoSudokuGenetico {
             PoblacionSudoku nueva = PoblacionSudoku.of();
 
             // ELITISMO: conservar el mejor individuo
-            nueva.add(mejor.copy());
+            nueva.add(mejor.deepCopy());
 
             // Rellenar el resto
             while (nueva.size() < POP_SIZE) {
@@ -52,20 +59,29 @@ public class AlgoritmoSudokuGenetico {
                 if (Sudoku.rand.nextDouble() < PROB_CROSS)
                     hijo = p1.crossover(p2);
                 else {
-                    hijo = p1.copy();
+                    hijo = p1.deepCopy();
                 }
                 if (Sudoku.rand.nextDouble() < PROB_MUT)
-                    hijo.mutate();
+                    hijo = hijo.mutate();
 
-                hijo.repair();
+                hijo = hijo.repair();
 
                 nueva.add(hijo);
             }
-
             poblacion = nueva;
+            
+			if (Math.abs(lastFit - bestFit) < error) {
+				ngr++;
+			}
+			if (ngr >= 20) {
+				System.out.println("Reboot");
+				poblacion = poblacion.reboot();
+			    ngr = 0;
+			}
+            lastFit = bestFit;
         }
-        System.out.println("No se encontró solución");
-        return null;
+        System.out.println("No se encontró solución: la mejor encontrada es:\n" + mejor);
+        return mejor;
     }
     
  // ============================
@@ -85,9 +101,12 @@ public class AlgoritmoSudokuGenetico {
             {0,0,0,0,8,0,0,7,9}
         };
 
-        Sudoku gs = Sudoku.of(puzzle);
+        AlgoritmoSudokuGenetico alg = new AlgoritmoSudokuGenetico();
+//        Sudoku gs = Sudoku.initial(puzzle);
+//        Sudoku gs = Sudoku.ofFilas("ficheros/sudoku_filas.txt");
+        Sudoku gs = Sudoku.of("ficheros/sudoku1.txt");
         System.out.println("Puzzle inicial:\n" +gs);
-        Sudoku solucion = solve(gs);
+        Sudoku solucion = alg.solve(gs);
         System.out.println("Puzzle Solucion:\n" + solucion);
     }
 

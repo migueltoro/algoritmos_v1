@@ -59,31 +59,30 @@ public class SudokuPLI {
 		return t == c / k + k * (f / k);
 	}
 
-	public static void sudoku() throws IOException {	
-		String txt = "ficheros/sudoku/sudoku1.txt";
+	public static void sudoku() throws IOException {
+		String txt = "ficheros/sudoku/sudoku2.txt";
 		DatosSudoku.leeFichero(txt);
 		System.out.println(SolucionSudoku.of(SudokuVertexI.first()));
-		include(txt,"modelos/sudoku_p.lsi","modelos/sudoku.lsi");
+		include(txt, "modelos/sudoku_p.lsi", "modelos/sudoku.lsi");
 		AuxGrammar.generate(SudokuPLI.class, "modelos/sudoku.lsi", "ficheros/sudoku.lp");
 		Optional<GurobiSolution> st = GurobiLp.gurobi("ficheros/sudoku.lp");
+//		System.out.println(st.isPresent());
 		if (st.isPresent()) {
 			Locale.setDefault(Locale.of("en", "US"));
 			List<Casilla> lc = solucion(st.get());
-			Collections.sort(lc,Comparator.comparing(c->c.p()));	
-		
-		System.out.println(SudokuVertexI.first());
-		Collections.sort(DatosSudoku.casillas,Comparator.comparing(c->c.p()));	
-		for(int i = 0; i < DatosSudoku.n;i++) {
-			if(!DatosSudoku.casillas.get(i).isWithInitialValue())
-				DatosSudoku.casillas.set(i,lc.get(i));
-		}
-		System.out.println(SolucionSudoku.of(SudokuVertexI.first()));
-		System.out.println(SudokuVertexI.first());
+			Collections.sort(lc, Comparator.comparing(c -> c.p()));
+
+			Collections.sort(DatosSudoku.casillas, Comparator.comparing(c -> c.p()));
+			for (int i = 0; i < DatosSudoku.n; i++) {
+				if (!DatosSudoku.casillas.get(i).isWithInitialValue())
+					DatosSudoku.casillas.set(i, lc.get(i));
+			}
+			System.out.println(SolucionSudoku.of(SudokuVertexI.first()));
+//		System.out.println(SudokuVertexI.first());
 		} else {
 			System.out.println("\n\n*****Modelo sin solución****");
 		}
 	}
-	
 	
 
 	public static void main(String[] args) throws IOException {

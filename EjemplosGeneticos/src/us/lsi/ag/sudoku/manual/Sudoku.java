@@ -1,12 +1,16 @@
 package us.lsi.ag.sudoku.manual;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import us.lsi.ag.manual.Cromosoma;
+import us.lsi.common.Files2;
+import us.lsi.common.IntegerSet;
 
 
 public class Sudoku  implements Cromosoma<Sudoku> {
@@ -14,18 +18,79 @@ public class Sudoku  implements Cromosoma<Sudoku> {
 	public static final int SIZE = 9;
 	private int[][] grid;
 	private Integer fit;
+	public static IntegerSet allValues = IntegerSet.range(1,10);
 	public static Random rand = new Random();
-
+	public static Map<Integer,IntegerSet> casillasVacias = new HashMap<>();
+    public static Map<Integer,IntegerSet> valoresUsados = new HashMap<>();
+    public static Map<Integer,IntegerSet> valoresLibres = new HashMap<>();
+    public static Sudoku initial;
+	
+    private Sudoku(int[][] grid) {
+		super();
+		int[][] copia = new int[grid.length][];
+		for (int i = 0; i < grid.length; i++)
+			copia[i] = Arrays.copyOf(grid[i], grid[i].length);
+		this.grid = copia;
+		this.fit = null;
+	}
 	
 	public static Sudoku of(int[][] grid) {
 		return new Sudoku(grid);
 	}
 	
-	private Sudoku(int[][] grid) {
-		super();
-		this.grid = grid;
-		this.fit = null;
+	public static Sudoku of(String file) {
+		int[][] grid = new int[SIZE][SIZE];
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < SIZE; j++) {
+				grid[i][j] = 0;
+			}
+		}
+		List<String> linesFromFile = Files2.linesFromFile(file);
+		for (String line : linesFromFile) {
+			String[] parts = line.split(",");
+			Integer i = Integer.parseInt(parts[0]);
+			Integer j = Integer.parseInt(parts[1]);
+			Integer valor = Integer.parseInt(parts[2]);
+			grid[i][j] = valor;
+		}
+		return Sudoku.initial(grid);
 	}
+	
+	public static Sudoku ofFilas(String file) {
+		int[][] copia = new int[SIZE][SIZE];
+		List<String> linesFromFile = Files2.linesFromFile(file);
+		for (int i = 0; i < SIZE; i++) {
+			String line = linesFromFile.get(i);
+			String[] parts = line.split(",");
+			if (parts.length != SIZE)
+				throw new IllegalArgumentException("Cada fila debe tener 9 valores separados por comas");
+			for (int j = 0; j < SIZE; j++) {
+				copia[i][j] = Integer.parseInt(parts[j]);
+			}
+		}
+        return Sudoku.initial(copia);
+	}
+	
+	public static Sudoku initial(int[][] grid) {
+		Sudoku sudoku = new Sudoku(grid);
+		Sudoku.initial = sudoku;
+		for (int i = 0; i < SIZE; i++) {
+			int[] fila = Sudoku.initial.grid[i].clone();;
+			IntegerSet vaciasEnFila = IntegerSet.empty();
+			IntegerSet valoresUsadosEnFila = IntegerSet.empty();
+			for (int j = 0; j < SIZE; j++) {
+				if (fila[j] == 0)
+					vaciasEnFila.add(j);
+				else
+					valoresUsadosEnFila.add(fila[j]);
+			}
+			Sudoku.casillasVacias.put(i, vaciasEnFila);
+			Sudoku.valoresUsados.put(i, valoresUsadosEnFila);
+			Sudoku.valoresLibres.put(i, allValues.difference(valoresUsadosEnFila));
+		}
+		return sudoku;
+	}
+	
 	
 	public int[][] grid() {
 		return grid;
@@ -67,88 +132,62 @@ public class Sudoku  implements Cromosoma<Sudoku> {
 	// ============================
     // Generar individuo completo
     // ============================
-    public Sudoku generarIndividuo() {
+    public Sudoku generateIndividual() {
         int[][] ind = new int[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++)
-            ind[i] = Sudoku.generarFilaValida(this.grid[i]);
+            ind[i] = Sudoku.generarFilaValida(i);
         return Sudoku.of(ind);
     }
     
     // ============================
     // Generar fila válida
     // ============================
-    private static int[] generarFilaValida(int[] filaOriginal) {
-        int[] fila = filaOriginal.clone();
-
-        List<Integer> vacias = new ArrayList<>();
-        boolean[] usados = new boolean[10];
-
-        for (int i = 0; i < SIZE; i++) {
-            if (fila[i] == 0) vacias.add(i);
-            else usados[fila[i]] = true;
-        }
-
-        List<Integer> faltantes = new ArrayList<>();
-        for (int v = 1; v <= 9; v++)
-            if (!usados[v]) faltantes.add(v);
-
-        Collections.shuffle(faltantes);
-
-        for (int i = 0; i < vacias.size(); i++)
-            fila[vacias.get(i)] = faltantes.get(i);
-
+    private static int[] generarFilaValida(int f) { 
+        int[] fila = Sudoku.initial.grid[f].clone();
+        List<Integer> vcFila = Sudoku.casillasVacias.get(f).stream().toList();
+        List<Integer> ftFila = Sudoku.valoresLibres.get(f).stream().collect(Collectors.toList());       
+        Collections.shuffle(ftFila);
+        for (int i = 0; i < vcFila.size(); i++)
+            fila[vcFila.get(i)] = ftFila.get(i);
         return fila;
     }
 
 	@Override
-	public void mutate() {
+	public Sudoku mutate() {
+		Sudoku copia = this.deepCopy();;
 		int fila = rand.nextInt(SIZE);
-
-        List<Integer> libres = new ArrayList<>();
-        for (int col = 0; col < SIZE; col++)
-            if (this.grid[fila][col] == 0)
-                libres.add(col);
-
-        if (libres.size() < 2) return;
+//		System.out.println("Mutando fila: " + fila);
+        List<Integer> libres = Sudoku.casillasVacias.get(fila).stream().toList();
+        if (libres.size() < 2) return copia;
 
         int i = libres.get(rand.nextInt(libres.size()));
         int j = libres.get(rand.nextInt(libres.size()));
         while (j == i) j = libres.get(rand.nextInt(libres.size()));
 
-        int tmp = this.grid[fila][i];
-        this.grid[fila][i] = this.grid[fila][j];
-        this.grid[fila][j] = tmp;
+        int tmp = copia.grid[fila][i];
+        copia.grid[fila][i] = copia.grid[fila][j];
+        copia.grid[fila][j] = tmp;
+        copia.fit = copia.fitness().intValue();
+        return copia;
 	}
 
 	@Override
-	public void repair() {
+	public Sudoku repair() {
+		Sudoku copiaMejor = this.deepCopy();
+		Double fitMejor = copiaMejor.fitness();
+
 		int intentos = 5;
 
         for (int t = 0; t < intentos; t++) {
-            int fitAntes = this.fitness().intValue();
-
-            int fila = rand.nextInt(SIZE);
-
-            List<Integer> libres = new ArrayList<>();
-            for (int col = 0; col < SIZE; col++)
-                if (this.grid[fila][col] == 0)
-                    libres.add(col);
-
-            if (libres.size() < 2) continue;
-
-            int i = libres.get(rand.nextInt(libres.size()));
-            int j = libres.get(rand.nextInt(libres.size()));
-            while (j == i) j = libres.get(rand.nextInt(libres.size()));
-
-            int tmp = this.grid[fila][i];
-            this.grid[fila][i] = this.grid[fila][j];
-            this.grid[fila][j] = tmp;
-
-            if (this.fitness() > fitAntes) {
-            	this.grid[fila][j] = this.grid[fila][i];
-            	this.grid[fila][i] = tmp;
-            }
+        	Sudoku copia = copiaMejor.mutate();	
+        	Double fitCopia = copia.fitness();
+			
+        	if (fitCopia < fitMejor) {
+				copiaMejor = copia;
+				fitMejor = fitCopia;
+			}	         
         }
+        return copiaMejor;
 		
 	}
 
@@ -180,10 +219,10 @@ public class Sudoku  implements Cromosoma<Sudoku> {
         return r;
     }
     @Override
-    public Sudoku copy() {
+    public Sudoku deepCopy() {
 		int[][] copia = new int[this.grid.length][];
 		for (int i = 0; i < this.grid.length; i++)
-			copia[i] = Arrays.copyOf(this.grid[i], this.grid.length);
+			copia[i] = Arrays.copyOf(this.grid[i], this.grid[i].length);
 		return Sudoku.of(copia);
 	}
 
@@ -229,15 +268,21 @@ public class Sudoku  implements Cromosoma<Sudoku> {
             {0,0,0,0,8,0,0,7,9}
         };
 
-        Sudoku gs = Sudoku.of(puzzle);
-        System.out.println(gs);
-        Sudoku gs2 = gs.generarIndividuo();
-        System.out.println(gs2);
-        Sudoku gs2c = gs2.copy();
-        gs2.repair();
-        Sudoku gsm = gs2.copy(); 
-        System.out.println(gsm);
-        System.out.println(gs2c.equals(gsm));
+        Sudoku gi = Sudoku.initial(puzzle);
+        
+        System.out.println(gi);
+//        System.out.println(Sudoku.casillasVacias.get(0));
+//        System.out.println(Sudoku.valoresUsados.get(0));
+//        System.out.println(Sudoku.valoresLibres.get(0));
+        Sudoku g1 = gi.generateIndividual();
+        System.out.println("Original " + g1);	
+		for (int i = 0; i < 5; i++) {
+			System.out.println(g1.mutate());	
+		}
+		System.out.println("Reparando:"+"\n" + g1.repair());
+        Sudoku g2 = gi.generateIndividual();
+        Sudoku g3 = gi.generateIndividual();
+        System.out.println("Crossover:"+"\n" + g3.crossover(g2));
     }
 
 

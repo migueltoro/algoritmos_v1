@@ -3,18 +3,24 @@ package us.lsi.ag.manual;
 public class GeneticAlgorithm<E extends Cromosoma<E>> {
 	
 	static final int POP_SIZE = 200;
-    static final int MAX_GEN = 15000;
-    static final double PROB_CROSS = 0.8;
-    static final double PROB_MUT = 0.3;
+	static final int MAX_GEN = 15000;
+	static final double PROB_CROSS = 0.8;
+	static final double PROB_MUT = 0.3;
+	public E initial;
+
+	public GeneticAlgorithm() {
+		super();
+	}
 	
 	// ============================
     // Algoritmo Genético principal
     // ============================
-    public static <E extends Cromosoma<E>> E solve(E initial) {
-
+    public E solve(E initial) {
+    	this.initial = initial;
+    	
         Poblacion<E> poblacion = initial.emptyPoblacion();
         for (int i = 0; i < POP_SIZE; i++)
-            poblacion.add(initial.generarIndividuo());
+            poblacion.add(initial.generateIndividual());
 
         for (int gen = 0; gen < MAX_GEN; gen++) {
 
@@ -41,7 +47,7 @@ public class GeneticAlgorithm<E extends Cromosoma<E>> {
             Poblacion<E> nueva = mejor.emptyPoblacion();
 
             // ELITISMO: conservar el mejor individuo
-            nueva.add(mejor.copy());
+            nueva.add(mejor.deepCopy());
 
             // Rellenar el resto
             while (nueva.size() < POP_SIZE) {
@@ -52,12 +58,12 @@ public class GeneticAlgorithm<E extends Cromosoma<E>> {
                 if (Cromosoma.rand.nextDouble() < PROB_CROSS)
                     hijo = p1.crossover(p2);
                 else {
-                    hijo = p1.copy();
+                    hijo = p1.deepCopy();
                 }
                 if (Cromosoma.rand.nextDouble() < PROB_MUT)
-                    hijo.mutate();
+                    hijo = hijo.mutate();
 
-                hijo.repair();
+                hijo = hijo.repair();
 
                 nueva.add(hijo);
             }
@@ -73,22 +79,6 @@ public class GeneticAlgorithm<E extends Cromosoma<E>> {
     // ============================
     public static void main(String[] args) {
 
-        int[][] puzzle = {
-            {5,3,0,0,7,0,0,0,0},
-            {6,0,0,1,9,5,0,0,0},
-            {0,9,8,0,0,0,0,6,0},
-            {8,0,0,0,6,0,0,0,3},
-            {4,0,0,8,0,3,0,0,1},
-            {7,0,0,0,2,0,0,0,6},
-            {0,6,0,0,0,0,2,8,0},
-            {0,0,0,4,1,9,0,0,5},
-            {0,0,0,0,8,0,0,7,9}
-        };
-
-//        Sudoku gs = Sudoku.of(puzzle);
-//        System.out.println("Puzzle inicial:\n" +gs);
-//        Sudoku solucion = solve(gs);
-//        System.out.println("Puzzle Solucion:\n" + solucion);
     }
 
 
