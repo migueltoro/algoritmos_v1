@@ -1,4 +1,4 @@
-package us.lsi.flowgraph.examples;
+package us.lsi.pli.caminos;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -50,7 +50,7 @@ public class Caminos {
 	public static void main(String[] args) throws IOException {
 //		caminos_model("models/caminos_aristas_y_vertices_disjuntos.lsi");
 //		caminos_model("models/caminos_aristas_disjuntas.lsi");
-		caminos_model("models/ruta_tren.lsi");
+		caminos_model("modelos/ruta_tren.lsi");
 	}
 
 }

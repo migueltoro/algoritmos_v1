@@ -1,0 +1,25 @@
+Tenemos un grafo de vértices *V* y aristas *E*. 
+El problema del corte mínimo busca encontrar una partición *S, T* de los vértices *V* 
+de un grafo tal que $V =S  \cup T$ y  $S  \cap T = \emptyset$. 
+Se parte de dos vértices distinguidos *s, t* tales que $s \in S, t \in T$.  
+Las aristas que van de S a T formar un corte. S
+e trata de encontrar un corte que minimice la suma de las capacidades máximas de 
+las aristas del corte. Si designamos por $c_{ij}$ la capacidad de la arista $(i,j)$,  
+el problema el corte mínimo puede ser formulado como uno de Programación Lineal Entera 
+en la forma:
+
+Definimos las variables binarias $x_{ij}$ y las $y_i$. 
+La variable binaria $y_i$ será 0 si pertenece al conjunto *S*  y 1 si pertenece a *T*. 
+Por otra parte $x_{ij}$ será 1 si pertenece al corte mínimo y 0 si no pertenece.
+
+$$
+\begin{array}{ll}
+    \min \sum\limits_{(i,j) \in E, j > i } &  (i,j) \in E, j >i \\ 
+    x_{ij} \ge  y_i - y_j &  (i,j) \in E, j >i \\
+    x_{ij} \ge  y_j - y_i &  (i,j) \in E, j >i \\
+    y_s = 0 & \\
+    y_t = 1 & \\
+    bin \ x_{ij} & (i,j) \in E, j >i \\
+    bin \ y_i & i \in V
+\end{array}
+$$

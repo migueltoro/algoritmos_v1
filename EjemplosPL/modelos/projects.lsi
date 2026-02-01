@@ -1,9 +1,9 @@
 head section
-
+ 
 Integer getN()
 Integer getM()
-Integer beneficio(Integer i)
-Integer coste(Integer j)
+Double beneficio(Integer i)
+Double coste(Integer j)
 Boolean necesita(Integer i, Integer j)
 Integer n = getN()
 Integer m = getM()

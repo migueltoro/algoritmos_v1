@@ -1,4 +1,4 @@
-package us.lsi.flowgraph.examples;
+package us.lsi.pli.projects;
 
 
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class ProjectsData {
 	public static void proyects() throws IOException {
 		data("data/projects.txt");
 		Locale.setDefault(Locale.of("en", "US"));
-		AuxGrammar.generate(ProjectsData.class,"models/projects.lsi","ficheros/proyects.lp");
+		AuxGrammar.generate(ProjectsData.class,"modelos/projects.lsi","ficheros/proyects.lp");
 		Optional<GurobiSolution> solution = GurobiLp.gurobi("ficheros/proyects.lp");
 		if (solution.isPresent()) {
 			System.out.println(solution.get().toString((s,d)-> d>0.));

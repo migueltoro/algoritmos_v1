@@ -46,6 +46,25 @@ public class GraphData {
 		return target;
 	}
 
-
+	/**
+	 * Asociamos un par a cada arista de un grafo no dirigido de la forma (i,j). 
+	 * Escogemos la dirección con j>i.
+	 * @param i
+	 * @param j
+	 * @return true si existe el par (i,j) con  j>i asociado a la arista (i,j) en E
+	 */
+	public static Boolean pend(Integer i, Integer j) {
+		return j>i && containsEdge(i,j);
+	}
+	
+	/**
+	 * Asociamos un par a cada arista de un grafo dirigido de la forma (i,j). 
+	 * @param i
+	 * @param j
+	 * @return true si existe el par (i,j) asociado a la arista (i,j) en E
+	 */
+	public static Boolean ped(Integer i, Integer j) {
+		return containsEdge(i,j);
+	}
 
 }

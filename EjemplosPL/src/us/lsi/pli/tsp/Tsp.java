@@ -1,4 +1,4 @@
-package us.lsi.flowgraph.examples;
+package us.lsi.pli.tsp;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -28,7 +28,7 @@ public class Tsp {
 	public static void tsp() throws IOException {	
 		
 		SimpleWeightedGraph<Ciudad,Carretera> graph =  
-				GraphsReader.newGraph("ficheros/andalucia.txt",
+				GraphsReader.newGraph("data/andalucia.txt",
 						Ciudad::ofFormat, 
 						Carretera::ofFormat,
 						Graphs2::simpleWeightedGraph,
@@ -36,7 +36,7 @@ public class Tsp {
 		Graph<Integer,SimpleEdge<Integer>> graph3 = IntegerVertexGraphView.of(graph);
 		GraphData.graph = graph3;
 		GraphData.n = graph3.vertexSet().size();
-		AuxGrammar.generate(GraphData.class,"models/tsp.lsi","ficheros/tsp.lp");
+		AuxGrammar.generate(GraphData.class,"modelos/tsp.lsi","ficheros/tsp.lp");
 		Optional<GurobiSolution> solution = GurobiLp.gurobi("ficheros/tsp.lp");
 		if (solution.isPresent()) {
 			Locale.setDefault(Locale.of("en", "US"));

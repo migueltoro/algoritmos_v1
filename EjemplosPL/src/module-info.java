@@ -15,6 +15,9 @@ module ejemplos_pl {
 	exports us.lsi.pli.reinas;
 	exports us.lsi.pli.tsp;
 	exports us.lsi.pli.tareas;
+	exports us.lsi.pli.caminos;
+	exports us.lsi.pli.flow;
+	exports us.lsi.pli.projects;
 
 	requires transitive datos_compartidos;
 	requires transitive ejemplos_algoritmos;

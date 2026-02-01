@@ -9,6 +9,7 @@ import java.util.stream.IntStream;
 
 import org.jgrapht.Graph;
 
+import us.lsi.graphs.GraphData;
 import us.lsi.graphs.Graphs2;
 import us.lsi.graphs.SimpleEdge;
 import us.lsi.gurobi.GurobiLp;
@@ -38,30 +39,14 @@ public class TspPLI {
 		return graph;
 	}
 	
-	public static Double getEdgeWeight(Integer i, Integer j, Graph<Integer, SimpleEdge<Integer>> g) {
-		SimpleEdge<Integer> e = g.getEdge(i,j); 
-		return g.getEdgeWeight(e);
-	}
-	
-	public static Double getEdgeWeight(Integer i, Integer j) {
-		SimpleEdge<Integer> e = TspPLI.graph.getEdge(i,j); 
-		return TspPLI.graph.getEdgeWeight(e);
-	}
-	
-	public static Boolean containsEdge(Integer i, Integer j) {
-		return TspPLI.graph.containsEdge(i,j);
-	}
-	
-	public static Integer getN() {
-		return TspPLI.n;
-	}
-	
 	
 	public static void tsp_model_1() throws IOException {
-		TspPLI.graph = graph(200,0.6);
+		TspPLI.graph = graph(40,0.6);
 		TspPLI.n = TspPLI.graph.vertexSet().size();
 		System.out.println(TspPLI.graph);
-		AuxGrammar.generate(TspPLI.class,"modelos/tsp_1.lsi","ficheros/tsp_1.lp");
+		GraphData.graph = TspPLI.graph;
+		GraphData.n = TspPLI.n;
+		AuxGrammar.generate(GraphData.class,"modelos/tsp_1.lsi","ficheros/tsp_1.lp");
 		Optional<GurobiSolution> solution = GurobiLp.gurobi("ficheros/tsp_1.lp");
 		if (solution.isPresent()) {
 			Locale.setDefault(Locale.of("en", "US"));
