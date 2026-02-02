@@ -54,18 +54,23 @@ public class GeneticAlgorithm<E extends Cromosoma<E>> {
             	E p1 = poblacion.tournament();
             	E p2 = poblacion.tournament();
 
-            	E hijo;
+            	@SuppressWarnings("unchecked")
+				E[] hijos = (E[]) new Cromosoma[2];
                 if (Cromosoma.rand.nextDouble() < PROB_CROSS)
-                    hijo = p1.crossover(p2);
+                    hijos = p1.crossover(p2);
                 else {
-                    hijo = p1.deepCopy();
+                    hijos[0] = p1.deepCopy();
+                    hijos[1] = p2.deepCopy();
                 }
-                if (Cromosoma.rand.nextDouble() < PROB_MUT)
-                    hijo = hijo.mutate();
+                if (Cromosoma.rand.nextDouble() < PROB_MUT) {
+                    hijos[0] = hijos[0].mutate();
+                    hijos[0] = hijos[0].mutate();
+                }
+                hijos[0] = hijos[0].repair();
+                hijos[1] = hijos[1].repair();
 
-                hijo = hijo.repair();
-
-                nueva.add(hijo);
+                nueva.add(hijos[0]);
+                nueva.add(hijos[1]);
             }
 
             poblacion = nueva;

@@ -7,8 +7,9 @@ public interface Cromosoma<E extends Cromosoma<E>> {
 	E generateIndividual();	
 	E mutate();
 	E repair();
-	E crossover(E other);
+	E[] crossover(E other);
 	E deepCopy();
+	Boolean isValid();
 	Poblacion<E> emptyPoblacion();
 	public static Random rand = new Random();
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import us.lsi.ag.Constraints;
 import us.lsi.ag.manual.Cromosoma;
 import us.lsi.common.Files2;
 import us.lsi.common.IntegerSet;
@@ -16,6 +17,7 @@ import us.lsi.common.IntegerSet;
 public class Sudoku  implements Cromosoma<Sudoku> {
 	
 	public static final int SIZE = 9;
+//	public static final Double CROSSOVER = 1.;
 	private int[][] grid;
 	private Integer fit;
 	public static IntegerSet allValues = IntegerSet.range(1,10);
@@ -31,7 +33,7 @@ public class Sudoku  implements Cromosoma<Sudoku> {
 		for (int i = 0; i < grid.length; i++)
 			copia[i] = Arrays.copyOf(grid[i], grid[i].length);
 		this.grid = copia;
-		this.fit = null;
+		this.fit = null;		
 	}
 	
 	public static Sudoku of(int[][] grid) {
@@ -190,17 +192,76 @@ public class Sudoku  implements Cromosoma<Sudoku> {
         return copiaMejor;
 		
 	}
-
+	
+	
+	
+	public Sudoku[] crossover2(Sudoku other) {
+		int cut = Sudoku.rand.nextInt(SIZE - 1) + 1;
+		int[][] h1 = new int[SIZE][SIZE];
+		int[][] h2 = new int[SIZE][SIZE];
+		for (int i = 0; i < SIZE; i++) {
+			if (i < cut) {
+				h1[i] = this.grid[i].clone();
+				h2[i] = other.grid[i].clone();
+			} else {
+				h1[i] = this.grid[i].clone();
+				h2[i] = other.grid[i].clone();
+			}
+		}
+		Sudoku[] r = {Sudoku.of(h1), Sudoku.of(h2) };
+		return r;
+	}
+	
 	@Override
-	public Sudoku crossover(Sudoku other) {
-		int[][] hijo = new int[SIZE][SIZE];
-        for (int i = 0; i < SIZE; i++) {
-            if (rand.nextDouble() < 0.5)
-                hijo[i] = this.grid[i].clone();
-            else
-                hijo[i] = other.grid[i].clone();
-        }
-        return Sudoku.of(hijo);
+	public Sudoku[] crossover(Sudoku other) {
+		int[][] h1 = new int[SIZE][SIZE];
+		int[][] h2 = new int[SIZE][SIZE];
+		boolean igualesH1 = true;
+		boolean igualesH2 = true;
+		for (int i = 0; i < SIZE; i++) {
+			boolean tomaDeP1 = Sudoku.rand.nextBoolean();
+			if (tomaDeP1) {
+				h1[i] = this.grid[i].clone();
+				h2[i] = other.grid[i].clone();
+			} else {
+				h1[i] = other.grid[i].clone();
+				h2[i] = this.grid[i].clone();
+			}
+			// Comprobamos si siguen siendo idénticos a los padres
+			if (!Arrays.equals(h1[i], this.grid[i]))
+				igualesH1 = false;
+			if (!Arrays.equals(h2[i], other.grid[i]))
+				igualesH2 = false;
+		}
+		// Si por casualidad un hijo salió idéntico al padre, forzamos un cambio
+		if (igualesH1) {
+			int fila = rand.nextInt(SIZE);
+			h1[fila] = other.grid[fila].clone();
+		}
+		if (igualesH2) {
+			int fila = rand.nextInt(SIZE);
+			h2[fila] = this.grid[fila].clone();
+		}
+		Sudoku[] r = {Sudoku.of(h1), Sudoku.of(h2) };	
+		return r;
+	}
+	
+	Sudoku[] crossover3(Sudoku p1, Sudoku p2) {
+		Random rand = new Random();
+		int cut = rand.nextInt(SIZE - 1) + 1;
+		int[][] h1 = new int[SIZE][SIZE];
+		int[][] h2 = new int[SIZE][SIZE];
+		for (int i = 0; i < SIZE; i++) {
+			if (i < cut) {
+				h1[i] = p1.grid[i].clone();
+				h2[i] = p2.grid[i].clone();
+			} else {
+				h1[i] = p2.grid[i].clone();
+				h2[i] = p1.grid[i].clone();
+			}
+		}
+		Sudoku[] r = {Sudoku.of(h1), Sudoku.of(h2) };
+		return r;
 	}
 
 	// ============================
@@ -250,40 +311,61 @@ public class Sudoku  implements Cromosoma<Sudoku> {
 		Sudoku other = (Sudoku) obj;
 		return Arrays.deepEquals(grid, other.grid);
 	}
+	
+	@Override
+	public Boolean isValid() {
+		Boolean esValido = true;
+		for (int i = 0; i < SIZE; i++) {
+			List<Integer> f = Arrays.stream(this.grid[i]).boxed().toList();
+			esValido = Constraints.allDifferents(f);
+			if(!esValido) break;
+		}
+		return esValido;
+	}
+	
+	public static void test1() {
+		
+		 int[][] puzzle = {
+		            {5,3,0,0,7,0,0,0,0},
+		            {6,0,0,1,9,5,0,0,0},
+		            {0,9,8,0,0,0,0,6,0},
+		            {8,0,0,0,6,0,0,0,3},
+		            {4,0,0,8,0,3,0,0,1},
+		            {7,0,0,0,2,0,0,0,6},
+		            {0,6,0,0,0,0,2,8,0},
+		            {0,0,0,4,1,9,0,0,5},
+		            {0,0,0,0,8,0,0,7,9}
+		        };
+
+		        Sudoku g = Sudoku.initial(puzzle);
+		  
+		        Sudoku g1 = g.generateIndividual();
+		        System.out.println("Individuo generado:"+"\n" + g1);
+		        System.out.println("Individuo generado:"+"\n" + g1.isValid());
+		        Sudoku g2 = g1.mutate();
+		        System.out.println("Mutate:"+"\n" + g2);
+		        System.out.println("Mutate:"+"\n" + g2.isValid());
+		        Sudoku g3 = g1.repair();
+		        System.out.println("Repair:"+"\n" + g3);
+		        System.out.println("Repair:"+"\n" + g3.isValid());
+
+		        Sudoku g4 = g.generateIndividual();
+		        Sudoku g5 = g.generateIndividual();
+		        Sudoku[] r = g4.crossover(g5);
+//		        System.out.println("Crossover Padres:"+"\n" + g4 + "\n" + g5);
+//		        System.out.println("Crossover Padres:"+"\n" + g4.isValid() + " " + g5.isValid());
+		        System.out.println("Crossover Hijos:"+"\n" + r[0] + "\n" + r[1]);
+		        System.out.println("Crossover Hijos:"+"\n" + r[0].isValid() + " " + r[1].isValid());              
+        
+    }
+	
 
 	// ============================
     // Ejemplo de uso
     // ============================
-    public static void main(String[] args) {
+	 public static void main(String[] args) {
+		 test1();
+	 }
 
-        int[][] puzzle = {
-            {5,3,0,0,7,0,0,0,0},
-            {6,0,0,1,9,5,0,0,0},
-            {0,9,8,0,0,0,0,6,0},
-            {8,0,0,0,6,0,0,0,3},
-            {4,0,0,8,0,3,0,0,1},
-            {7,0,0,0,2,0,0,0,6},
-            {0,6,0,0,0,0,2,8,0},
-            {0,0,0,4,1,9,0,0,5},
-            {0,0,0,0,8,0,0,7,9}
-        };
-
-        Sudoku gi = Sudoku.initial(puzzle);
-        
-        System.out.println(gi);
-//        System.out.println(Sudoku.casillasVacias.get(0));
-//        System.out.println(Sudoku.valoresUsados.get(0));
-//        System.out.println(Sudoku.valoresLibres.get(0));
-        Sudoku g1 = gi.generateIndividual();
-        System.out.println("Original " + g1);	
-		for (int i = 0; i < 5; i++) {
-			System.out.println(g1.mutate());	
-		}
-		System.out.println("Reparando:"+"\n" + g1.repair());
-        Sudoku g2 = gi.generateIndividual();
-        Sudoku g3 = gi.generateIndividual();
-        System.out.println("Crossover:"+"\n" + g3.crossover(g2));
-    }
-
-
+	
 }

@@ -3,9 +3,10 @@ package us.lsi.ag.sudoku.manual;
 public class AlgoritmoSudokuGenetico {
 	
 	static final int POP_SIZE = 200;
-    static final int MAX_GEN = 15000;
-    static final double PROB_CROSS = 0.8;
+    static final int MAX_GEN = 5000;
+    static final double PROB_CROSS = 0.95;
     static final double PROB_MUT = 0.3;
+    
     public Sudoku initial;
     
 	
@@ -52,21 +53,25 @@ public class AlgoritmoSudokuGenetico {
 
             // Rellenar el resto
             while (nueva.size() < POP_SIZE) {
+            	
             	Sudoku p1 = poblacion.tournament();
             	Sudoku p2 = poblacion.tournament();
 
-            	Sudoku hijo;
+            	Sudoku[] hijos = new Sudoku[2];
                 if (Sudoku.rand.nextDouble() < PROB_CROSS)
-                    hijo = p1.crossover(p2);
+                    hijos = p1.crossover(p2);
                 else {
-                    hijo = p1.deepCopy();
+                    hijos[0] = p1.deepCopy();
+                    hijos[1] = p2.deepCopy();
                 }
-                if (Sudoku.rand.nextDouble() < PROB_MUT)
-                    hijo = hijo.mutate();
-
-                hijo = hijo.repair();
-
-                nueva.add(hijo);
+                if (Sudoku.rand.nextDouble() < PROB_MUT) {               
+                	hijos[0] = hijos[0].mutate();
+                	hijos[1] = hijos[1].mutate();
+                }
+                hijos[0] = hijos[0].repair();
+                hijos[1] = hijos[1].repair();
+                nueva.add(hijos[0]);
+                nueva.add(hijos[1]);
             }
             poblacion = nueva;
             
@@ -80,6 +85,7 @@ public class AlgoritmoSudokuGenetico {
 			}
             lastFit = bestFit;
         }
+        System.out.println(poblacion.dispersion());
         System.out.println("No se encontró solución: la mejor encontrada es:\n" + mejor);
         return mejor;
     }
@@ -103,8 +109,8 @@ public class AlgoritmoSudokuGenetico {
 
         AlgoritmoSudokuGenetico alg = new AlgoritmoSudokuGenetico();
 //        Sudoku gs = Sudoku.initial(puzzle);
-//        Sudoku gs = Sudoku.ofFilas("ficheros/sudoku_filas.txt");
-        Sudoku gs = Sudoku.of("ficheros/sudoku1.txt");
+       Sudoku gs = Sudoku.ofFilas("ficheros/sudoku_filas.txt");
+//        Sudoku gs = Sudoku.of("ficheros/sudoku1.txt");
         System.out.println("Puzzle inicial:\n" +gs);
         Sudoku solucion = alg.solve(gs);
         System.out.println("Puzzle Solucion:\n" + solucion);
