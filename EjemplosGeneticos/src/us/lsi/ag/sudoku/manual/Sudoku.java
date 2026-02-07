@@ -17,7 +17,6 @@ import us.lsi.common.IntegerSet;
 public class Sudoku  implements Cromosoma<Sudoku> {
 	
 	public static final int SIZE = 9;
-//	public static final Double CROSSOVER = 1.;
 	private int[][] grid;
 	private Integer fit;
 	public static IntegerSet allValues = IntegerSet.range(1,10);

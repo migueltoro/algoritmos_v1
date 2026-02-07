@@ -10,6 +10,12 @@ public interface Poblacion<E extends Cromosoma<E>> {
 	Poblacion<E> reboot();
 	E best();
 	
+	public default List<E> bests(Integer n){
+		return this.individuals().stream()
+				.sorted((c1, c2) -> c1.fitness().compareTo(c2.fitness()))
+				.limit(n).toList();
+	}
+	
 	public default Double dispersion() {
 		Double s= 0.;
 		Double s2= 0.;

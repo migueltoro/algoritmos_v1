@@ -10,7 +10,7 @@ import us.lsi.ag.manual.Poblacion;
 
 public class PoblacionSudoku implements Poblacion<Sudoku>{
 	
-	public static Double porcentaje_conservacion_reboot = 0.05;
+	public static Double porcentaje_conservacion_reboot = 0.1;
 	
 	public static PoblacionSudoku of(List<Sudoku> individuos) {
 		return new PoblacionSudoku(individuos);
@@ -62,7 +62,7 @@ public class PoblacionSudoku implements Poblacion<Sudoku>{
 	@Override
 	public PoblacionSudoku reboot() {
 		Integer n = this.size();
-		Integer s1 = (int)(n*porcentaje_conservacion_reboot);
+		Integer s1 = (int)(n*PoblacionSudoku.porcentaje_conservacion_reboot);
 		Integer ind = Sudoku.rand.nextInt(n);
 		Sudoku sd = this.individuals.get(ind);
 		List<Sudoku> crs = this.individuals.stream()
