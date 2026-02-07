@@ -7,7 +7,7 @@ AD_{i=0}^{n-1} v_i \equiv
 \min \sum\limits_{i=0,j=0| j \gt i}^{n-1} z_{ij} & \\
 z_{ij} \ge x_i - x_j & i \in [0,n), j \in [0,n) | j \gt i \\
 z_{ij} \ge x_j - x_i & i \in [0,n), j \in [0,n) | j \gt i \\
-z_{ij}> \epsilon & i \in [0,n), j \in [0,n) | j \gt i \ \ \text{$\epsilon=1$ si x, y son enteras, si son reales un valor epsilon pequeño y positivo}
+z_{ij}> \epsilon & i \in [0,n), j \in [0,n) | j \gt i \ \ \text{$\epsilon=1$ si x, y enteras, si reales un valor pequeño y positivo}
 \end{array}
 \right.
 $$
@@ -24,6 +24,7 @@ bin \ z_i & i \in [0,n)
 \end{array}
 \right.
 $$
+
 Máximo de un conjunto de valores
 
 $$
@@ -35,6 +36,7 @@ z \ge v_i & i \in [0,n)\\
 \end{array}
 \right.
 $$
+
 Mínimo de un conjunto de valores
 
 $$
@@ -46,6 +48,7 @@ z \le v_i & i \in [0,n)\\
 \end{array}
 \right.
 $$
+
 Permutaciones de u conjunto de valores:
 
 $$
@@ -59,6 +62,7 @@ bin \ z_{ij} & i \in [0,n), j \in [0,n)
 \end{array}
 \right.
 $$
+
 Valor absoluto
 
 $$
@@ -71,7 +75,9 @@ z \ge -y & \\
 \end{array}
 \right.
 $$
+
 Desigualdad
+
 $$
 x \neq y \equiv 
 \left\\{ 
