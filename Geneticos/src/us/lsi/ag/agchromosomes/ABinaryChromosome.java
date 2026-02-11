@@ -108,6 +108,11 @@ public class ABinaryChromosome<S> extends BinaryChromosome implements AChromosom
 		return DIMENSION;
 	}
 	
+	@Override
+	public List<Integer> representation() {
+		return this.getRepresentation();
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public ChromosomeData<List<Integer>, S> data() {

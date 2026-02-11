@@ -104,10 +104,17 @@ public class ARandomKey<V,S> extends RandomKey<Object> implements AChromosome<V,
 	public ChromosomeData<V, S> data() {
 		return (ChromosomeData<V, S>) data;
 	}
+	
+	@Override
+	public List<Double> representation() {
+		return this.getRepresentation();
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 	}
+
+	
 
 	
 }

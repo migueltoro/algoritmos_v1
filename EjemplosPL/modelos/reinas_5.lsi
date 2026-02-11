@@ -1,0 +1,41 @@
+head section
+
+Integer n = 50
+
+
+goal section
+
+min  x[0]
+
+constraints section
+
+//allDifferent(x[i], i in 0 .. n)
+
+z1[i,j] = 1 -> x[i] - x[j]  >= 1, i in 0 .. n, j in 0 .. n | j > i
+z1[i,j] = 0 -> x[i] - x[j]  <= -1, i in 0 .. n, j in 0 .. n | j > i
+
+
+//allDifferent(x[i] - i, i in 0 .. n)
+
+z2[i,j] = 1 -> x[i] - x[j]  >= (j -i) + 1, i in 0 .. n, j in 0 .. n | j > i
+z2[i,j] = 0 -> x[i] - x[j]  <= (j -i) - 1, i in 0 .. n, j in 0 .. n | j > i
+
+//allDifferent(x[i] + i, i in 0 .. n)
+
+z3[i,j] = 1 -> x[i] - x[j]  >= -(j -i) + 1, i in 0 .. n, j in 0 .. n | j > i
+z3[i,j] = 0 -> x[i] - x[j]  <= -(j -i) - 1, i in 0 .. n, j in 0 .. n | j > i
+
+
+bounds section
+
+x[i] <= n-1, i in 0 .. n
+
+bin
+
+z1[i,j], i in 0 .. n,j in 0 .. n | j > i
+z2[i,j], i in 0 .. n,j in 0 .. n | j > i
+z3[i,j], i in 0 .. n,j in 0 .. n | j > i
+
+int  
+
+x[i], i in 0 .. n

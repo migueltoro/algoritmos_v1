@@ -1,0 +1,47 @@
+head section
+
+Integer n = 10
+Float eps = 1.
+
+goal section
+
+min  x[0]
+
+constraints section
+
+h1[i,j] - x[i] + x[j] = 0, i in 0 .. n, j in 0 .. n | j > i
+h2[i,j] - x[i] + x[j] = i - j, i in 0 .. n, j in 0 .. n | j > i
+h3[i,j] - x[i] + x[j] = - i + j, i in 0 .. n, j in 0 .. n | j > i
+
+//allDifferent(x[i], i in 0 .. n)
+
+z1[i,j] = ABS(h1[i,j]), i in 0 .. n, j in 0 .. n | j > i
+z1[i,j]  >= eps, i in 0 .. n, j in 0 .. n | j > i
+
+//allDifferent(x[i] + i, i in 0 .. n)
+
+
+z2[i,j] = ABS(h2[i,j]), i in 0 .. n, j in 0 .. n | j > i
+z2[i,j]  >= eps, i in 0 .. n, j in 0 .. n | j > i
+
+//allDifferent(x[i] - i, i in 0 .. n)
+
+z3[i,j] = ABS(h3[i,j]), i in 0 .. n, j in 0 .. n | j > i
+z3[i,j]  >= eps, i in 0 .. n, j in 0 .. n | j > i
+
+
+bounds section
+
+x[i] <= n-1, i in 0 .. n
+
+
+int  
+
+x[i], i in 0 .. n
+
+free  
+
+h1[i,j], i in 0 .. n, j in 0 .. n | j > i
+h2[i,j], i in 0 .. n, j in 0 .. n | j > i
+h3[i,j], i in 0 .. n, j in 0 .. n | j > i
+

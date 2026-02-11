@@ -44,6 +44,11 @@ public class BlocksDatosSudokuFilasAG implements BlocksData<SolucionSudoku>{
 	public Integer size() {
 		return DatosSudoku.n-sv.index();
 	}
+	
+	@Override
+	public Integer bloksNumber() {
+		return null;
+	}
 
 	@Override
 	public Double fitnessFunction(List<Integer> cr) {

@@ -10,18 +10,18 @@ import us.lsi.solve.AuxGrammar;
 
 public class ReinasPLI {
 	
-	public static int n = 100;
+	public static int n = 200;
 	
 	public static void reinas_gen() throws IOException {
 		AuxGrammar.generate(ReinasPLI.class,"modelos/reinas_1.lsi","ficheros/reinas_1.lp");
 	}
 	
 	public static void reinas_model_2() throws IOException {
-		AuxGrammar.generate(ReinasPLI.class, "modelos/reinas_1.lsi", "ficheros/reinas_1.lp");
-		Optional<GurobiSolution> solution = GurobiLp.gurobi("ficheros/reinas_1.lp");
+		AuxGrammar.generate(ReinasPLI.class, "modelos/reinas_4.lsi", "ficheros/reinas_4.lp");
+		Optional<GurobiSolution> solution = GurobiLp.gurobi("ficheros/reinas_4.lp");
 		if (solution.isPresent()) {
 			Locale.setDefault(Locale.of("en", "US"));
-			System.out.println(solution.get().toString((s, d) -> !s.contains("$") && d > 0));
+			System.out.println(solution.get().toString((s, d) ->  s.startsWith("x"))) ;
 		} else {
 			System.out.println("\n\n*****Modelo sin solución****");
 		}

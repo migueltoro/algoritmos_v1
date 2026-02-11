@@ -14,5 +14,10 @@ public interface BlocksData<S> extends ChromosomeData<List<Integer>,S> {
 	 * Los valores del cromosoma serán permutaciones de los valores dentro de cada bloque
 	 */
 	List<Integer> initialValues();
-
+	
+	
+	/**
+	 * @return número de bloques en los que se descompone el cromosoma.
+	 */
+	Integer bloksNumber();
 }

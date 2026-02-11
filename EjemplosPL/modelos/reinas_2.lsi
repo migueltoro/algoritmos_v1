@@ -1,6 +1,6 @@
 head section
 
-Integer n = 20
+Integer n = 10
 
 goal section
 
@@ -8,13 +8,13 @@ min  x[0]
 
 constraints section
 
-permutation(x[i], i in 0 .. n ; j, j in 0 .. n)
+allDifferent(x[i], i in 0 .. n)
 allDifferent(x[i] + i, i in 0 .. n)
 allDifferent(x[i] - i, i in 0 .. n)
 
 bounds section
 
-x[i] < n, i in 0 .. n
+x[i] <= n-1, i in 0 .. n
 
 int  
 

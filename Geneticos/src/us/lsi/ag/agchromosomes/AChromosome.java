@@ -25,6 +25,8 @@ public interface AChromosome<V,G,S> {
 	
 	V decode(Chromosome chromosome);
 	
+	G representation();
+	
 	V decodeValues(G g);
 	
 	Integer dimension();

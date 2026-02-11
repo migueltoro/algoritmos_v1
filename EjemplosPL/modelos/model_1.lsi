@@ -1,0 +1,26 @@
+head section
+
+Integer n = 5
+Float eps = 1.
+
+goal section
+
+min  sum(z1[i,j], i in 0 .. n, j in 0 .. n | j > i)
+
+constraints section
+
+//allDifferent(x[i], i in 0 .. n)
+
+z1[i,j] - x[i] + x[j]  >= 0, i in 0 .. n, j in 0 .. n | j > i
+z1[i,j] + x[i] - x[j]  >= 0, i in 0 .. n, j in 0 .. n | j > i
+z1[i,j]  >= eps, i in 0 .. n, j in 0 .. n | j > i
+
+
+
+bounds section
+
+x[i] <= n-1, i in 0 .. n
+
+int  
+
+x[i], i in 0 .. n
