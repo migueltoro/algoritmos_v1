@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import us.lsi.ag.ExpressionData;
+import us.lsi.ag.agchromosomes.ARandomKey;
+import us.lsi.ag.agchromosomes.ExpressionValues;
 import us.lsi.ag.agchromosomes.Chromosomes.ChromosomeType;
 import us.lsi.common.Preconditions;
 import us.lsi.tiposrecursivos.ast.Exp;
@@ -93,5 +95,13 @@ public class DatosExpression implements ExpressionData {
 	@Override
 	public ChromosomeType type() {
 		return ChromosomeType.Expression;
+	}
+
+	@Override
+	public Exp initialValues() {
+		ExpressionValues rv = ExpressionValues.of(this);
+		ARandomKey.iniValues(rv);
+		List<Double> r = ARandomKey.getInitialChromosome().representation();
+		return rv.decode(r);
 	}
 }

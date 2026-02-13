@@ -8,7 +8,7 @@ public class TestFilas {
 	public static void main(String[] args) {
 		
 		DatosSudoku.tamSubCuadro = 3;
-		DatosSudoku.leeFichero("ficheros/sudoku.txt");
+		DatosSudoku.leeFichero("ficheros/sudoku1.txt");
 		
 		SudokuVertexI sv = SudokuVertexI.first();
 		

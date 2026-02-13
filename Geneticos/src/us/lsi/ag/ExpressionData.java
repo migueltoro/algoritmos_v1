@@ -3,6 +3,8 @@ package us.lsi.ag;
 
 import java.util.List;
 
+import us.lsi.ag.agchromosomes.ARandomKey;
+import us.lsi.ag.agchromosomes.ExpressionValues;
 import us.lsi.tiposrecursivos.ast.Exp;
 import us.lsi.tiposrecursivos.ast.Operator;
 import us.lsi.tiposrecursivos.ast.Type;
@@ -63,6 +65,13 @@ public interface ExpressionData extends ChromosomeData<Exp,Exp>{
 	
 	default Integer size() {
 		return this.numItemsPorGen()*this.numGenes() + this.numConstants();
+	}
+	
+	@Override
+	public default Exp initialValues() {
+		List<Double> r = ARandomKey.getInitialChromosome().representation();
+		ExpressionValues pv = ExpressionValues.of(this);
+		return pv.decodeValues(r);
 	}
 	
 }

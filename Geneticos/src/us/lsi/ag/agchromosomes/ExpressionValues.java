@@ -16,7 +16,7 @@ import us.lsi.tiposrecursivos.ast.Operators;
 import us.lsi.tiposrecursivos.ast.Type;
 import us.lsi.tiposrecursivos.ast.Var;
 
-public class ExpressionValues implements ChromosomeValues<Exp, List<Double>, Exp> {
+public class ExpressionValues implements ChromosomeValues<Exp,List<Double>, Exp> {
 	
 	public static ExpressionValues of(ExpressionData data) {
 		return new ExpressionValues(data);

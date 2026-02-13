@@ -10,22 +10,35 @@ import org.apache.commons.math3.genetics.MutationPolicy;
 import org.apache.commons.math3.genetics.RandomKey;
 import org.apache.commons.math3.genetics.RandomKeyMutation;
 import org.apache.commons.math3.genetics.SelectionPolicy;
-import org.apache.commons.math3.genetics.TournamentSelection;
 
 import us.lsi.ag.ChromosomeData;
-import us.lsi.ag.agchromosomes.ACrossOverPolicy.CrossoverType;
 
 public class ARandomKey<V,S> extends RandomKey<Object> implements AChromosome<V,List<Double>,S> {
 
 	private static ChromosomeValues<Object,List<Double>,Object> values = null;
 	private static Integer DIMENSION = null;
 	private static ChromosomeData<Object,Object> data = null;
+	public static CrossoverPolicy crossOverPolicy = ACrossOverPolicy.getCrossoverPolicyKey();
+	public static MutationPolicy mutationPolicy = new RandomKeyMutation();
+	public static SelectionPolicy selectionPolicy = new ASelectionPolicy();
+		
 	
 	@SuppressWarnings("unchecked")
 	public static <V,G,S> void iniValues(ChromosomeValues<V,List<Double>,S> values){
 		ARandomKey.values = (ChromosomeValues<Object,List<Double>,Object>) values; 
 		ARandomKey.DIMENSION = values.dimension();
 		ARandomKey.data = (ChromosomeData<Object, Object>) values.data();
+	}
+	
+	public static <V,G,S> void iniValues(
+			ChromosomeValues<V,List<Double>,S> values,
+			CrossoverPolicy crossOverPolicy,
+			MutationPolicy mutationPolicy,
+             SelectionPolicy selectionPolicy){
+		ARandomKey.iniValues(values);
+		ARandomKey.crossOverPolicy = crossOverPolicy;
+		ARandomKey.mutationPolicy = mutationPolicy;
+		ARandomKey.selectionPolicy = selectionPolicy;				
 	}
 	
 	public static <E,S> ARandomKey<E,S> getInitialChromosome() {
@@ -64,21 +77,17 @@ public class ARandomKey<V,S> extends RandomKey<Object> implements AChromosome<V,
 		return (S) data.solution(this.decode());
 	}
 	
-	public static CrossoverType crossoverType = CrossoverType.OnePoint;
-	
 	public CrossoverPolicy crossOverPolicy() {
-		return ACrossOverPolicy.getCrossoverPolicyKey(crossoverType);
+		return ACrossOverPolicy.getCrossoverPolicyKey();
 	}
 	
 	public MutationPolicy mutationPolicy() {
 		return new RandomKeyMutation();
-	}
-	
-	public static int TOURNAMENT_ARITY = 2;
+	}	
 	
 	public SelectionPolicy selectionPolicy() {
-		return new TournamentSelection(TOURNAMENT_ARITY);
-	}
+		return new ASelectionPolicy();
+	} 
 	
 	@Override
 	public Chromosome initialChromosome() {

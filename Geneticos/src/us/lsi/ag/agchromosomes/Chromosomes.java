@@ -11,6 +11,8 @@ import us.lsi.ag.InSetData;
 import us.lsi.ag.PermutationData;
 import us.lsi.ag.RangeDoubleData;
 import us.lsi.ag.RangeIntegerData;
+import us.lsi.ag.agchromosomes.ACrossOverPolicy.CrossoverPolicyBlocks;
+import us.lsi.ag.agchromosomes.AMutatePolicy.MutatePolicyBlocks;
 import us.lsi.tiposrecursivos.ast.Exp;
 
 public class Chromosomes {
@@ -76,10 +78,14 @@ public class Chromosomes {
 		return ARandomKey.getInitialChromosome();
 	}
 	
-	public static <S> AChromosome<List<Integer>, List<Double>, S> ofBlocks(BlocksData<S> cd) {
-		BlocksValues<S> rv = BlocksValues.of(cd);
-		ARandomKey.iniValues(rv);
-		return ARandomKey.getInitialChromosome();
+	public static <S> AChromosome<List<Integer>, List<Integer>, S> ofBlocks(BlocksData<S> cd) {
+		ChromosomeValues<List<Integer>,List<Integer>,S> values = 
+				BlocksValues.of(cd);
+		IntegerChromosome.iniValues(values, 
+				new CrossoverPolicyBlocks(), 
+				new MutatePolicyBlocks(), 
+				new ASelectionPolicy());
+		return IntegerChromosome.getInitialChromosome();
 	}
 	
 	public static AChromosome<Exp, List<Double>, Exp> ofExp(ExpressionData cd) {
@@ -88,7 +94,5 @@ public class Chromosomes {
 		ARandomKey.iniValues(rv);
 		return ARandomKey.getInitialChromosome();
 	}
-	
-	
 
 }

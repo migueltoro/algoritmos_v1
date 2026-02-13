@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import us.lsi.ag.agchromosomes.ARandomKey;
+import us.lsi.ag.agchromosomes.PermutationValues;
 import us.lsi.common.List2;
 
 /**
@@ -47,5 +49,9 @@ public interface PermutationData<S> extends ChromosomeData<List<Integer>,S> {
 			return r;
 		}
 	    
-	    
+		default List<Integer> initialValues() {
+			List<Double> r = ARandomKey.getInitialChromosome().representation();
+			PermutationValues<S> pv = PermutationValues.of(this);
+			return pv.decodeValues(r);
+		}    
 }

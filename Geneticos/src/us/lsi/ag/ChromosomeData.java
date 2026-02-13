@@ -4,6 +4,12 @@ import us.lsi.ag.agchromosomes.Chromosomes.ChromosomeType;
 
 public interface ChromosomeData<V,S> {
 	
+	
+	/**
+	 * @return los volores iniciales del cromosoma
+	 */
+	V initialValues();
+	
 	/**
 	 * @return Numero de valores del cromosoma
 	 */

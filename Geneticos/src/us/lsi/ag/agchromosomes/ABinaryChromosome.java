@@ -6,10 +6,10 @@ import org.apache.commons.math3.genetics.AbstractListChromosome;
 import org.apache.commons.math3.genetics.InvalidRepresentationException;
 import org.apache.commons.math3.genetics.MutationPolicy;
 import org.apache.commons.math3.genetics.SelectionPolicy;
-import org.apache.commons.math3.genetics.TournamentSelection;
+
 
 import us.lsi.ag.ChromosomeData;
-import us.lsi.ag.agchromosomes.ACrossOverPolicy.CrossoverType;
+
 
 import org.apache.commons.math3.genetics.BinaryChromosome;
 import org.apache.commons.math3.genetics.BinaryMutation;
@@ -72,20 +72,16 @@ public class ABinaryChromosome<S> extends BinaryChromosome implements AChromosom
 		return (S) data.solution(this.decode());
 	}
 	
-	public static CrossoverType crossoverType = CrossoverType.OnePoint;
-	
 	public CrossoverPolicy crossOverPolicy() {
-		return ACrossOverPolicy.getCrossoverPolicyBin(crossoverType);
+		return ACrossOverPolicy.getCrossoverPolicyBin();
 	}
 	
 	public MutationPolicy mutationPolicy() {
 		return new BinaryMutation();
 	}
 	
-	public static int TOURNAMENT_ARITY = 2;
-	
 	public SelectionPolicy selectionPolicy() {
-		return new TournamentSelection(TOURNAMENT_ARITY);
+		return new ASelectionPolicy();
 	}
 	
 	@Override
