@@ -16,7 +16,7 @@ public class TestAlumnosAGRange {
 		AlgoritmoAG.MUTATION_RATE = 0.7;
 		AlgoritmoAG.POPULATION_SIZE = 50;
 		
-		StoppingConditionFactory.NUM_GENERATIONS = 5000;
+		AlgoritmoAG.NUM_GENERATIONS = 5000;
 		StoppingConditionFactory.stoppingConditionType = StoppingConditionFactory.StoppingConditionType.GenerationCount;
 		
 		InRangeAlumnosAG p = new InRangeAlumnosAG("ficheros/p3/ejemplo3_3.txt");

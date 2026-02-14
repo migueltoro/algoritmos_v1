@@ -17,7 +17,7 @@ public class TestMulticonjuntoAGRange {
 		AlgoritmoAG.MUTATION_RATE = 0.8;
 		AlgoritmoAG.POPULATION_SIZE = 1000;
 		
-		StoppingConditionFactory.NUM_GENERATIONS = 1000;
+		AlgoritmoAG.NUM_GENERATIONS = 1000;
 		StoppingConditionFactory.stoppingConditionType = StoppingConditionFactory.StoppingConditionType.GenerationCount;
 		
 		InRangeMulticonjuntoAG p = new InRangeMulticonjuntoAG("ficheros/p3/ejemplo1_1.txt");

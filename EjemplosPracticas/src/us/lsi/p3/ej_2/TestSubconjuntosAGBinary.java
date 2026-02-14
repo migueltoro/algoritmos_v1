@@ -18,7 +18,7 @@ public class TestSubconjuntosAGBinary {
 		AlgoritmoAG.MUTATION_RATE = 0.7;
 		AlgoritmoAG.POPULATION_SIZE = 50;
 		
-		StoppingConditionFactory.NUM_GENERATIONS = 5000;
+		AlgoritmoAG.NUM_GENERATIONS = 5000;
 		StoppingConditionFactory.stoppingConditionType = StoppingConditionFactory.StoppingConditionType.GenerationCount;
 		
 		BinSubconjuntoAG p = new BinSubconjuntoAG("ficheros/p3/ejemplo2_2.txt");

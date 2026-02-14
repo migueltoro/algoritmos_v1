@@ -32,7 +32,8 @@ public class AMutatePolicy {
 			for (int k = 0; k < n; k++) {
 				r1n.add(r1.get(k));
 			}
-			Integer b = rnd.nextInt(n);
+			Integer bn = d.bloksNumber();
+			Integer b = rnd.nextInt(bn);
 			Integer bs = limits.get(b + 1) - limits.get(b);
 			int i = rnd.nextInt(bs);
 			int j = rnd.nextInt(bs);

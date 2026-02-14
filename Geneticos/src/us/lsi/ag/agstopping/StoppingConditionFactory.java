@@ -4,6 +4,8 @@ import org.apache.commons.math3.genetics.FixedElapsedTime;
 import org.apache.commons.math3.genetics.FixedGenerationCount;
 import org.apache.commons.math3.genetics.StoppingCondition;
 
+import us.lsi.ag.agchromosomes.AlgoritmoAG;
+
 
 
 public class StoppingConditionFactory {
@@ -41,15 +43,15 @@ public class StoppingConditionFactory {
 	/**
 	 * N�mero de generaciones m�ximo para fijar le criterio de parada
 	 */
-	public static int NUM_GENERATIONS = Integer.MAX_VALUE;
+	
 	
 	public static StoppingCondition getStoppingCondition(){
 		return switch(stoppingConditionType){
 		case ElapsedTime -> new FixedElapsedTime(StoppingConditionFactory.MAX_ELAPSEDTIME);
-		case GenerationCount -> new FixedGenerationCount(StoppingConditionFactory.NUM_GENERATIONS);
+		case GenerationCount -> new FixedGenerationCount(AlgoritmoAG.NUM_GENERATIONS);
 		case SolutionsNumber -> 
 		new SolutionsNumber(StoppingConditionFactory.MAX_ELAPSEDTIME,
-				StoppingConditionFactory.NUM_GENERATIONS,
+				AlgoritmoAG.NUM_GENERATIONS,
 				StoppingConditionFactory.SOLUTIONS_NUMBER_MIN,
 				StoppingConditionFactory.FITNESS_MIN);
 		};

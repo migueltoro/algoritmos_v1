@@ -41,7 +41,7 @@ public class AlgoritmoAG<V,S> {
 	/**
 	 * Tama�o de la poblaci�n. Usualmente de un valor cercano a la DIMENSION de los cromosomas o mayor
 	 */
-	public static int POPULATION_SIZE = 30;
+	public static int POPULATION_SIZE = 100;
 	
 	/**
 	 * Tasa de elitismo. El porcentaje especificado de los mejores cromosomas pasa a la siguiente generaci�n sin cambio
@@ -78,6 +78,8 @@ public class AlgoritmoAG<V,S> {
 
 	public static long INITIAL_TIME;
 	public static long FINAL_TIME;
+	
+	public static int NUM_GENERATIONS = 5000;
 	
 	
 	public AChromosome<V,?,S>  aChromosome;

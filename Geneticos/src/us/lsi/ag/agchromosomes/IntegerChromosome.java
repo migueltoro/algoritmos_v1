@@ -102,7 +102,7 @@ public class IntegerChromosome<S> extends AbstractListChromosome<Integer>
 	
 	@Override
 	public Chromosome initialChromosome() {
-		return ABinaryChromosome.getInitialChromosome();
+		return IntegerChromosome.getInitialChromosome();
 	}
 	
 	@Override
@@ -122,7 +122,7 @@ public class IntegerChromosome<S> extends AbstractListChromosome<Integer>
 	
 	@Override
 	public List<Integer> representation() {
-		return this.representation();
+		return super.getRepresentation();
 	}
 	
 	@SuppressWarnings("unchecked")

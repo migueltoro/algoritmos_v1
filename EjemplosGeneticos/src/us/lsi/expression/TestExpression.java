@@ -21,7 +21,7 @@ public class TestExpression {
 		AlgoritmoAG.MUTATION_RATE = 0.7;
 		AlgoritmoAG.POPULATION_SIZE = 50;
 		
-		StoppingConditionFactory.NUM_GENERATIONS = 50;
+		AlgoritmoAG.NUM_GENERATIONS = 50;
 		StoppingConditionFactory.stoppingConditionType = StoppingConditionType.SolutionsNumber;
 		StoppingConditionFactory.FITNESS_MIN = -1.;
 		StoppingConditionFactory.SOLUTIONS_NUMBER_MIN = 1;

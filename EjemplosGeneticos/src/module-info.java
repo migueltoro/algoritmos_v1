@@ -13,5 +13,6 @@ module ejemplos_geneticos {
 	requires transitive partecomun;
 	requires transitive grafos;
 	requires transitive ejemplos_algoritmos;
+	requires commons.math3;
 //	requires transitive commons.math3;
 }

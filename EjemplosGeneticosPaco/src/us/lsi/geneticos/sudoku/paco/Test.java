@@ -16,7 +16,7 @@ public class Test {
 		AlgoritmoAG.MUTATION_RATE = 0.7;
 		AlgoritmoAG.POPULATION_SIZE = 50;
 		
-		StoppingConditionFactory.NUM_GENERATIONS = 500;
+		AlgoritmoAG.NUM_GENERATIONS = 500;
 		StoppingConditionFactory.stoppingConditionType = StoppingConditionFactory.StoppingConditionType.GenerationCount;
 		
 		Cromosoma cr = new Cromosoma("ficheros/geneticos/sudoku/sudoku1.txt");
@@ -28,7 +28,7 @@ public class Test {
 		System.out.println("==========================");
 		
 		AlgoritmoAG.POPULATION_SIZE = 1200;
-		StoppingConditionFactory.NUM_GENERATIONS = 7500;		
+		AlgoritmoAG.NUM_GENERATIONS = 7500;		
 		
 		cr = new Cromosoma("ficheros/geneticos/sudoku/sudoku2.txt");
 		ag = AlgoritmoAG.of(cr);

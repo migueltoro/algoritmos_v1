@@ -22,7 +22,7 @@ public class TestCamino {
 			Predicate<Ciudad> pv1, Predicate<Double> pe1) {
 		
 			AlgoritmoAG.POPULATION_SIZE = 500;
-			StoppingConditionFactory.NUM_GENERATIONS = 4000;
+			AlgoritmoAG.NUM_GENERATIONS = 4000;
 			
 			CaminoDatos.iniGrafo("ficheros/camino"+i+".txt", pv1, pe1, origen, destino);
 			

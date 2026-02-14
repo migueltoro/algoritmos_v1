@@ -22,7 +22,7 @@ public class Test {
 			Predicate<Ciudad> pv1, Predicate<Double> pe1) {
 		
 			AlgoritmoAG.POPULATION_SIZE = 750;
-			StoppingConditionFactory.NUM_GENERATIONS = 2000;
+			AlgoritmoAG.NUM_GENERATIONS = 2000;
 			
 			Datos.iniDatos("ficheros/geneticos/camino/camino"+i+".txt", pv1, pe1, origen, destino);
 			

@@ -37,7 +37,7 @@ public class TestColorAG {
 		AlgoritmoAG.POPULATION_SIZE = 100;
 		
 		// Condiciones de parada
-		StoppingConditionFactory.NUM_GENERATIONS = 100;
+		AlgoritmoAG.NUM_GENERATIONS = 100;
 		StoppingConditionFactory.SOLUTIONS_NUMBER_MIN = 1;
 		StoppingConditionFactory.stoppingConditionType = StoppingConditionType.GenerationCount;
 	}	
