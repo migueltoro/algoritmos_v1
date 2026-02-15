@@ -17,8 +17,8 @@ public class ReinasPLI {
 	}
 	
 	public static void reinas_model_2() throws IOException {
-		AuxGrammar.generate(ReinasPLI.class, "modelos/reinas_4.lsi", "ficheros/reinas_4.lp");
-		Optional<GurobiSolution> solution = GurobiLp.gurobi("ficheros/reinas_4.lp");
+		AuxGrammar.generate(ReinasPLI.class, "modelos/all_differents.lsi", "ficheros/all_differents.lp");
+		Optional<GurobiSolution> solution = GurobiLp.gurobi("ficheros/all_differents.lp");
 		if (solution.isPresent()) {
 			Locale.setDefault(Locale.of("en", "US"));
 			System.out.println(solution.get().toString((s, d) ->  s.startsWith("x"))) ;
