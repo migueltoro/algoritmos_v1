@@ -115,4 +115,9 @@ public class ABinaryChromosome<S> extends BinaryChromosome implements AChromosom
 		return (ChromosomeData<List<Integer>, S>) data;
 	}
 
+	@Override
+	public ABinaryChromosome<S> copy() {
+		return new ABinaryChromosome<S>(this.representation());
+	}
+
 }

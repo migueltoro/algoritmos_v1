@@ -10,7 +10,6 @@ import org.jgrapht.graph.GraphWalk;
 
 import us.lsi.alg.mochila.MochilaEdge;
 import us.lsi.alg.mochila.MochilaVertex;
-import us.lsi.alg.mochila.MochilaVertex;
 import us.lsi.alg.mochila.SolucionMochila;
 import us.lsi.graphs.virtual.EGraph;
 import us.lsi.mochila.datos.DatosMochila;

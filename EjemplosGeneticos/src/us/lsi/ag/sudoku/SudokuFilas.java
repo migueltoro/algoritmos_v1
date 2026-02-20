@@ -2,12 +2,10 @@ package us.lsi.ag.sudoku;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import org.apache.commons.math3.genetics.Chromosome;
 import org.apache.commons.math3.genetics.ChromosomePair;
@@ -17,7 +15,6 @@ import us.lsi.ag.Constraints;
 import us.lsi.ag.agchromosomes.Chromosomes.ChromosomeType;
 import us.lsi.ag.agchromosomes.AChromosome;
 import us.lsi.ag.agchromosomes.ACrossOverPolicy.CrossoverPolicyBlocks;
-import us.lsi.ag.agchromosomes.BlocksValues;
 import us.lsi.ag.agchromosomes.Chromosomes;
 //import us.lsi.ag.manual.Cromosoma;
 //import us.lsi.alg.sudoku.SolucionSudoku;

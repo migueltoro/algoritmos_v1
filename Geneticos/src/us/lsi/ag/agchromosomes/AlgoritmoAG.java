@@ -1,5 +1,6 @@
 package us.lsi.ag.agchromosomes;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,7 @@ import org.apache.commons.math3.random.JDKRandomGenerator;
 import us.lsi.ag.ChromosomeData;
 import us.lsi.ag.agstopping.StoppingConditionFactory;
 import us.lsi.common.Preconditions;
+import us.lsi.streams.Stream2;
 
 /**
  * <p> Implementaci�n de un Algoritmo Gen�tico </p>
@@ -156,6 +158,11 @@ public class AlgoritmoAG<V,S> {
 		AlgoritmoAG.bestFinal = AlgoritmoAG.finalPopulation.getFittestChromosome();
 		AlgoritmoAG.bestFitNess = this.getBestFitness();
 		AlgoritmoAG.FINAL_TIME = System.currentTimeMillis();
+		AlgoritmoAG.bestChromosomes = 
+				Stream2.of(AlgoritmoAG.finalPopulation)
+				.sorted(Comparator.<Chromosome,Double>comparing(c->c.fitness()).reversed())
+				.limit(10)
+				.collect(Collectors.toList());
 	}
 
 	/**

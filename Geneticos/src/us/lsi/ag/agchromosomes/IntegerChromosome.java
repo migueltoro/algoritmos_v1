@@ -130,5 +130,10 @@ public class IntegerChromosome<S> extends AbstractListChromosome<Integer>
 	public ChromosomeData<List<Integer>, S> data() {
 		return (ChromosomeData<List<Integer>, S>) data;
 	}
+	
+	@Override
+	public IntegerChromosome<S> copy() {
+		return new IntegerChromosome<S>(this.representation());
+	}
 }
 

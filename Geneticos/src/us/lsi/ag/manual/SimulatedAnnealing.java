@@ -1,9 +1,20 @@
 package us.lsi.ag.manual;
 
 import java.util.List;
-import java.util.Random; 
+import java.util.Random;
 
-public class SimulatedAnnealing<E extends Cromosoma<E>> {
+public class SimulatedAnnealing<E extends Cromosoma<E>>{
+	
+	public static <E extends Cromosoma<E>> SimulatedAnnealing<E> of(
+			double initialTemperature,
+			double minTemperature, 
+			double coolingRate, 
+			int iterationsPerTemp) {
+		return new SimulatedAnnealing<E>(initialTemperature, 
+				minTemperature, coolingRate, 
+				iterationsPerTemp);
+	}
+
 	
 	private final double initialTemperature;
 	private final double minTemperature;
@@ -11,7 +22,9 @@ public class SimulatedAnnealing<E extends Cromosoma<E>> {
 	private final int iterationsPerTemp;
 	private final Random random = new Random();
 
-	public SimulatedAnnealing(double initialTemperature, double minTemperature, double coolingRate,
+	protected SimulatedAnnealing(double initialTemperature, 
+			double minTemperature, 
+			double coolingRate,
 			int iterationsPerTemp) {
 		this.initialTemperature = initialTemperature;
 		this.minTemperature = minTemperature;
@@ -21,7 +34,7 @@ public class SimulatedAnnealing<E extends Cromosoma<E>> {
 	
 	public E run(List<E> initials) {
 		E best = null;
-		for (Cromosoma<E> initial : initials) {
+		for (E initial : initials) {
 			E result = run(initial);
 			if (best == null || result.fitness() > best.fitness()) {
 				best = result.deepCopy();
@@ -30,7 +43,7 @@ public class SimulatedAnnealing<E extends Cromosoma<E>> {
 		return best;		
 	}
 
-	public E run(Cromosoma<E> initial) {
+	public E run(E initial) {
 		E current = initial.deepCopy();
 		E best = current.deepCopy();
 		double temperature = initialTemperature;

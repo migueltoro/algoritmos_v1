@@ -16,10 +16,6 @@ public record TyPVertexI(Integer index, List<Double> cargas)
 		return new TyPVertexI(0,List2.nCopies(0.,DatosTyP.m));
 	}
 	
-	public static TyPVertex last() {
-		return new TyPVertexI(DatosTyP.n,List2.nCopies(0.,DatosTyP.m));
-	}
-	
 	public static TyPVertexI of(Integer index, List<Double> cargas) {
 		List<Double> cargasC = List.copyOf(cargas);
 		return new TyPVertexI(index,cargasC);
@@ -67,7 +63,10 @@ public record TyPVertexI(Integer index, List<Double> cargas)
 
 	@Override
 	public List<Integer> actions() {
-		return IntStream.range(0, DatosTyP.m).boxed().toList();
+//		return IntStream.range(0, DatosTyP.m).boxed().toList();
+		return IntStream.range(0, DatosTyP.m).boxed()
+				.sorted(Comparator.comparing(p->this.cargas.get(p)))
+				.toList();
 	}
 	
 	@Override

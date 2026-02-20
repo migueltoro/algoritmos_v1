@@ -31,5 +31,7 @@ public interface AChromosome<V,G,S> {
 	
 	Integer dimension();
 	
+	AChromosome<V,G,S> copy();
+	
 	ChromosomeData<V,S> data();
 }

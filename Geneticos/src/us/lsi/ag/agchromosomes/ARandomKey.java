@@ -118,6 +118,11 @@ public class ARandomKey<V,S> extends RandomKey<Object> implements AChromosome<V,
 	public List<Double> representation() {
 		return this.getRepresentation();
 	}
+	
+	@Override
+	public ARandomKey<V,S> copy() {
+		return new ARandomKey<V,S>(this.representation());
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
