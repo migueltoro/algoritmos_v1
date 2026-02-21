@@ -31,7 +31,7 @@ public class TestSudoku {
 		       GeneticAlgorithm<Sudoku> alg = new GeneticAlgorithm<Sudoku>();
 //		       Sudoku gs = Sudoku.initial(puzzle);
 //		       Sudoku gs = Sudoku.ofFilas("ficheros/sudoku/sudoku_filas.txt");
-		       Sudoku gs = Sudoku.of("ficheros/sudoku/sudoku4.txt");
+		       Sudoku gs = Sudoku.of("ficheros/sudoku/sudoku5.txt");
 		        System.out.println("Puzzle inicial:\n" +gs);
 		        Optional<Sudoku> solucion = alg.solve(gs);
 		        if(solucion.isPresent())
@@ -39,8 +39,9 @@ public class TestSudoku {
 //		        Sudoku initial = Sudoku.of(puzzle); // tu implementación 
 //		        System.out.println("Puzzle mutate:\n" +gs.mutate());
 		        SimulatedAnnealing<Sudoku> sa = 
-		        		SimulatedAnnealing.of(1000.0, 0.01, 0.95, 100);
-		        Sudoku saSolution = sa.run(alg.best());
+//		        		SimulatedAnnealing.of(1000.0, 0.01, 0.95, 100);
+		        		SimulatedAnnealing.of(1000.0, 0.01, 0.99, 100);
+		        Sudoku saSolution = sa.run(alg.poblacion().bests(10));
 		        System.out.println("Mejor en simulated annealing encontrado:\n" + 
 		        		saSolution);
 		    }

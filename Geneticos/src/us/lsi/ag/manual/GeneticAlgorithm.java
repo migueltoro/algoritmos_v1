@@ -32,7 +32,7 @@ public class GeneticAlgorithm<E extends Cromosoma<E>> {
 		Integer ngr = 0;
 		Double error = 1.0;
 
-		Integer bestFit = Integer.MAX_VALUE;
+		Integer bestFit = Integer.MIN_VALUE;
 		int lastFit = -1;
 
 		this.initial = initial;
@@ -47,11 +47,11 @@ public class GeneticAlgorithm<E extends Cromosoma<E>> {
 
 			// Evaluar mejor individuo (elitismo)
 			mejor = null;
-			bestFit = Integer.MAX_VALUE;
+			bestFit = Integer.MIN_VALUE;
 
 			for (E ind : poblacion.individuals()) {
 				int fit = ind.fitness().intValue();
-				if (fit < bestFit) {
+				if (fit > bestFit) {
 					bestFit = fit;
 					mejor = ind;
 				}

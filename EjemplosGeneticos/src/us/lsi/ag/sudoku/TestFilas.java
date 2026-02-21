@@ -30,7 +30,7 @@ public class TestFilas {
 		StoppingConditionFactory.stoppingConditionType = StoppingConditionType.GenerationCount;
 //		SudokuFilas g = SudokuFilas.initial(puzzle);
 //		SudokuFilas g = SudokuFilas.ofFilas("ficheros/sudoku/sudoku_filas.txt");
-		SudokuFilas g = SudokuFilas.of("ficheros/sudoku/sudoku4.txt");
+		SudokuFilas g = SudokuFilas.of("ficheros/sudoku/sudoku5.txt");
 		
 		AlgoritmoAG<List<Integer>, SudokuFilas> ap = AlgoritmoAG.of(g);
 		ap.ejecuta();
@@ -44,7 +44,8 @@ public class TestFilas {
 		System.out.println(ap.bestSolution());
 		AlgoritmoSA<List<Integer>,SudokuFilas> sa = 
 //				AlgoritmoSA.of(2000.0, 0.001, 0.99, 500);
-				AlgoritmoSA.of(1000.0, 0.01, 0.95, 100);
+//				AlgoritmoSA.of(1000.0, 0.01, 0.95, 100);
+				AlgoritmoSA.of(1000.0, 0.01, 0.99, 100);
 		AChromosome<List<Integer>, ?, SudokuFilas> saSolution = sa.run(ap.getBestAChromosomes());	
 		System.out.println("Mejor encontrado en SA: " + saSolution.solution()); 
 	}

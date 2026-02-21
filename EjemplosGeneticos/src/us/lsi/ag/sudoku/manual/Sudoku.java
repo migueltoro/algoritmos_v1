@@ -126,7 +126,7 @@ public class Sudoku  implements Cromosoma<Sudoku> {
 						conflictos += (count[v] - 1);
 			}
 		}
-		this.fit = conflictos;
+		this.fit = -conflictos;
 		return this.fit.doubleValue();
 	}
 	
