@@ -5,7 +5,6 @@ import java.util.Locale;
 import java.util.function.Predicate;
 
 import us.lsi.ag.agchromosomes.AlgoritmoAG;
-import us.lsi.ag.agstopping.StoppingConditionFactory;
 import us.lsi.grafos.datos.Ciudad;
 
 public class TestCamino {

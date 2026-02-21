@@ -1,133 +1,82 @@
 package us.lsi.sa;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Random;
 
-import org.apache.commons.math3.random.JDKRandomGenerator;
-import us.lsi.math.Math2;
+import us.lsi.ag.agchromosomes.AChromosome;
 
-
-
-	/**
-	 * <p> Implementaci�n del Algoritmo de Simulated Annealing. Un problema que se quiera resolver por este algortimo
-	 * debe implementar el interface ProblemaSA &lt; E,S,A &gt; </p>
-	 * 
-	 * <p> Para usar esta t�cnica hay que considerar un conjunto de estado y unas alternativas para pasar de unos a otros.
-	 * El estado que minimice el objetivo debe ser alcanzable desde el estado inicial a trav�s de una secuencia de 
-	 * alternativas. </p>
-	 * 
-	 * <p>La documentaci�n puede encontarse en el: <a href="../../../document/Tema16.pdf" target="_blank">Tema16</a></p>
-	 * 
-	 * <p>Un resumen de la a documentaci�n puede encontarse en el: <a href="../../../document/SimulatedAnn.html" target="_blank">Tema16</a></p>
-	 * 
-	 * @author Miguel Toro
-	 *
-	 */
-public class AlgoritmoSA<V,G,S> {
-
-	/**
-	 *
-	 * @param estado El estado del cromosoma
-	 * @return AlgoritmoSA
-	 */
-
-	public static <V,G,S> AlgoritmoSA<V,G,S> of(StateSa<V,G,S> estado) {
-			return new AlgoritmoSA<>(estado);
-	}
-
-	/**
-	 * Conjunto de soluciones encontradas
-	 */
-	public Set<StateSa<V,G,S>> soluciones;
-	/**
-	 * Mejor soluci�n encontrada
-	 */
-	public StateSa<V,G,S> mejorSolucionEncontrada = null;
-	/**
-	 * N�mero de intentos. En cada intento se parte del estado incial y se llevan a
-	 * cabo un n�mero de iteraciones por intento. En cada iteraci�n se llevan a cabo
-	 * un n�mero de iteraciones sin disminuir la temperatura.
-	 */
-	public static Integer numeroDeIntentos = 10;
-	/**
-	 * El n�mero iteraciones por intento. Los designaremos por n.
-	 */
-	public static Integer numeroDeIteracionesPorIntento = 300;
-	/**
-	 * El n�mero iteraciones a la misma temperatura. Lo designaremos por m.
-	 */
-	public static Integer numeroDeIteracionesALaMismaTemperatura = 10;
-	/**
-	 * La temperatura fijada inicialmente. Lo designaremos por t0.
-	 */
-	public static double temperaturaInicial = 1000;
+public class AlgoritmoSA<V,S>{
 	
-	public static double alfa = 0.99;
-
-	private double temperatura;
-	private StateSa<V,G,S> estado;
-	private StateSa<V,G,S> nextEstado;
-
-	
-	private AlgoritmoSA(StateSa<V,G,S> estado) {
-		this.estado = estado;
-		this.mejorSolucionEncontrada = estado;
-		this.soluciones = new HashSet<>();
-		JDKRandomGenerator random = new JDKRandomGenerator();
-		random.setSeed((int) System.currentTimeMillis());
-		Math2.rnd = random;
+	public static <V, S> AlgoritmoSA<V, S> of() {
+		return new AlgoritmoSA<V, S>(1000.0, 0.001, 0.95, 100);
 	}
 	
-	public Double averageIncrement(int n) {
-		Double s = 0.;
-		Integer r = 0;
-		Double f = this.estado.fitness();
-		for(int i=0; i<n;i++) {
-			StateSa<V,G,S> e = this.estado.random();
-			if(e.fitness() > f) {
-				r++;
-				s = e.fitness()-f;
+	public static <V,S> AlgoritmoSA<V,S> of(
+			double initialTemperature,
+			double minTemperature, 
+			double coolingRate, 
+			int iterationsPerTemp) {
+		return new AlgoritmoSA<V,S>(initialTemperature, 
+				minTemperature, coolingRate, 
+				iterationsPerTemp);
+	}
+	
+	private final double initialTemperature;
+	private final double minTemperature;
+	private final double coolingRate;
+	private final int iterationsPerTemp;
+	private final Random random = new Random();
+
+	protected AlgoritmoSA(double initialTemperature, 
+			double minTemperature, 
+			double coolingRate,
+			int iterationsPerTemp) {
+		this.initialTemperature = initialTemperature;
+		this.minTemperature = minTemperature;
+		this.coolingRate = coolingRate;
+		this.iterationsPerTemp = iterationsPerTemp;
+	}
+	
+	public AChromosome<V,?,S> run(List<AChromosome<V,?,S>> initials) {
+		AChromosome<V,?,S> best = null;
+		for (AChromosome<V,?,S> initial : initials) {
+			AChromosome<V,?,S> result = run(initial);
+			if (best == null || result.fitness() > best.fitness()) {
+				best = result.deepCopy();
 			}
 		}
-		return s/r;
+		return best;		
 	}
 
-	/**
-	 * Ejecuci�n del algoritmo
-	 */
-	public void ejecuta() {
-		this.mejorSolucionEncontrada = this.estado.random();
-		for (Integer n = 0; n < numeroDeIntentos; n++) {
-			this.temperatura = temperaturaInicial;
-			this.estado = this.estado.random();
-			for (int numeroDeIteraciones = 0;
-				     numeroDeIteraciones < numeroDeIteracionesPorIntento; numeroDeIteraciones++) {
-				for (int s = 0; s < numeroDeIteracionesALaMismaTemperatura; s++) {
-					this.nextEstado = this.estado.mutate();
-					double incr = nextEstado.fitness() - estado.fitness();
-					if (aceptaCambio(incr)) {
-						estado = nextEstado;
-						actualizaMejorValor();
-					}
+	public AChromosome<V,?,S> run(AChromosome<V,?,S> initial) {
+		AChromosome<V,?,S> current = initial.deepCopy();
+		AChromosome<V,?,S> best = current.deepCopy();
+		double temperature = initialTemperature;
+		while (temperature > minTemperature) {
+			for (int i = 0; i < iterationsPerTemp; i++) {
+				AChromosome<V,?,S> neighbor = current.deepCopy();
+				neighbor = neighbor.mutate(); // vecindad = mutación
+				double currentFitness = current.fitness();
+				double neighborFitness = neighbor.fitness();
+				if (acceptanceProbability(currentFitness, neighborFitness, temperature) > random.nextDouble()) {
+					current = neighbor;
 				}
-				this.temperatura = nexTemperatura(numeroDeIteraciones);
+				if (current.fitness() > best.fitness()) {
+					best = current.deepCopy();
+				}
 			}
-			soluciones.add(this.estado);
+			temperature *= coolingRate;
 		}
+		return best;
 	}
 
-	private void actualizaMejorValor() {
-		if (estado.fitness() < mejorSolucionEncontrada.fitness()) {
-			mejorSolucionEncontrada = estado;
+	private double acceptanceProbability(double currentFit, double newFit, double temp) {
+		if (newFit > currentFit) {
+			return 1.0;
 		}
+		return Math.exp((newFit - currentFit) / temp);
 	}
-
-	private double nexTemperatura(int numeroDeIteraciones) {
-		return alfa * temperatura;
-	}
-
-	private boolean aceptaCambio(double incr) {
-		return Math2.aceptaBoltzmann(incr, temperatura);
-	}
-
+	
+	
 }
+

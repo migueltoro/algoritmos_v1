@@ -155,7 +155,7 @@ public class Sudoku  implements Cromosoma<Sudoku> {
 
 	@Override
 	public Sudoku mutate() {
-		Sudoku copia = this.deepCopy();;
+		Sudoku copia = this.deepCopy();
 		int fila = rand.nextInt(SIZE);
 //		System.out.println("Mutando fila: " + fila);
         List<Integer> libres = Sudoku.casillasVacias.get(fila).stream().toList();

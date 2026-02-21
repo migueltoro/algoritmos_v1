@@ -37,10 +37,12 @@ public class TestSudoku {
 		        if(solucion.isPresent())
 		        	System.out.println("Mejor en genetics encontrado:\n" + solucion);
 //		        Sudoku initial = Sudoku.of(puzzle); // tu implementación 
+//		        System.out.println("Puzzle mutate:\n" +gs.mutate());
 		        SimulatedAnnealing<Sudoku> sa = 
 		        		SimulatedAnnealing.of(1000.0, 0.01, 0.95, 100);
-		        Sudoku saSolution = sa.run(gs);
-		        System.out.println("Mejor en simulated annealing encontrado:\n" + saSolution);
+		        Sudoku saSolution = sa.run(alg.best());
+		        System.out.println("Mejor en simulated annealing encontrado:\n" + 
+		        		saSolution);
 		    }
 	}
 

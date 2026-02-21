@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.math3.genetics.AbstractListChromosome;
 import org.apache.commons.math3.genetics.Chromosome;
+import org.apache.commons.math3.genetics.ChromosomePair;
 import org.apache.commons.math3.genetics.CrossoverPolicy;
 import org.apache.commons.math3.genetics.InvalidRepresentationException;
 import org.apache.commons.math3.genetics.MutationPolicy;
@@ -12,6 +13,7 @@ import org.apache.commons.math3.genetics.RandomKeyMutation;
 import org.apache.commons.math3.genetics.SelectionPolicy;
 
 import us.lsi.ag.ChromosomeData;
+import us.lsi.common.Pair;
 
 public class ARandomKey<V,S> extends RandomKey<Object> implements AChromosome<V,List<Double>,S> {
 
@@ -120,9 +122,25 @@ public class ARandomKey<V,S> extends RandomKey<Object> implements AChromosome<V,
 	}
 	
 	@Override
-	public ARandomKey<V,S> copy() {
+	public ARandomKey<V,S> deepCopy() {
 		return new ARandomKey<V,S>(this.representation());
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public AChromosome<V, List<Double>, S> mutate() {
+		return (AChromosome<V, List<Double>, S>) this.mutationPolicy().mutate(this);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Pair<AChromosome<V, List<Double>, S>, AChromosome<V, List<Double>, S>> 
+		crossover(AChromosome<V, List<Double>, S> second) {
+		ChromosomePair r = this.crossOverPolicy().crossover(this, (Chromosome) second);
+		return Pair.of((AChromosome<V, List<Double>, S>) r.getFirst(),
+				(AChromosome<V, List<Double>, S>) r.getSecond());
+	}
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

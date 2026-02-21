@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.math3.genetics.AbstractListChromosome;
 import org.apache.commons.math3.genetics.Chromosome;
+import org.apache.commons.math3.genetics.ChromosomePair;
 import org.apache.commons.math3.genetics.CrossoverPolicy;
 import org.apache.commons.math3.genetics.InvalidRepresentationException;
 import org.apache.commons.math3.genetics.MutationPolicy;
@@ -12,6 +13,7 @@ import org.apache.commons.math3.genetics.SelectionPolicy;
 import us.lsi.ag.ChromosomeData;
 import us.lsi.ag.agchromosomes.ACrossOverPolicy.CrossoverPolicyInteger;
 import us.lsi.ag.agchromosomes.AMutatePolicy.MutatePolicyInteger;
+import us.lsi.common.Pair;
 
 /**
  * @author Miguel Toro
@@ -132,8 +134,25 @@ public class IntegerChromosome<S> extends AbstractListChromosome<Integer>
 	}
 	
 	@Override
-	public IntegerChromosome<S> copy() {
+	public IntegerChromosome<S> deepCopy() {
 		return new IntegerChromosome<S>(this.representation());
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public AChromosome<List<Integer>, List<Integer>, S> mutate() {
+		return (AChromosome<List<Integer>, List<Integer>, S>) this.mutationPolicy().mutate(this);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Pair<AChromosome<List<Integer>, List<Integer>, S>, AChromosome<List<Integer>, List<Integer>, S>> crossover(
+			AChromosome<List<Integer>, List<Integer>, S> second) {
+		ChromosomePair r = this.crossOverPolicy().crossover(this, (Chromosome) second);
+		return Pair.of(
+				(AChromosome<List<Integer>, List<Integer>, S>) r.getFirst(),
+				(AChromosome<List<Integer>, List<Integer>, S>) r.getSecond());
+	}
+	
 }
 

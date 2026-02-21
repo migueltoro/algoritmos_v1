@@ -9,11 +9,12 @@ import org.apache.commons.math3.genetics.SelectionPolicy;
 
 
 import us.lsi.ag.ChromosomeData;
-
+import us.lsi.common.Pair;
 
 import org.apache.commons.math3.genetics.BinaryChromosome;
 import org.apache.commons.math3.genetics.BinaryMutation;
 import org.apache.commons.math3.genetics.Chromosome;
+import org.apache.commons.math3.genetics.ChromosomePair;
 import org.apache.commons.math3.genetics.CrossoverPolicy;
 
 /**
@@ -116,8 +117,26 @@ public class ABinaryChromosome<S> extends BinaryChromosome implements AChromosom
 	}
 
 	@Override
-	public ABinaryChromosome<S> copy() {
+	public ABinaryChromosome<S> deepCopy() {
 		return new ABinaryChromosome<S>(this.representation());
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public AChromosome<List<Integer>, List<Integer>, S> mutate() {
+		return (AChromosome<List<Integer>, List<Integer>, S>) this.mutationPolicy().mutate(this);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Pair<AChromosome<List<Integer>, List<Integer>, S>, AChromosome<List<Integer>, List<Integer>, S>> crossover(
+			AChromosome<List<Integer>, List<Integer>, S> second) {
+		ChromosomePair r = this.crossOverPolicy().crossover(this, (Chromosome) second);
+		return Pair.of(
+				(AChromosome<List<Integer>, List<Integer>, S>) r.getFirst(),
+				(AChromosome<List<Integer>, List<Integer>, S>) r.getSecond());
+	}
+	
+	
 
 }

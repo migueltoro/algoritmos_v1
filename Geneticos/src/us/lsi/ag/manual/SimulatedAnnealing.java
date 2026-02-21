@@ -5,6 +5,10 @@ import java.util.Random;
 
 public class SimulatedAnnealing<E extends Cromosoma<E>>{
 	
+	public static <E extends Cromosoma<E>> SimulatedAnnealing<E> of() {
+		return SimulatedAnnealing.of(1000.0, 0.001, 0.95, 100);
+	}
+	
 	public static <E extends Cromosoma<E>> SimulatedAnnealing<E> of(
 			double initialTemperature,
 			double minTemperature, 
@@ -50,7 +54,7 @@ public class SimulatedAnnealing<E extends Cromosoma<E>>{
 		while (temperature > minTemperature) {
 			for (int i = 0; i < iterationsPerTemp; i++) {
 				E neighbor = current.deepCopy();
-				neighbor.mutate(); // vecindad = mutación
+				neighbor = neighbor.mutate(); // vecindad = mutación
 				double currentFitness = current.fitness();
 				double neighborFitness = neighbor.fitness();
 				if (acceptanceProbability(currentFitness, neighborFitness, temperature) > random.nextDouble()) {
