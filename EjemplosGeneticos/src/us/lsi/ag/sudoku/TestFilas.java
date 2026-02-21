@@ -43,9 +43,8 @@ public class TestFilas {
 		System.out.println(cr.fitness());
 		System.out.println(ap.bestSolution());
 		AlgoritmoSA<List<Integer>,SudokuFilas> sa = 
-//				AlgoritmoSA.of(2000.0, 0.001, 0.99, 500);
-//				AlgoritmoSA.of(1000.0, 0.01, 0.95, 100);
-				AlgoritmoSA.of(1000.0, 0.01, 0.99, 100);
+				AlgoritmoSA.of(1000.0, 0.01, 0.95, 100);
+//				AlgoritmoSA.of(1000.0, 0.01, 0.99, 100);
 		AChromosome<List<Integer>, ?, SudokuFilas> saSolution = sa.run(ap.getBestAChromosomes());	
 		System.out.println("Mejor encontrado en SA: " + saSolution.solution()); 
 	}

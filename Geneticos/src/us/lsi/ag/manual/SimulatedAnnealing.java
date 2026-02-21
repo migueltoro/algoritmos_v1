@@ -25,6 +25,7 @@ public class SimulatedAnnealing<E extends Cromosoma<E>>{
 	private final double coolingRate;
 	private final int iterationsPerTemp;
 	private final Random random = new Random();
+	private E best = null;
 
 	protected SimulatedAnnealing(double initialTemperature, 
 			double minTemperature, 
@@ -37,11 +38,10 @@ public class SimulatedAnnealing<E extends Cromosoma<E>>{
 	}
 	
 	public E run(List<E> initials) {
-		E best = null;
 		for (E initial : initials) {
 			E result = run(initial);
-			if (best == null || result.fitness() > best.fitness()) {
-				best = result.deepCopy();
+			if (this.best == null || result.fitness() > this.best.fitness()) {
+				this.best = result.deepCopy();
 			}
 		}
 		return best;		
@@ -49,7 +49,6 @@ public class SimulatedAnnealing<E extends Cromosoma<E>>{
 
 	public E run(E initial) {
 		E current = initial.deepCopy();
-		E best = current.deepCopy();
 		double temperature = initialTemperature;
 		while (temperature > minTemperature) {
 			for (int i = 0; i < iterationsPerTemp; i++) {
@@ -60,13 +59,13 @@ public class SimulatedAnnealing<E extends Cromosoma<E>>{
 				if (acceptanceProbability(currentFitness, neighborFitness, temperature) > random.nextDouble()) {
 					current = neighbor;
 				}
-				if (current.fitness() > best.fitness()) {
-					best = current.deepCopy();
+				if (this.best == null || current.fitness() > this.best.fitness()) {
+					this.best = current.deepCopy();
 				}
 			}
 			temperature *= coolingRate;
 		}
-		return best;
+		return this.best;
 	}
 
 	private double acceptanceProbability(double currentFit, double newFit, double temp) {

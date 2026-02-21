@@ -26,6 +26,7 @@ public class AlgoritmoSA<V,S>{
 	private final double coolingRate;
 	private final int iterationsPerTemp;
 	private final Random random = new Random();
+	private AChromosome<V,?,S> best = null;
 
 	protected AlgoritmoSA(double initialTemperature, 
 			double minTemperature, 
@@ -38,19 +39,17 @@ public class AlgoritmoSA<V,S>{
 	}
 	
 	public AChromosome<V,?,S> run(List<AChromosome<V,?,S>> initials) {
-		AChromosome<V,?,S> best = null;
 		for (AChromosome<V,?,S> initial : initials) {
 			AChromosome<V,?,S> result = run(initial);
-			if (best == null || result.fitness() > best.fitness()) {
-				best = result.deepCopy();
+			if (this.best == null || result.fitness() > this.best.fitness()) {
+				this.best = result.deepCopy();
 			}
 		}
-		return best;		
+		return this.best;		
 	}
 
 	public AChromosome<V,?,S> run(AChromosome<V,?,S> initial) {
 		AChromosome<V,?,S> current = initial.deepCopy();
-		AChromosome<V,?,S> best = current.deepCopy();
 		double temperature = initialTemperature;
 		while (temperature > minTemperature) {
 			for (int i = 0; i < iterationsPerTemp; i++) {
@@ -61,13 +60,13 @@ public class AlgoritmoSA<V,S>{
 				if (acceptanceProbability(currentFitness, neighborFitness, temperature) > random.nextDouble()) {
 					current = neighbor;
 				}
-				if (current.fitness() > best.fitness()) {
-					best = current.deepCopy();
+				if (this.best == null || current.fitness() > best.fitness()) {
+					this.best = current.deepCopy();
 				}
 			}
 			temperature *= coolingRate;
 		}
-		return best;
+		return this.best;
 	}
 
 	private double acceptanceProbability(double currentFit, double newFit, double temp) {
