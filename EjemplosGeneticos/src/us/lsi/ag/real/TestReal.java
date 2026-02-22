@@ -19,7 +19,7 @@ public class TestReal {
 		AlgoritmoAG.POPULATION_SIZE = 200;
 		
 		StoppingConditionFactory.stoppingConditionType = StoppingConditionType.GenerationCount;
-		AlgoritmoAG.NUM_GENERATIONS = 100;
+		StoppingConditionFactory.NUM_GENERATIONS = 100;
 		
 		RangeDoubleData<List<Double>> d = new DatosReal();
 		AlgoritmoAG<List<Double>, List<Double>> ap = AlgoritmoAG.of(d);

@@ -23,7 +23,7 @@ import us.lsi.common.IntPair;
 import us.lsi.common.IntegerSet;
 
 
-public class SudokuFilas  implements BlocksData<SudokuFilas> {
+public class Sudoku  implements BlocksData<Sudoku> {
 	
 	public static final int SIZE = 9;
 	private int[][] grid;
@@ -38,9 +38,9 @@ public class SudokuFilas  implements BlocksData<SudokuFilas> {
     public static List<IntPair> casillasVacias = new ArrayList<>();
     public static List<Integer> initialValuesEnVacias = new ArrayList<>();
     public static Integer size;
-    public static SudokuFilas initial;
+    public static Sudoku initial;
 	
-    private SudokuFilas(int[][] grid) {
+    private Sudoku(int[][] grid) {
 		super();
 		int[][] copia = new int[grid.length][];
 		for (int i = 0; i < grid.length; i++)
@@ -49,11 +49,11 @@ public class SudokuFilas  implements BlocksData<SudokuFilas> {
 		this.fit = null;		
 	}
 	
-	public static SudokuFilas of(int[][] grid) {
-		return new SudokuFilas(grid);
+	public static Sudoku of(int[][] grid) {
+		return new Sudoku(grid);
 	}
 	
-	public static SudokuFilas of(String file) {
+	public static Sudoku of(String file) {
 		int[][] grid = new int[SIZE][SIZE];
 		for (int i = 0; i < SIZE; i++) {
 			for (int j = 0; j < SIZE; j++) {
@@ -68,10 +68,10 @@ public class SudokuFilas  implements BlocksData<SudokuFilas> {
 			Integer valor = Integer.parseInt(parts[2]);
 			grid[i][j] = valor;
 		}
-		return SudokuFilas.initial(grid);
+		return Sudoku.initial(grid);
 	}
 	
-	public static SudokuFilas ofFilas(String file) {
+	public static Sudoku ofFilas(String file) {
 		int[][] copia = new int[SIZE][SIZE];
 		List<String> linesFromFile = Files2.linesFromFile(file);
 		for (int i = 0; i < SIZE; i++) {
@@ -83,14 +83,14 @@ public class SudokuFilas  implements BlocksData<SudokuFilas> {
 				copia[i][j] = Integer.parseInt(parts[j]);
 			}
 		}
-        return SudokuFilas.initial(copia);
+        return Sudoku.initial(copia);
 	}
 	
-	public static SudokuFilas initial(int[][] grid) {
-		SudokuFilas sudoku = new SudokuFilas(grid);
-		SudokuFilas.initial = sudoku;
+	public static Sudoku initial(int[][] grid) {
+		Sudoku sudoku = new Sudoku(grid);
+		Sudoku.initial = sudoku;
 		for (int i = 0; i < SIZE; i++) {
-			int[] fila = SudokuFilas.initial.grid[i].clone();;
+			int[] fila = Sudoku.initial.grid[i].clone();;
 			List<Integer> vaciasEnFila = new ArrayList<>();
 			IntegerSet valoresUsadosEnFila = IntegerSet.empty();
 			for (int j = 0; j < SIZE; j++) {
@@ -99,22 +99,22 @@ public class SudokuFilas  implements BlocksData<SudokuFilas> {
 				else
 					valoresUsadosEnFila.add(fila[j]);
 			}
-			SudokuFilas.casillasVaciasPorFilas.put(i, vaciasEnFila);
-			SudokuFilas.valoresUsadosPorFilas.put(i, valoresUsadosEnFila);
-			SudokuFilas.valoresLibresPorFilas.put(i, allValues.difference(valoresUsadosEnFila));
+			Sudoku.casillasVaciasPorFilas.put(i, vaciasEnFila);
+			Sudoku.valoresUsadosPorFilas.put(i, valoresUsadosEnFila);
+			Sudoku.valoresLibresPorFilas.put(i, allValues.difference(valoresUsadosEnFila));
 		}
-		SudokuFilas.blockslimits.add(0);
+		Sudoku.blockslimits.add(0);
 		Integer sum = 0;
 		for(int i=0; i<SIZE;i++) {
 			final int fi = i;
-			List<IntPair> ls = SudokuFilas.casillasVaciasPorFilas.get(fi).stream().map(j->IntPair.of(fi,j)).toList();
-			SudokuFilas.casillasVacias.addAll(ls);
+			List<IntPair> ls = Sudoku.casillasVaciasPorFilas.get(fi).stream().map(j->IntPair.of(fi,j)).toList();
+			Sudoku.casillasVacias.addAll(ls);
 			sum += ls.size();
-			SudokuFilas.blockslimits.add(sum);
-			SudokuFilas.initialValuesEnVacias.addAll(SudokuFilas.valoresLibresPorFilas.get(i).stream().toList());			
+			Sudoku.blockslimits.add(sum);
+			Sudoku.initialValuesEnVacias.addAll(Sudoku.valoresLibresPorFilas.get(i).stream().toList());			
 		}
-		SudokuFilas.blocksNumber = SudokuFilas.blockslimits.size() - 1;
-		SudokuFilas.size = SudokuFilas.casillasVacias.size();
+		Sudoku.blocksNumber = Sudoku.blockslimits.size() - 1;
+		Sudoku.size = Sudoku.casillasVacias.size();
 		return sudoku;
 	}
 	
@@ -159,10 +159,10 @@ public class SudokuFilas  implements BlocksData<SudokuFilas> {
 	// ============================
     // Generar individuo completo
     // ============================
-	 public SudokuFilas generateIndividual() {
-			for (int i = 0; i < SudokuFilas.size; i++) {
-				IntPair p = SudokuFilas.casillasVacias.get(i);
-				this.grid[p.first()][p.second()] = SudokuFilas.initialValuesEnVacias.get(i);
+	 public Sudoku generateIndividual() {
+			for (int i = 0; i < Sudoku.size; i++) {
+				IntPair p = Sudoku.casillasVacias.get(i);
+				this.grid[p.first()][p.second()] = Sudoku.initialValuesEnVacias.get(i);
 			}
 			return this;
 	 }
@@ -170,20 +170,20 @@ public class SudokuFilas  implements BlocksData<SudokuFilas> {
     
 	@Override
 	public Integer size() {
-		return SudokuFilas.size;
+		return Sudoku.size;
 	}
 
 	@Override
 	public Double fitnessFunction(List<Integer> value) {
-		SudokuFilas sd = solution(value);
+		Sudoku sd = solution(value);
 		sd.fit = null;
 		return -sd.fitness();
 	}
 
 	@Override
-	public SudokuFilas solution(List<Integer> value) {
+	public Sudoku solution(List<Integer> value) {
 		for (int i = 0; i < value.size(); i++) {
-			IntPair p = SudokuFilas.casillasVacias.get(i);
+			IntPair p = Sudoku.casillasVacias.get(i);
 			this.grid[p.first()][p.second()] = value.get(i);
 		}
 		return this;
@@ -196,17 +196,17 @@ public class SudokuFilas  implements BlocksData<SudokuFilas> {
 
 	@Override
 	public List<Integer> blocksLimits() {
-		return SudokuFilas.blockslimits;
+		return Sudoku.blockslimits;
 	}
 
 	@Override
 	public List<Integer> initialValues() {
-		return SudokuFilas.initialValuesEnVacias;
+		return Sudoku.initialValuesEnVacias;
 	}
 
 	@Override
 	public Integer bloksNumber() {
-		return SudokuFilas.blocksNumber;
+		return Sudoku.blocksNumber;
 	}
 
 	// ============================
@@ -227,11 +227,11 @@ public class SudokuFilas  implements BlocksData<SudokuFilas> {
 		return r;
 	}
 
-	public SudokuFilas deepCopy() {
+	public Sudoku deepCopy() {
 		int[][] copia = new int[this.grid.length][];
 		for (int i = 0; i < this.grid.length; i++)
 			copia[i] = Arrays.copyOf(this.grid[i], this.grid[i].length);
-		return SudokuFilas.of(copia);
+		return Sudoku.of(copia);
 	}
 
 	@Override
@@ -250,7 +250,7 @@ public class SudokuFilas  implements BlocksData<SudokuFilas> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SudokuFilas other = (SudokuFilas) obj;
+		Sudoku other = (Sudoku) obj;
 		return Arrays.deepEquals(grid, other.grid);
 	}
 
@@ -271,24 +271,24 @@ public class SudokuFilas  implements BlocksData<SudokuFilas> {
 				{ 8, 0, 0, 0, 6, 0, 0, 0, 3 }, { 4, 0, 0, 8, 0, 3, 0, 0, 1 }, { 7, 0, 0, 0, 2, 0, 0, 0, 6 },
 				{ 0, 6, 0, 0, 0, 0, 2, 8, 0 }, { 0, 0, 0, 4, 1, 9, 0, 0, 5 }, { 0, 0, 0, 0, 8, 0, 0, 7, 9 } };
 
-		SudokuFilas g = SudokuFilas.initial(puzzle);
+		Sudoku g = Sudoku.initial(puzzle);
 		System.out.println("Individuo initial:" + "\n" + g);
-		System.out.println(SudokuFilas.casillasVacias);
-		System.out.println(SudokuFilas.initialValuesEnVacias);
-		System.out.println(SudokuFilas.casillasVacias.size());
-		System.out.println(SudokuFilas.initialValuesEnVacias.size());
-		System.out.println(SudokuFilas.blockslimits);
-		System.out.println(SudokuFilas.blocksNumber);
-		SudokuFilas g1 = g.generateIndividual();
+		System.out.println(Sudoku.casillasVacias);
+		System.out.println(Sudoku.initialValuesEnVacias);
+		System.out.println(Sudoku.casillasVacias.size());
+		System.out.println(Sudoku.initialValuesEnVacias.size());
+		System.out.println(Sudoku.blockslimits);
+		System.out.println(Sudoku.blocksNumber);
+		Sudoku g1 = g.generateIndividual();
 		System.out.println("Individuo generado:" + "\n" + g1);
 		System.out.println("Individuo generado:" + "\n" + g1.isValid());
 //		        Sudoku g2 = g1.mutate();
 		
 
-		SudokuFilas g4 = g.generateIndividual();
-		SudokuFilas g5 = g.generateIndividual();
-		AChromosome<List<Integer>, List<Integer>, SudokuFilas> g4v = Chromosomes.ofBlocks(g4);
-		AChromosome<List<Integer>, List<Integer>, SudokuFilas> g5v = Chromosomes.ofBlocks(g5);
+		Sudoku g4 = g.generateIndividual();
+		Sudoku g5 = g.generateIndividual();
+		AChromosome<List<Integer>, List<Integer>, Sudoku> g4v = Chromosomes.ofBlocks(g4);
+		AChromosome<List<Integer>, List<Integer>, Sudoku> g5v = Chromosomes.ofBlocks(g5);
 		
 		CrossoverPolicyBlocks c = new CrossoverPolicyBlocks();
 		ChromosomePair g6 = c.crossover(((Chromosome)g4v), ((Chromosome)g5v));

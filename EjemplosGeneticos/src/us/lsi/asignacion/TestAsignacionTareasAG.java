@@ -16,7 +16,7 @@ public class TestAsignacionTareasAG {
 		AlgoritmoAG.MUTATION_RATE = 0.8;
 		AlgoritmoAG.POPULATION_SIZE = 40;
 		
-		AlgoritmoAG.NUM_GENERATIONS = 600;
+		StoppingConditionFactory.NUM_GENERATIONS = 600;
 		StoppingConditionFactory.SOLUTIONS_NUMBER_MIN = 1;
 		StoppingConditionFactory.FITNESS_MIN = 0.;
 		StoppingConditionFactory.stoppingConditionType = StoppingConditionType.GenerationCount;

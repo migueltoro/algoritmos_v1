@@ -17,7 +17,7 @@ public class TestAlumnosAGPermutation {
 		AlgoritmoAG.MUTATION_RATE = 0.7;
 		AlgoritmoAG.POPULATION_SIZE = 50;
 		
-		AlgoritmoAG.NUM_GENERATIONS = 5000;
+		StoppingConditionFactory.NUM_GENERATIONS = 5000;
 		StoppingConditionFactory.stoppingConditionType = StoppingConditionFactory.StoppingConditionType.GenerationCount;
 		
 		PermutationAlumnosAG p = new PermutationAlumnosAG("ficheros/p3/ejemplo3_1.txt");

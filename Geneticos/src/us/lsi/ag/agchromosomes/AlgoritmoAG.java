@@ -81,9 +81,6 @@ public class AlgoritmoAG<V,S> {
 	public static long INITIAL_TIME;
 	public static long FINAL_TIME;
 	
-	public static int NUM_GENERATIONS = 5000;
-	
-	
 	public AChromosome<V,?,S>  aChromosome;
 	public ChromosomeData<V,S> data;
 	public CrossoverPolicy crossOverPolicy;

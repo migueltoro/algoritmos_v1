@@ -22,30 +22,30 @@ public class TestFilas {
 		AlgoritmoAG.CROSSOVER_RATE = 0.8;
 		AlgoritmoAG.MUTATION_RATE = 0.3;
 		AlgoritmoAG.POPULATION_SIZE = 200;
-		AlgoritmoAG.NUM_GENERATIONS = 5000;
+		
 		
 		// Condiciones de parada
-		
+		StoppingConditionFactory.NUM_GENERATIONS = 5000;
 		StoppingConditionFactory.SOLUTIONS_NUMBER_MIN = 1;
 		StoppingConditionFactory.stoppingConditionType = StoppingConditionType.GenerationCount;
 //		SudokuFilas g = SudokuFilas.initial(puzzle);
 //		SudokuFilas g = SudokuFilas.ofFilas("ficheros/sudoku/sudoku_filas.txt");
-		SudokuFilas g = SudokuFilas.of("ficheros/sudoku/sudoku5.txt");
+		Sudoku g = Sudoku.of("ficheros/sudoku/sudoku5.txt");
 		
-		AlgoritmoAG<List<Integer>, SudokuFilas> ap = AlgoritmoAG.of(g);
+		AlgoritmoAG<List<Integer>, Sudoku> ap = AlgoritmoAG.of(g);
 		ap.ejecuta();
 		System.out.println("================================");
 		
 		System.out.println("================================");
 
-		AChromosome<List<Integer>, ?, SudokuFilas> cr = ap.getBestAChromosome();
+		AChromosome<List<Integer>, ?, Sudoku> cr = ap.getBestAChromosome();
 		System.out.println("Mejor encontrado en genético: " + cr); 
 		System.out.println(cr.fitness());
 		System.out.println(ap.bestSolution());
-		AlgoritmoSA<List<Integer>,SudokuFilas> sa = 
+		AlgoritmoSA<List<Integer>,Sudoku> sa = 
 				AlgoritmoSA.of(1000.0, 0.01, 0.95, 100);
 //				AlgoritmoSA.of(1000.0, 0.01, 0.99, 100);
-		AChromosome<List<Integer>, ?, SudokuFilas> saSolution = sa.run(ap.getBestAChromosomes());	
+		AChromosome<List<Integer>, ?, Sudoku> saSolution = sa.run(ap.getBestAChromosomes());	
 		System.out.println("Mejor encontrado en SA: " + saSolution.solution()); 
 	}
 

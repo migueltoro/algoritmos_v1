@@ -17,7 +17,7 @@ public class Test {
 		AlgoritmoAG.MUTATION_RATE = 0.7;
 		AlgoritmoAG.POPULATION_SIZE = 100;
 		
-		AlgoritmoAG.NUM_GENERATIONS = 400;
+		StoppingConditionFactory.NUM_GENERATIONS = 400;
 		StoppingConditionFactory.stoppingConditionType = StoppingConditionType.GenerationCount;
 		
 		DatosAnuncios.tiempoTotal = 30;

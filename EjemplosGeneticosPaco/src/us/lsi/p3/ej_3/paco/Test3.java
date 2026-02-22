@@ -16,7 +16,7 @@ public class Test3 {
 		AlgoritmoAG.MUTATION_RATE = 0.7;
 		AlgoritmoAG.POPULATION_SIZE = 50;
 		
-		AlgoritmoAG.NUM_GENERATIONS = 5000;
+		StoppingConditionFactory.NUM_GENERATIONS = 5000;
 		StoppingConditionFactory.stoppingConditionType = StoppingConditionFactory.StoppingConditionType.GenerationCount;
 		
 		Cromosoma3 cr = new Cromosoma3("ficheros/p3/ejemplo3_1.txt");
