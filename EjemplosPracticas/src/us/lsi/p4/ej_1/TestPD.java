@@ -10,9 +10,9 @@ import org.jgrapht.GraphPath;
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestPD {
@@ -40,7 +40,6 @@ public class TestPD {
 			EGraph<MulticonjuntoVertex, MulticonjuntoEdge> graph =
 					EGraph.virtual(start)
 					.pathType(PathType.Sum)
-					.type(Type.Min)
 					.edgeWeight(x -> x.weight())
 					.heuristic(MulticonjuntoHeuristic::heuristic)
 					.build();
@@ -54,7 +53,12 @@ public class TestPD {
 			
 			System.out.println("Voraz = "+r.getWeight()+"  == "+SolucionMulticonjunto.of(r));
 			
-			PDR<MulticonjuntoVertex, MulticonjuntoEdge, ?> pdr = PDR.of(graph,null,true);
+			PDR<MulticonjuntoVertex, MulticonjuntoEdge, ?> pdr = 
+					PDRBuilder.<MulticonjuntoVertex, MulticonjuntoEdge, SolucionMulticonjunto>of()
+					.graph(graph)
+					.type(PDR.Type.Min)
+					.fsolution(SolucionMulticonjunto::of)
+					.withGraph(true).build();
 						
 			Optional<GraphPath<MulticonjuntoVertex, MulticonjuntoEdge>> gp = pdr.search();
 			

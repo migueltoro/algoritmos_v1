@@ -7,6 +7,10 @@ import us.lsi.graphs.alg.AStar.Type;
 
 public class ASBuilder<V, E, S> {
 	
+	public static <V, E, S> ASBuilder<V, E, S> of() {
+		return new ASBuilder<V, E, S>();
+	}
+	
     private EGraph<V, E> graph = null;
     private Type type = Type.Min;
     private Function<GraphPath<V, E>, S> fsolution = null;

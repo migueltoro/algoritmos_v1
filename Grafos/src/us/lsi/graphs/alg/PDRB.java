@@ -23,16 +23,9 @@ public class PDRB<V, E, S> {
 	
 	public static enum Type{Min,Max}
 	
-	public static <V, E, S> PDRB<V, E, S> of(EGraph<V, E> graph,Type type) {
-		return PDRB.of(graph,type,null,null,null,false);
-	}
-	
-	public static <V, E, S> PDRB<V, E, S> of(EGraph<V, E> graph, Type type,
-			Double bestValue, GraphPath<V, E> optimalPath) {
-		return new PDRB<V, E, S>(graph,type,null,bestValue,optimalPath,false);
-	}
-	
-	public static <V, E, S> PDRB<V, E, S> of(EGraph<V, E> graph, Type type,
+	public static <V, E, S> PDRB<V, E, S> of(
+			EGraph<V, E> graph, 
+			Type type,
 			Function<GraphPath<V, E>, S> fsolution, 
 			Double bestValue, GraphPath<V, E> optimalPath, 
 			Boolean withGraph) {
@@ -56,7 +49,12 @@ public class PDRB<V, E, S> {
 	private Type type;
 	private Boolean stop = false;
 
-	PDRB(EGraph<V, E> g, Type type, Function<GraphPath<V, E>, S> fsolution, Double bestValue, GraphPath<V, E> optimalPath, Boolean withGraph) {
+	PDRB(EGraph<V, E> g, 
+			Type type, 
+			Function<GraphPath<V, E>, S> fsolution, 
+			Double bestValue, 
+			GraphPath<V, E> optimalPath, 
+			Boolean withGraph) {
 		this.graph = g;
 		this.comparatorSp = this.type == Type.Min?Comparator.naturalOrder():Comparator.reverseOrder();
 		this.type = type;

@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestBT {
@@ -41,7 +41,6 @@ public class TestBT {
 			EGraph<MulticonjuntoVertex, MulticonjuntoEdge> graph =
 					EGraph.virtual(start)
 					.pathType(PathType.Sum)
-					.type(Type.Min)
 					.edgeWeight(x -> x.weight())
 					.heuristic(MulticonjuntoHeuristic::heuristic)
 					.build();
@@ -53,11 +52,21 @@ public class TestBT {
 			
 			System.out.println("Voraz = "+r.getWeight()+"  == "+SolucionMulticonjunto.of(r));
 			
-			BT<MulticonjuntoVertex, MulticonjuntoEdge, SolucionMulticonjunto> bta = BT.of(graph,
-					SolucionMulticonjunto::of, null, null, true);
+			BT<MulticonjuntoVertex, MulticonjuntoEdge, SolucionMulticonjunto> bta = 
+					new BTBuilder<MulticonjuntoVertex, MulticonjuntoEdge, SolucionMulticonjunto>()
+					.graph(graph)
+					.fsolution(SolucionMulticonjunto::of)
+					.withGraph(true)
+					.build();
 
 			if (rr.isSolution(r)) {
-				bta = BT.of(graph, SolucionMulticonjunto::of, r.getWeight(), r, true);
+				bta = BTBuilder.<MulticonjuntoVertex, MulticonjuntoEdge, SolucionMulticonjunto>of()
+						.graph(graph)
+						.fsolution(SolucionMulticonjunto::of)
+						.bestValue(r.getWeight())
+						.optimalPath(r)
+						.withGraph(true)
+						.build();
 			}
 			Optional<GraphPath<MulticonjuntoVertex, MulticonjuntoEdge>> gp = bta.search();
 			System.out.println(SolucionMulticonjunto.of(gp.get()));

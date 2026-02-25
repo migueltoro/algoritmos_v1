@@ -7,6 +7,10 @@ import us.lsi.graphs.alg.BT.Type;
 
 public class BTBuilder<V, E, S> {
 	
+	public static <V, E, S> BTBuilder<V, E, S> of() {
+		return new BTBuilder<V, E, S>();
+	}
+	
     private EGraph<V, E> graph = null;
     private Type type = Type.Min;
     private Function<GraphPath<V, E>, S> fsolution = null;

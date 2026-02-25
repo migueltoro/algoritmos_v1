@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 
 import org.jgrapht.GraphPath;
 
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
+import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
 import us.lsi.path.EGraphPath.PathType;
 
@@ -38,8 +40,17 @@ public class TestAStar {
 					.heuristic(MulticonjuntoHeuristic::heuristic)
 					.build();
 					
-			AStar<MulticonjuntoVertex, MulticonjuntoEdge,?> aStar = 
-					AStar.ofGreedy(graph);
+			GreedyOnGraph<MulticonjuntoVertex, MulticonjuntoEdge> rr = GreedyOnGraph.of(graph);
+			
+			GraphPath<MulticonjuntoVertex, MulticonjuntoEdge> r = rr.path();
+			
+			AStar<MulticonjuntoVertex, MulticonjuntoEdge,Integer> aStar = 
+					ASBuilder.<MulticonjuntoVertex, MulticonjuntoEdge,Integer>of()
+					.graph(graph)
+					.type(AStar.Type.Min)
+					.bestValue(r.getWeight())
+					.optimalPath(r)
+					.build();					
 			
 			GraphPath<MulticonjuntoVertex, MulticonjuntoEdge> gp = aStar.search().get();
 			
