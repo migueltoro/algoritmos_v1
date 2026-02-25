@@ -24,7 +24,7 @@ public class TestVertex {
 		VertexPuzzle v4 = VertexPuzzle.of(1,8,2,0,4,3,7,6,5); //soluble con respecto a goal
 		VertexPuzzle v5 = VertexPuzzle.of(8,1,2,0,4,3,7,6,5); // no soluble con respecto a 
 		VertexPuzzle v6 = VertexPuzzle.of(1,2,3,4,0,5,8,6,7); // no soluble con respecto a 
-		Integer[][] puzzle = {{1, 8, 2},{0, 4, 3},{7, 6, 5}};
+		int[][] puzzle = {{1, 8, 2},{0, 4, 3},{7, 6, 5}};
 		VertexPuzzleI v42 = VertexPuzzleI.of(puzzle,IntPair.of(1, 0));
 		System.out.println("______________");
 		System.out.println(goal.getInvCount());

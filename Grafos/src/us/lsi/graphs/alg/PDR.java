@@ -9,7 +9,6 @@ import java.util.function.Function;
 
 import us.lsi.graphs.Graphs2;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath;
 
 import java.util.Optional;
@@ -22,14 +21,16 @@ import org.jgrapht.graph.SimpleDirectedGraph;
 
 public class PDR<V, E, S> {
 	
-	public static <V, E, S> PDR<V, E, S> of(EGraph<V, E> graph) {
-		return new PDR<V, E, S>(graph,null,false);
+	public static enum Type{Min,Max}
+	
+	public static <V, E, S> PDR<V, E, S> of(EGraph<V, E> graph,Type type) {
+		return new PDR<V, E, S>(graph,type,null,false);
 	}
 	
-	public static <V, E, S> PDR<V, E, S> of(EGraph<V, E> graph, 
+	public static <V, E, S> PDR<V, E, S> of(EGraph<V, E> graph,Type type,
 			Function<GraphPath<V, E>, S> fsolution, 
 			Boolean withGraph) {
-		return new PDR<V, E, S>(graph,fsolution,withGraph);
+		return new PDR<V, E, S>(graph,type,fsolution,withGraph);
 	}
 
 	private EGraph<V, E> graph;
@@ -43,10 +44,10 @@ public class PDR<V, E, S> {
 	private Type type;
 	public Boolean stop = false;
 
-	PDR(EGraph<V, E> g, Function<GraphPath<V, E>, S> fsolution, Boolean withGraph) {
+	PDR(EGraph<V, E> g, Type type, Function<GraphPath<V, E>, S> fsolution, Boolean withGraph) {
 		this.graph = g;
-		this.comparatorSp = this.graph.type() == EGraph.Type.Min?Comparator.naturalOrder():Comparator.reverseOrder();
-		this.type = g.type();
+		this.comparatorSp = this.type == Type.Min?Comparator.naturalOrder():Comparator.reverseOrder();
+		this.type = type;
 		this.solutionsTree = new HashMap<>();
 		this.actualPath = new ArrayList<>();
 		this.withGraph = withGraph;
@@ -57,16 +58,6 @@ public class PDR<V, E, S> {
 	protected void update(V actual, Double accumulateValue) {
 		if (graph.goalHasSolution().test(actual)) {
 			switch(this.type) {
-			case All:
-				S s = fsolution.apply(pathToOrigin(actual,accumulateValue));
-				this.solutions.add(s);
-				if (this.solutions.size() >= this.graph.solutionNumber()) this.stop = true;
-				break;
-			case One:
-				s = fsolution.apply(pathToOrigin(actual,accumulateValue));
-				this.solutions.add(s);
-				this.stop = true;
-				break;
 			case Min:
 			case Max:
 			}

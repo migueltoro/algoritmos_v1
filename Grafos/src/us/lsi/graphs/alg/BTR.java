@@ -14,19 +14,19 @@ import us.lsi.math.Math2;
 public class BTR<V,E,S extends Comparable<S>> extends BT<V,E,S> {
 	
 	public static <V, E, S extends Comparable<S>> BTR<V, E, S> of(
-			EGraph<V, E> graph, 
+			EGraph<V, E> graph, Type type,
 			Function<GraphPath<V, E>, S> solution, 
 			Function<V, Integer> size,
 			Integer threshold) {
-		return new BTR<V, E, S>(graph,solution, size,threshold);
+		return new BTR<V, E, S>(graph,type,solution, size,threshold);
 	}
 	
 
-	BTR(EGraph<V, E> graph, 
+	BTR(EGraph<V, E> graph, Type type,
 			Function<GraphPath<V, E>, S> solution,
 			Function<V,Integer> size,
 			Integer threshold) {
-		super(graph, solution, null,null, false);
+		super(graph, type, solution, null,null, threshold, false);
 		this.size = size;
 		this.threshold = threshold;
 	}

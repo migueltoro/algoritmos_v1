@@ -31,8 +31,6 @@ public class EGraphOfGraph<V,E,G extends Graph<V,E>> implements EGraph<V,E> {
 	private PathType pathType;
 	private Function<V,E> greedyEdge;
 	private TriFunction<V, Predicate<V>, V, Double> heuristic;
-	private Type type;
-	private Integer solutionNumber;
 
 	
 	EGraphOfGraph(EGraphBuilderGraph<G,V,E> builder){
@@ -47,13 +45,6 @@ public class EGraphOfGraph<V,E,G extends Graph<V,E>> implements EGraph<V,E> {
 		this.pathType = builder.pathType;
 		this.greedyEdge = builder.greedyEdge;
 		this.heuristic = builder.heuristic;
-		this.type = builder.type;
-		this.solutionNumber = builder.solutionNumber;
-	}
-	
-	@Override
-	public Type type() {
-		return type;
 	}
 	
 	@Override
@@ -249,11 +240,6 @@ public class EGraphOfGraph<V,E,G extends Graph<V,E>> implements EGraph<V,E> {
 	@Override
 	public V oppositeVertex(E edge, V v) {
 		return Graphs.getOppositeVertex(graph, edge, v);
-	}
-
-	@Override
-	public Integer solutionNumber() {
-		return this.solutionNumber;
 	}
 
 }

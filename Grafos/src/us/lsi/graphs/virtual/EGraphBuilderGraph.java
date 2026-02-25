@@ -8,7 +8,6 @@ import org.jgrapht.Graph;
 import us.lsi.common.List2;
 import us.lsi.common.Preconditions;
 import us.lsi.common.TriFunction;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class EGraphBuilderGraph<G extends Graph<V,E>, V, E> implements EGraphBuilder<V, E> {
@@ -25,7 +24,6 @@ public class EGraphBuilderGraph<G extends Graph<V,E>, V, E> implements EGraphBui
 	Function<V,E> greedyEdge = v -> this.graph.edgesOf(v).isEmpty() ? null : 
 		List2.randomUnitary(this.graph.edgesOf(v)).get(0);
 	TriFunction<V, Predicate<V>, V, Double> heuristic = (v1,p,v2) -> 0.;
-	Type type = Type.Min;
 	Integer solutionNumber = 1;
 	
 	public EGraphBuilderGraph(G graph) {
@@ -41,13 +39,12 @@ public class EGraphBuilderGraph<G extends Graph<V,E>, V, E> implements EGraphBui
 		this.goal = goal;
 	}
 	
-	public EGraphBuilderGraph(G graph,V startVertex,Predicate<V> goal,PathType pathType,Type type) {
+	public EGraphBuilderGraph(G graph,V startVertex,Predicate<V> goal,PathType pathType) {
 		super();
 		this.graph = graph;
 		this.startVertex = startVertex;
 		this.goal = goal;
 		this.pathType = pathType;
-		this.type = type;
 	}
 	
 	
@@ -90,18 +87,7 @@ public class EGraphBuilderGraph<G extends Graph<V,E>, V, E> implements EGraphBui
 		this.heuristic = heuristic;
 		return this;
 	}
-	@Override
-	public EGraphBuilder<V, E> type(Type type) {
-		this.type = type;
-		return this;
-	}
-	
-	@Override
-	public EGraphBuilder<V, E> solutionNumber(Integer n) {
-		this.solutionNumber = n;
-		return this;
-	}
-	
+
 	@Override
 	public EGraph<V,E> build() {
 		return new EGraphOfGraph<>(this);

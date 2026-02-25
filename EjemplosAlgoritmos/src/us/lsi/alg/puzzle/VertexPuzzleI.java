@@ -16,18 +16,28 @@ import us.lsi.common.Preconditions;
 import us.lsi.graphs.virtual.VirtualVertex;
 import us.lsi.streams.Stream2;
 
-public record VertexPuzzleI(IntPair blackPosition,Integer[][] datos)
+public record VertexPuzzleI(IntPair blackPosition,int[][] datos)
          implements VirtualVertex<VertexPuzzle, EdgePuzzle, ActionPuzzle>, VertexPuzzle {
 	
 	public static VertexPuzzle end = VertexPuzzle.of(1,2,3,4,6,5,8,7,0);
+	
+	public static Integer numFilas = 3;
+	public static Integer n = numFilas;
 	
 	public static VertexPuzzle copy(VertexPuzzle m) {
 		VertexPuzzleI m2 = (VertexPuzzleI) m;
 		return new VertexPuzzleI(m2.blackPosition, m2.datos);
 	}
 	
-	public Integer[][] datos(){
-		return Arrays2.copyArray(datos);
+	public int[][] datos(){
+		return this.datos;
+	}
+	
+	public static int[][] deepCopy(int[][] datos) {
+		int[][] copia = new int[VertexPuzzleI.n][];
+		for (int i = 0; i < VertexPuzzleI.n; i++)
+			copia[i] = Arrays.copyOf(datos[i], VertexPuzzleI.n);
+		return copia;
 	}
 
 	/**
@@ -36,22 +46,22 @@ public record VertexPuzzleI(IntPair blackPosition,Integer[][] datos)
 	 */
 	
 	public static VertexPuzzle of(Integer... d) {
-		Integer dt[][] = Arrays2.toMultiArray(d, VertexPuzzle.n, VertexPuzzle.n);	
+		int dt[][] = Arrays2.toMultiArrayInt(d, VertexPuzzle.n, VertexPuzzle.n);	
 		IntPair bp = Arrays2.findPosition(dt, e->e==0);
 		Preconditions.checkArgument(validData(dt),"No es valido");
 		return VertexPuzzleI.of(dt,bp);
 	}
 	
-	private static Boolean validData(Integer[][] datos) {
+	private static Boolean validData(int[][] datos) {
 		Set<Integer> s = Arrays.stream(datos)
-				.flatMap(f->Arrays.stream(f))
+				.flatMap(f->Arrays.stream(f).boxed())
 				.filter(e->VertexPuzzleI.validDato(e))
 				.collect(Collectors.toSet());
 		return s.size()== n*n;
 	}	
 	
-	public static VertexPuzzleI of(Integer[][] datos, IntPair blackPosition) {
-		Integer[][] dt = Arrays2.copyArray(datos);
+	public static VertexPuzzleI of(int[][] datos, IntPair blackPosition) {
+		int[][] dt = VertexPuzzleI.deepCopy(datos);
 		VertexPuzzleI r = new VertexPuzzleI(blackPosition,dt);
 		Preconditions.checkArgument(r.isValid(),"No es válido");
 		return r;
@@ -62,7 +72,7 @@ public record VertexPuzzleI(IntPair blackPosition,Integer[][] datos)
 		return getInvCount(this.datos());
 	}
 	
-	private static int getInvCount(Integer[][] dt) {
+	private static int getInvCount(int[][] dt) {
 		List<Integer> d = Stream2.allPairs(0,3,0,3)
 				.map(p->dt[p.first()][p.second()])
 				.collect(Collectors.toList());
@@ -74,13 +84,13 @@ public record VertexPuzzleI(IntPair blackPosition,Integer[][] datos)
 	    return inv_count;
 	}
 	
-	public static boolean isSolvable2(Integer[][] d1, Integer[][] d2) {
+	public static boolean isSolvable2(int[][] d1, int[][] d2) {
 	    Integer n1 = getInvCount(d1)%2;
 	    Integer n2 = getInvCount(d2)%2;
 	    return n1 == n2;
 	}
 	 
-	public static boolean isSolvable(Integer[][] puzzle) {
+	public static boolean isSolvable(int[][] puzzle) {
 	    int invCount = getInvCount(puzzle);
 	    return (invCount % 2 == 0);
 	}
@@ -135,7 +145,7 @@ public record VertexPuzzleI(IntPair blackPosition,Integer[][] datos)
 	@Override
 	public VertexPuzzleI swap(IntPair np) {
 		IntPair op = this.blackPosition();
-		Integer dd[][] = Arrays2.copyArray(this.datos());
+		int dd[][] = deepCopy(this.datos());
 		Integer value = dd[np.first()][np.second()];
 		dd[op.first()][op.second()] = value;
 		dd[np.first()][np.second()] = 0;
@@ -175,7 +185,8 @@ public record VertexPuzzleI(IntPair blackPosition,Integer[][] datos)
 	private String fila(Integer y) {
 		Integer n = VertexPuzzleI.numFilas;
 		return IntStream.range(0,n).boxed()
-				.map(j->datos[y][j].toString()).collect(Collectors.joining("|", "|", "|"));
+				.map(j->Integer.valueOf(datos[y][j]).toString())
+				.collect(Collectors.joining("|", "|", "|"));
 	}
 
 	@Override

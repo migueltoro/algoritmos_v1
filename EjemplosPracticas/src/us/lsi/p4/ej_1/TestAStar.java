@@ -8,7 +8,6 @@ import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestAStar {
@@ -35,12 +34,12 @@ public class TestAStar {
 			EGraph<MulticonjuntoVertex, MulticonjuntoEdge> graph =
 					EGraph.virtual(start)
 					.pathType(PathType.Sum)
-					.type(Type.Min)
 					.edgeWeight(x -> x.weight())
 					.heuristic(MulticonjuntoHeuristic::heuristic)
 					.build();
 					
-			AStar<MulticonjuntoVertex, MulticonjuntoEdge,?> aStar = AStar.ofGreedy(graph);
+			AStar<MulticonjuntoVertex, MulticonjuntoEdge,?> aStar = 
+					AStar.ofGreedy(graph);
 			
 			GraphPath<MulticonjuntoVertex, MulticonjuntoEdge> gp = aStar.search().get();
 			

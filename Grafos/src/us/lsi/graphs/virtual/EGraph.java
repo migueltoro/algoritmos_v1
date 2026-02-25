@@ -26,8 +26,8 @@ public interface EGraph<V, E> extends Graph<V, E> {
 	}
 	
 	public static <G extends Graph<V,E>, V,E> EGraphBuilder<V, E>
-		ofGraph(G graph,V startVertex,Predicate<V> goal,PathType pathType,Type type){
-		return new EGraphBuilderGraph<G,V,E>(graph,startVertex,goal,pathType,type);
+		ofGraph(G graph,V startVertex,Predicate<V> goal,PathType pathType){
+		return new EGraphBuilderGraph<G,V,E>(graph,startVertex,goal,pathType);
 	}
 	
 	public static <V extends VirtualVertex<V,E,?>, E extends SimpleEdgeAction<V,?>> EGraphBuilder<V, E> 
@@ -46,13 +46,13 @@ public interface EGraph<V, E> extends Graph<V, E> {
 //	}
 	
 	public static <V, E> EGraphBuilderVirtualG<V, E> 
-		virtualG(Graph<V, E> graph, V startVertex,PathType pathType, Type type) {
-		return new EGraphBuilderVirtualG<V, E>(graph, startVertex,pathType, type);
+		virtualG(Graph<V, E> graph, V startVertex,PathType pathType) {
+		return new EGraphBuilderVirtualG<V, E>(graph, startVertex,pathType);
 	}
 	
 	public static <V, E> EGraphBuilderVirtualMG<V, E> 
-			virtualMG(DirectedMultigraph<V, E> graph, V startVertex, Predicate<V> goal,PathType pathType, Type type) {
-		return new EGraphBuilderVirtualMG<V, E>(graph, startVertex, goal, pathType, type);
+			virtualMG(DirectedMultigraph<V, E> graph, V startVertex, Predicate<V> goal,PathType pathType) {
+		return new EGraphBuilderVirtualMG<V, E>(graph, startVertex, goal, pathType);
 	}
 
 	double getVertexPassWeight(V vertex, E edgeIn, E edgeOut);
@@ -78,12 +78,6 @@ public interface EGraph<V, E> extends Graph<V, E> {
 	PathType pathType();
 	
 	TriFunction<V, Predicate<V>, V, Double> heuristic(); 
-	
-	public static enum Type{Min,Max,All,One}
-	
-	Type type();
-	
-	Integer solutionNumber();
 		
 	public default Double add(V vertexActual, Double acumulateValue, E edgeOut, E edgeIn) {
 		return this.initialPath().add(vertexActual, acumulateValue, edgeOut, edgeIn);

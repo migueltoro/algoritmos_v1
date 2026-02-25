@@ -20,66 +20,34 @@ import us.lsi.common.List2;
 import us.lsi.common.Preconditions;
 import us.lsi.graphs.Graphs2;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath;
 
 public class BT<V,E,S> {
 	
-	public static <V, E, S> BT<V, E, S> ofGreedy(EGraph<V, E> graph){
-		return BT.ofGreedy(graph, false);
-	}
-
-	public static <V, E, S> BT<V, E, S> ofGreedy(
-			EGraph<V, E> graph,Boolean withGraph) {
-		GreedyOnGraph<V, E> ga = GreedyOnGraph.of(graph);
-		Optional<GraphPath<V, E>> gp = ga.search();
-		if(gp.isPresent()) return BT.of(graph,null,gp.get().getWeight(),gp.get(),false);
-		else return BT.of(graph, null, null, null, withGraph);
-	}
-	
-	public static <V, E, S> BT<V, E, S> of(
-			EGraph<V, E> graph,
-			Function<GraphPath<V, E>, S> fsolution) {
-		return BT.of(graph, fsolution, null, null, false);
-	}
-	
-	public static <V, E, S> BT<V, E, S> of(
-			EGraph<V, E> graph) {
-		return BT.of(graph, null, null, null, false);
-	}
-	
-	public static <V, E, S> BT<V, E, S> of(
-			EGraph<V, E> graph,
-			Double bestValue,
-			GraphPath<V,E> optimalPath) {
-		return new BT<V, E, S>(graph,null,bestValue,optimalPath,false);
-	}
-	
-	public static <V, E, S> BT<V, E, S> of(
-			EGraph<V, E> graph,
-			Function<GraphPath<V, E>, S> fsolution,
-			Double bestValue,
-			GraphPath<V,E> optimalPath,
-			Boolean withGraph) {
-		return new BT<V, E, S>(graph,fsolution,bestValue,optimalPath,withGraph);
-	}
+	public static enum Type{Min,Max,All,One}
 	
 	private Comparator<Double> comparator = Comparator.naturalOrder();
 	
-	private Type type;
+	protected Type type;
 	public EGraph<V,E> graph;
 	public Double bestValue;
 	public GraphPath<V,E> optimalPath;
 	public Set<S> solutions;
+	public Integer solutionNumber;
 	protected Function<GraphPath<V,E>,S> fsolution;
 	private SimpleDirectedGraph<V,E> outGraph;
 	private Boolean withGraph = false;
 	protected Boolean stop = false;
 	
-	BT(EGraph<V, E> graph,Function<GraphPath<V, E>, S> fsolution, 
-			Double bestValue,GraphPath<V,E> optimalPath, Boolean withGraph) {
+	BT(EGraph<V, E> graph,
+			Type type,
+			Function<GraphPath<V, E>, S> fsolution, 
+			Double bestValue,
+			GraphPath<V,E> optimalPath,
+			Integer solutionNumber,
+			Boolean withGraph) {
 		this.graph = graph;
-		this.type = this.graph.type();
+		this.type = type;
 		this.comparator = switch(this.type) {
 		case All -> {
 			Preconditions.checkNotNull(fsolution,"Para el caso All fsolution no puede ser null"); 
@@ -89,6 +57,7 @@ public class BT<V,E,S> {
 		case Min -> Comparator.naturalOrder();
 		case One -> null;
 		};	
+		this.solutionNumber = solutionNumber;
 		this.fsolution = fsolution;
 		this.bestValue = bestValue;
 		this.optimalPath = optimalPath;
@@ -97,7 +66,7 @@ public class BT<V,E,S> {
 	
 	protected Boolean forget(State<V,E> state, E edge) {
 		Boolean r = false;
-		if(graph.type().equals(Type.All) || graph.type().equals(Type.One))  return false;
+		if(this.type.equals(Type.All) || this.type.equals(Type.One))  return false;
 		Double w = state.getGraph().boundedValue(state.getActualVertex(),state.getAccumulateValue(),
 				edge,graph.heuristic());
 		if(this.bestValue != null) r = comparator.compare(w,this.bestValue) >= 0;
@@ -107,23 +76,18 @@ public class BT<V,E,S> {
 	protected void update(State<V, E> state) {
 		if (graph.goalHasSolution().test(state.getActualVertex())) {
 			switch(this.type) {
-			case All: 
-				this.optimalPath = state.getPath();
-				S s = fsolution.apply(state.getPath());
-				this.solutions.add(s);
-				if (this.solutions.size() >= this.graph.solutionNumber()) this.stop = true;
-				break;
-			case One:
-				this.bestValue = state.getAccumulateValue();
-				this.optimalPath = state.getPath();
-				this.stop = true;
-				break;
 			case Min:
 			case Max:
 				if (this.bestValue == null || this.comparator.compare(state.getAccumulateValue(), this.bestValue) < 0) {
 					this.bestValue = state.getAccumulateValue();
 					this.optimalPath = state.getPath();
 				}
+			case All:
+				break;
+			case One:
+				break;
+			default:
+				break;
 			}
 		}
 	}

@@ -3,15 +3,14 @@ package us.lsi.graphs.virtual;
 import org.jgrapht.Graph;
 
 import us.lsi.common.Preconditions;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class EGraphBuilderVirtualG<V, E> extends EGraphBuilderVirtual<VirtualVertexG<V, E>, VirtualEdgeG<V, E>> {
 
 	private Graph<V,E> graph;
 
-	public EGraphBuilderVirtualG(Graph<V,E> graph, V startVertex, PathType pathType, Type type) {	
-		super(VirtualVertexG.of(startVertex, graph), pathType, type);		
+	public EGraphBuilderVirtualG(Graph<V,E> graph, V startVertex, PathType pathType) {	
+		super(VirtualVertexG.of(startVertex, graph), pathType);		
 		this.graph = graph;
 		Preconditions.checkArgument(graph.getType().isSimple(),"El grafo debe ser simple");
 	}

@@ -3,16 +3,12 @@ package us.lsi.graphs.alg;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
-import us.lsi.common.Preconditions;
 import us.lsi.graphs.Graphs2;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath;
 
 import java.util.Optional;
@@ -25,31 +21,22 @@ import org.jgrapht.graph.SimpleDirectedGraph;
 
 public class PDRB<V, E, S> {
 	
-	public static <V, E, S> PDRB<V, E, S> ofGreedy(EGraph<V, E> graph) {
-		return PDRB.ofGreedy(graph,false);
+	public static enum Type{Min,Max}
+	
+	public static <V, E, S> PDRB<V, E, S> of(EGraph<V, E> graph,Type type) {
+		return PDRB.of(graph,type,null,null,null,false);
 	}
 	
-	public static <V, E, S> PDRB<V, E, S> ofGreedy(EGraph<V, E> graph,Boolean withGraph) {
-		GreedyOnGraph<V, E> ga = GreedyOnGraph.of(graph);
-		Optional<GraphPath<V, E>> gp = ga.search();
-		if(gp.isPresent()) return PDRB.of(graph,null,gp.get().getWeight(),gp.get(),withGraph);
-		else return PDRB.of(graph,null,null,null,withGraph);
-	}
-	
-	public static <V, E, S> PDRB<V, E, S> of(EGraph<V, E> graph) {
-		return PDRB.of(graph,null,null,null,false);
-	}
-	
-	public static <V, E, S> PDRB<V, E, S> of(EGraph<V, E> graph, 
+	public static <V, E, S> PDRB<V, E, S> of(EGraph<V, E> graph, Type type,
 			Double bestValue, GraphPath<V, E> optimalPath) {
-		return new PDRB<V, E, S>(graph,null,bestValue,optimalPath,false);
+		return new PDRB<V, E, S>(graph,type,null,bestValue,optimalPath,false);
 	}
 	
-	public static <V, E, S> PDRB<V, E, S> of(EGraph<V, E> graph, 
+	public static <V, E, S> PDRB<V, E, S> of(EGraph<V, E> graph, Type type,
 			Function<GraphPath<V, E>, S> fsolution, 
 			Double bestValue, GraphPath<V, E> optimalPath, 
 			Boolean withGraph) {
-		return new PDRB<V, E, S>(graph,fsolution,bestValue,optimalPath,withGraph);
+		return new PDRB<V, E, S>(graph,type,fsolution,bestValue,optimalPath,withGraph);
 	}
 
 	private EGraph<V, E> graph;
@@ -69,18 +56,13 @@ public class PDRB<V, E, S> {
 	private Type type;
 	private Boolean stop = false;
 
-	PDRB(EGraph<V, E> g, Function<GraphPath<V, E>, S> fsolution, Double bestValue, GraphPath<V, E> optimalPath, Boolean withGraph) {
+	PDRB(EGraph<V, E> g, Type type, Function<GraphPath<V, E>, S> fsolution, Double bestValue, GraphPath<V, E> optimalPath, Boolean withGraph) {
 		this.graph = g;
-		this.comparatorSp = this.graph.type() == EGraph.Type.Min?Comparator.naturalOrder():Comparator.reverseOrder();
-		this.type = g.type();
+		this.comparatorSp = this.type == Type.Min?Comparator.naturalOrder():Comparator.reverseOrder();
+		this.type = type;
 		this.comparator = switch(this.type) {
-		case All -> {
-			Preconditions.checkNotNull(fsolution,"Para el caso All fsolution no puede ser null"); 
-			this.solutions = new HashSet<>();
-			yield null;}
 		case Max -> Comparator.reverseOrder();
 		case Min -> Comparator.naturalOrder();
-		case One -> null;
 		};	
 		this.solutionsTree = new HashMap<>();
 		
@@ -100,7 +82,6 @@ public class PDRB<V, E, S> {
 	
 	private Boolean forget(E edge, V actual,Double accumulateValue,Predicate<V> goal,V end) {
 		Boolean r = false;
-		if(graph.type().equals(Type.All) || graph.type().equals(Type.One))  return false;
 
 		V v = Graphs.getOppositeVertex(graph,edge,actual);
 		Double h = newHeuristic(v, goal, end);
@@ -126,17 +107,6 @@ public class PDRB<V, E, S> {
 	protected void update(V actual, Double accumulateValue) {
 		if (graph.goalHasSolution().test(actual)) {
 			switch(this.type) {
-			case All:
-				this.optimalPath = pathToOrigin(actual,accumulateValue);
-				S s = fsolution.apply(this.optimalPath);
-				this.solutions.add(s);
-				if (this.solutions.size() >= this.graph.solutionNumber()) this.stop = true;
-				break;
-			case One:
-				this.bestValue = accumulateValue;
-				this.optimalPath = pathToOrigin(actual,accumulateValue);
-				this.stop = true;
-				break;
 			case Min:
 			case Max:
 				if (this.bestValue == null || this.comparator.compare(accumulateValue, this.bestValue) < 0) {

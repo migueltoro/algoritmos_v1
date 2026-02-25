@@ -4,7 +4,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import us.lsi.common.TriFunction;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public interface EGraphBuilder<V, E> {
@@ -22,10 +21,6 @@ public interface EGraphBuilder<V, E> {
 	EGraphBuilder<V, E> pathType(PathType pathType);
 
 	EGraphBuilder<V, E> heuristic(TriFunction<V, Predicate<V>, V, Double> heuristic);
-
-	EGraphBuilder<V, E> type(Type type);
-	
-	EGraphBuilder<V, E> solutionNumber(Integer n);
 
 	EGraph<V, E> build();
 

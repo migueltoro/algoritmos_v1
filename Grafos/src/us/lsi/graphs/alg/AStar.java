@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,15 +22,15 @@ import org.jheaps.tree.FibonacciHeap;
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.ArrowHead;
 import us.lsi.colors.GraphColors.Color;
-import us.lsi.common.Preconditions;
 import us.lsi.graphs.Graphs2;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath;
 import us.lsi.streams.Stream2;
 
 
 public class AStar<V,E,S> implements Iterator<V>, Iterable<V> {
+	
+	public static enum Type{Min,Max}
 	
 	/**
 	 * @param <V> El tipo de los v&eacute;rtices
@@ -40,25 +39,7 @@ public class AStar<V,E,S> implements Iterator<V>, Iterable<V> {
 	 * @param heuristic La heur&iacute;stica 
 	 * @return Una algoritmo de b&uacute;squeda de AStar
 	 */
-	public static <V, E, S> AStar<V, E, S> ofGreedy(EGraph<V, E> graph) {
-		GreedyOnGraph<V, E> ga = GreedyOnGraph.of(graph);
-		Optional<GraphPath<V, E>> gp = ga.search();
-		if(gp.isPresent()) return AStar.of(graph,null,gp.get().getWeight(),gp.get());
-		else return new AStar<V, E, S>(graph,null,null,null);
-	}
 	
-	public static <V, E, S> AStar<V, E, S> of(EGraph<V, E> graph) {
-		return new AStar<V, E, S>(graph,null,null,null);
-	}
-	
-	public static <V, E, S> AStar<V, E, S> of(EGraph<V, E> graph,Double bestValue,GraphPath<V, E> optimalPath) {
-		return new AStar<V, E, S>(graph,null,bestValue,optimalPath);
-	}
-	
-	public static <V, E, S> AStar<V, E, S> of(EGraph<V, E> graph,
-			Function<GraphPath<V, E>, S> fsolution,Double bestValue,GraphPath<V, E> optimalPath) {
-		return new AStar<V, E, S>(graph,fsolution,bestValue,optimalPath);
-	}
 
 	private Type type;
 	public Comparator<Double> comparator;
@@ -69,21 +50,18 @@ public class AStar<V,E,S> implements Iterator<V>, Iterable<V> {
 	private GraphPath<V, E> optimalPath = null; //mejor camino estimado
 	protected Set<S> solutions;
 	protected Function<GraphPath<V,E>,S> fsolution;
+	private Boolean withGraph = false;
 
-	protected AStar(EGraph<V, E> graph, Function<GraphPath<V, E>, S> fsolution, Double bestValue, GraphPath<V, E> optimalPath) {
+	protected AStar(EGraph<V, E> graph, Type type, Function<GraphPath<V, E>, S> fsolution, 
+			Double bestValue, GraphPath<V, E> optimalPath, Boolean withGraph) {
 		super();
 		this.graph = graph;
-		this.type = this.graph.type();
+		this.type = type;
 		this.comparator = switch(this.type) {
-		case All -> {
-			Preconditions.checkNotNull(fsolution,"Para el caso All fsolution no puede ser null"); 
-			this.solutions = new HashSet<>();
-			yield null;}
 		case Max -> Comparator.reverseOrder();
 		case Min -> Comparator.naturalOrder();
-		case One -> null;
 		};
-		this.comparator = this.graph.type().equals(EGraph.Type.Min)?Comparator.naturalOrder():Comparator.reverseOrder();		
+		this.comparator = this.type.equals(Type.Min)?Comparator.naturalOrder():Comparator.reverseOrder();		
 		this.tree = new HashMap<>();
 		EGraphPath<V, E> ePath = graph.initialPath();
 		this.heap = new FibonacciHeap<>(comparator);
@@ -94,6 +72,7 @@ public class AStar<V,E,S> implements Iterator<V>, Iterable<V> {
 		this.bestValue = bestValue;
 		this.optimalPath = optimalPath;
 		this.fsolution = fsolution;
+		this.withGraph = withGraph;
 	}
 	
 	public Boolean closed(V v) {
@@ -193,22 +172,9 @@ public class AStar<V,E,S> implements Iterator<V>, Iterable<V> {
 		Optional<GraphPath<V, E>> r = Optional.empty();
 		if (graph.goal().test(startVertex))
 			return Optional.of(ePath);
-		switch (this.graph.type()) {
-		case All:
-			List<V> goals = this.stream()
-				.filter(v -> v != null)
-				.filter(graph.goal().and(graph.goalHasSolution()))
-				.limit(this.graph.solutionNumber())
-				.toList();
-			for (V v : goals) {
-				Optional<GraphPath<V, E>> p = this.path(startVertex, v);
-				r = p;
-				this.solutions.add(this.fsolution.apply(p.get()));
-			}
-			break;
+		switch (this.type) {		
 		case Max:
 		case Min:
-		case One:
 			Optional<V> last = this.stream().filter(v -> v != null).filter(graph.goal().and(graph.goalHasSolution()))
 					.findFirst();
 			if (last.isPresent())

@@ -4,7 +4,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import us.lsi.common.TriFunction;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class EGraphBuilderVirtual<V extends VirtualVertex<V,E,?>, E extends SimpleEdgeAction<V,?>> 
@@ -19,8 +18,6 @@ public class EGraphBuilderVirtual<V extends VirtualVertex<V,E,?>, E extends Simp
 	PathType pathType = PathType.Sum;
 	Function<V,E> greedyEdge = v -> v.edgesListOf().isEmpty()? null : v.edgesListOf().get(0);
 	TriFunction<V, Predicate<V>, V, Double> heuristic = (v1,p,v2) -> 0.;
-	Type type = Type.Min;
-	Integer solutionNumber;
 	
 	public EGraphBuilderVirtual() {
 		super();
@@ -31,11 +28,10 @@ public class EGraphBuilderVirtual<V extends VirtualVertex<V,E,?>, E extends Simp
 		this.startVertex = startVertex;
 	}
 	
-	public EGraphBuilderVirtual(V startVertex,PathType pathType,Type type) {
+	public EGraphBuilderVirtual(V startVertex,PathType pathType) {
 		super();
 		this.startVertex = startVertex;
 		this.pathType = pathType;
-		this.type = type;
 	}
 
 	public EGraphBuilderVirtual<V, E> edgeWeight(Function<E, Double> edgeWeight) {
@@ -72,15 +68,7 @@ public class EGraphBuilderVirtual<V extends VirtualVertex<V,E,?>, E extends Simp
 		this.heuristic = heuristic;
 		return this;
 	}
-	public EGraphBuilderVirtual<V, E> type(Type type) {
-		this.type = type;
-		return this;
-	}
-	@Override
-	public EGraphBuilder<V, E> solutionNumber(Integer n) {
-		this.solutionNumber = n;
-		return this;
-	}
+
 	public EGraph<V,E> build() {
 		return new ESimpleVirtualGraph<V,E>(this);		
 	}
