@@ -8,9 +8,9 @@ import org.jgrapht.GraphPath;
 
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestAStart {
@@ -38,13 +38,17 @@ public class TestAStart {
 			EGraph<VertexProductos, EdgeProductos> graph = 
 					EGraph.virtual(start)
 					.pathType(PathType.Sum)
-					.type(Type.Max)
 					.edgeWeight(x -> x.weight())
 					.heuristic(ProductosHeuristic::heuristic)
 					.build();
 			
 			
-			AStar<VertexProductos, EdgeProductos, ?> aStar = AStar.ofGreedy(graph);
+			AStar<VertexProductos, EdgeProductos, SolucionProductos> aStar = 
+					ASBuilder.<VertexProductos, EdgeProductos, SolucionProductos>of()
+					.graph(graph)
+					.type(AStar.Type.Max)
+					.withGraph(true)
+					.build();
 			
 			GraphPath<VertexProductos, EdgeProductos> gp = aStar.search().get();
 			

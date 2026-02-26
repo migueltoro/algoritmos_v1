@@ -8,9 +8,9 @@ import org.jgrapht.GraphPath;
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.mochila.datos.DatosMochila;
 import us.lsi.path.EGraphPath.PathType;
 
@@ -28,7 +28,6 @@ public class TestBTMochila {
 		EGraph<MochilaVertex, MochilaEdge> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.heuristic(MochilaHeuristic::heuristic1)
 				.build();	
 		
@@ -41,10 +40,15 @@ public class TestBTMochila {
 //		System.out.println(s0);
 		System.out.println(path.getEdgeList().stream().map(e->e.action()).toList());
 		
-		BT<MochilaVertex,MochilaEdge,SolucionMochila> ms = BT.of(
-				graph,
-				MochilaVertex::getSolucion,
-				path.getWeight(),path,true);		
+		BT<MochilaVertex,MochilaEdge,SolucionMochila> ms = 
+				BTBuilder.<MochilaVertex, MochilaEdge,SolucionMochila>of()
+				.graph(graph)
+				.type(BT.Type.Max)
+				.bestValue(path.getWeight())
+				.optimalPath(path)
+				.withGraph(true)
+				.build();
+					
 		
 		Optional<GraphPath<MochilaVertex, MochilaEdge>> gp = ms.search();
 //		SolucionMochila s = MochilaVertex.getSolucion(ms.optimalPath().get());

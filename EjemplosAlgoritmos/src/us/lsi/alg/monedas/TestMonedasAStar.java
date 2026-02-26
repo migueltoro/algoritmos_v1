@@ -7,13 +7,12 @@ import java.util.Optional;
 
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.SimpleDirectedGraph;
-
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 
@@ -28,7 +27,6 @@ public class TestMonedasAStar {
 		EGraph<MonedasVertex, MonedasEdge> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.heuristic(MonedasHeuristica::heuristic)
 				.build();	
 		
@@ -42,9 +40,17 @@ public class TestMonedasAStar {
 		
 		if (rr.isSolution(path1)) {
 			System.out.println("Hay solucion voraz 1 = " +path1.getWeight());
-			ms = AStar.ofGreedy(graph);
+			ms = ASBuilder.<MonedasVertex, MonedasEdge, SolucionMonedas>of()
+					.graph(graph)
+					.type(AStar.Type.Max)
+					.bestValue(path1.getWeight())
+					.optimalPath(path1)
+					.build();
 		} else {
-			ms = AStar.of(graph);
+			ms = ASBuilder.<MonedasVertex, MonedasEdge, SolucionMonedas>of()
+					.graph(graph)
+					.type(AStar.Type.Max)
+					.build();
 		}
 		
 		Optional<GraphPath<MonedasVertex, MonedasEdge>> path = ms.search();
@@ -71,13 +77,10 @@ public class TestMonedasAStar {
 		Collections.sort(DatosMonedas.monedas, Comparator.comparing(m -> m.pesoUnitario()));
 		
 		MonedasVertex e3 = MonedasVertex.first(valorInicial);
-//		MonedaVertex e4 = MonedaVertex.last();
-		
-		
+//		MonedaVertex e4 = MonedaVertex.last();	
 
 		graph = EGraph.virtual(e3)
 				.pathType(PathType.Sum)
-				.type(Type.Min)
 				.heuristic(MonedasHeuristica::heuristic)
 				.build();	
 		
@@ -87,9 +90,18 @@ public class TestMonedasAStar {
 	    
 	    if (rr.isSolution(path2)) {
 			System.out.println("Hay solucion voraz 2 = "+path2.getWeight());
-			ms = AStar.ofGreedy(graph);
+			ms = ASBuilder.<MonedasVertex, MonedasEdge, SolucionMonedas>of()
+					.graph(graph)
+					.type(AStar.Type.Min)
+					.bestValue(path2.getWeight())
+					.optimalPath(path2)
+					.build();
+					
 		} else {
-			ms = AStar.of(graph);
+			ms = ASBuilder.<MonedasVertex, MonedasEdge, SolucionMonedas>of()
+					.graph(graph)
+					.type(AStar.Type.Min)
+					.build();
 		}
 		
 	    path = ms.search();

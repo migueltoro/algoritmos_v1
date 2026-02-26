@@ -8,9 +8,9 @@ import org.jgrapht.GraphPath;
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestBT {
@@ -36,7 +36,6 @@ public class TestBT {
 			EGraph<VertexProductos, EdgeProductos> graph = 
 					EGraph.virtual(start)
 					.pathType(PathType.Sum)
-					.type(Type.Max)
 					.edgeWeight(x -> x.weight())
 					.heuristic(ProductosHeuristic::heuristic)
 					.build();
@@ -47,9 +46,13 @@ public class TestBT {
 
 			// Algoritmo BT
 			BT<VertexProductos, EdgeProductos, SolucionProductos> bta = 
-				BT.of(graph, 
-					SolucionProductos::of, 
-					gp.getWeight(),gp,true);
+					BTBuilder.<VertexProductos, EdgeProductos, SolucionProductos>of()
+					.graph(graph)
+					.type(BT.Type.Max)
+					.bestValue(gp.getWeight())
+					.optimalPath(gp)
+					.withGraph(true)
+					.build();
 
 			Optional<GraphPath<VertexProductos, EdgeProductos>> gps = bta.search();
 			

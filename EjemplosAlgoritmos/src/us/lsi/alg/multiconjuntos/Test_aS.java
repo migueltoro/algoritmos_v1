@@ -5,9 +5,10 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.jgrapht.GraphPath;
+
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class Test_aS {
@@ -34,12 +35,15 @@ public class Test_aS {
 			EGraph<MulticonjuntoVertex, MulticonjuntoEdge> graph =
 					EGraph.virtual(start)
 					.pathType(PathType.Sum)
-					.type(Type.Min)
 					.edgeWeight(x -> x.weight())
 					.heuristic(MulticonjuntoHeuristic::heuristic)
 					.build();
 					
-			AStar<MulticonjuntoVertex, MulticonjuntoEdge,?> aStar = AStar.ofGreedy(graph);
+			AStar<MulticonjuntoVertex, MulticonjuntoEdge,SolucionMulticonjunto> aStar = 
+					ASBuilder.<MulticonjuntoVertex, MulticonjuntoEdge,SolucionMulticonjunto>of()
+					.graph(graph)
+					.type(AStar.Type.Min)
+					.build();
 			
 			GraphPath<MulticonjuntoVertex, MulticonjuntoEdge> gp = aStar.search().get();
 			

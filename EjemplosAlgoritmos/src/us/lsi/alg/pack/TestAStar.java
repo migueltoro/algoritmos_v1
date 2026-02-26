@@ -5,10 +5,10 @@ import java.util.Locale;
 
 import org.jgrapht.GraphPath;
 
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 
@@ -22,7 +22,6 @@ public class TestAStar {
 		EGraph<PackVertex,PackEdge> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Last)
-				.type(Type.Min)
 				.vertexWeight(v->(double)v.nc())
 				.edgeWeight(e->e.weight())
 				.heuristic(Heuristica::heuristic)
@@ -36,7 +35,13 @@ public class TestAStar {
 		System.out.println("Solucion Voraz = "+sp);
 		System.out.println("Heuristica = "+Heuristica.heuristic(e1, v->v.goal(), null));
 		
-		AStar<PackVertex, PackEdge, ?> ms = AStar.of(graph,null,(double)sp.nc(),p);
+		AStar<PackVertex, PackEdge,SolucionPack> ms = 
+				ASBuilder.<PackVertex, PackEdge,SolucionPack>of()
+				.graph(graph)
+				.type(AStar.Type.Min)
+				.bestValue(p.getWeight())
+				.optimalPath(p)
+				.build();
 		
 		GraphPath<PackVertex,PackEdge> path = ms.search().orElse(null);
 		SolucionPack s = SolucionPack.of(path);

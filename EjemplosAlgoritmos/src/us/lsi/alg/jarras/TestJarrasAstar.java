@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 import org.jgrapht.GraphPath;
-
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.virtual.EGraph;
 
@@ -23,7 +23,11 @@ public class TestJarrasAstar {
 					.heuristic((v1,p,v2)->0.)
 					.build();		
 			
-			AStar<JarrasVertex, JarrasEdge,JarrasSolution> ms = AStar.of(graph);
+			AStar<JarrasVertex, JarrasEdge,JarrasSolution> ms = 
+					ASBuilder.<JarrasVertex, JarrasEdge,JarrasSolution>of()
+					.graph(graph)
+					.type(AStar.Type.Max)
+					.build();
 			
 //			Optional<JarrasVertex> r = ms.stream().peek(e->System.out.println(e)).filter(e->e.equals(e2)).findFirst();
 			

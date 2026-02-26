@@ -10,9 +10,9 @@ import java.util.Optional;
 import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 
@@ -28,7 +28,6 @@ public class TestMonedasPDR {
 		EGraph<MonedasVertex, MonedasEdge> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.heuristic(MonedasHeuristica::heuristic)
 				.build();
 
@@ -38,12 +37,12 @@ public class TestMonedasPDR {
 		
 		PDR<MonedasVertex, MonedasEdge, SolucionMonedas> ms1;
 
-		if (rr.isSolution(path1)) {
 			System.out.println("1 = " + SolucionMonedas.of(path1));
-			ms1 = PDR.of(graph);
-		} else {
-			ms1 = PDR.of(graph);
-		}
+			ms1 = PDRBuilder.<MonedasVertex, MonedasEdge, SolucionMonedas>of()
+					.graph(graph)
+					.type(PDR.Type.Max)
+					.withGraph(true)
+					.build();
 		
 		Optional<GraphPath<MonedasVertex, MonedasEdge>> s1 = ms1.search();
 		
@@ -56,7 +55,6 @@ public class TestMonedasPDR {
 		
 		graph = EGraph.virtual(e3)
 				.pathType(PathType.Sum)
-				.type(Type.Min)
 				.heuristic(MonedasHeuristica::heuristic)
 				.build();
 
@@ -66,12 +64,12 @@ public class TestMonedasPDR {
 
 		PDR<MonedasVertex, MonedasEdge, SolucionMonedas> ms2;
 
-		if (rr.isSolution(path2)) {
 			System.out.println("3 = " + SolucionMonedas.of(path2));
-			ms2 = PDR.of(graph);
-		}else {
-			ms2 = PDR.of(graph);
-		}
+			ms2 = PDRBuilder.<MonedasVertex, MonedasEdge, SolucionMonedas>of()
+					.graph(graph)
+					.type(PDR.Type.Min)
+					.withGraph(true)
+					.build();
 		Optional<GraphPath<MonedasVertex, MonedasEdge>> s2 = ms2.search();
 		if (s2.isPresent()) System.out.println("4 = " + SolucionMonedas.of(s2.get()));
 		else System.out.println("4 = No hay solucion");

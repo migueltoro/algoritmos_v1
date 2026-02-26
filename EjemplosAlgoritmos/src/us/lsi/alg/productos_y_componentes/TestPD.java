@@ -11,8 +11,8 @@ import org.jgrapht.GraphPath;
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestPD {
@@ -36,7 +36,6 @@ public class TestPD {
 			EGraph<VertexProductos, EdgeProductos> graph = 
 					EGraph.virtual(start)
 					.pathType(PathType.Sum)
-					.type(Type.Max)
 					.edgeWeight(x -> x.weight())
 					.heuristic(ProductosHeuristic::heuristic)
 					.build();
@@ -47,7 +46,11 @@ public class TestPD {
 
 			// Algoritmo PD
 			PDR<VertexProductos, EdgeProductos,?> pdr = 
-					PDR.of(graph, null, true);
+					PDRBuilder.<VertexProductos, EdgeProductos, SolucionProductos>of()
+					.graph(graph)
+					.type(PDR.Type.Max)
+					.withGraph(true)
+					.build();
 			
 
 			Optional<GraphPath<VertexProductos, EdgeProductos>> gp = pdr.search();

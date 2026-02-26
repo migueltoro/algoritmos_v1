@@ -5,6 +5,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.jgrapht.GraphPath;
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.virtual.EGraph;
 
@@ -28,8 +29,11 @@ public class TestAS {
 					.build();
 
 			// Algoritmo A*
-			AStar<ProductosVertex, ProductosEdge,?> aStar = AStar.ofGreedy(
-					graph);
+			AStar<ProductosVertex, ProductosEdge,SolucionProductos> aStar =
+					ASBuilder.<ProductosVertex, ProductosEdge,SolucionProductos>of()
+					.graph(graph)
+					.type(AStar.Type.Max)
+					.build();
 			
 			GraphPath<ProductosVertex, ProductosEdge> gp = aStar.search().get();
 

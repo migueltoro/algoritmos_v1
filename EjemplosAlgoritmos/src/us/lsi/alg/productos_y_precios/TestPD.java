@@ -9,6 +9,7 @@ import org.jgrapht.GraphPath;
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.virtual.EGraph;
 
 public class TestPD {
@@ -35,7 +36,12 @@ public class TestPD {
 			// Algoritmo PD
 			
 			PDR<ProductosVertex, ProductosEdge,?> pdr = 
-					PDR.of(graph,null,true);
+					PDRBuilder.<ProductosVertex, ProductosEdge,SolucionProductos>of()
+					.graph(graph)
+					.type(PDR.Type.Max)
+					.withGraph(true)
+					.build();
+					
 //			pdr.bestValue = ProductosHeuristic.entero(start,DatosProductos.NUM_PRODUCTOS);
 			GraphPath<ProductosVertex, ProductosEdge> r = pdr.search().get();
 			List<Integer> gp_pdr = r.getEdgeList().stream().map(x -> x.action())

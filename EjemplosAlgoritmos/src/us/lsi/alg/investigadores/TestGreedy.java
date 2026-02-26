@@ -4,7 +4,6 @@ import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestGreedy {
@@ -15,7 +14,6 @@ public class TestGreedy {
 		
 		EGraph<InvVertex, InvEdge> graph = EGraph.virtual(InvVertexI.first())
 				.pathType(PathType.Last)
-				.type(Type.Max)
 				.vertexWeight(v->v.fo().doubleValue())
 				.heuristic(InvHeuristic::heuristic).build();
 	

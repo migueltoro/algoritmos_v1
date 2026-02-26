@@ -6,9 +6,9 @@ import java.util.Locale;
 import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestBT {
@@ -21,7 +21,6 @@ public class TestBT {
 		EGraph<PackVertex,PackEdge> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Sum)
-				.type(Type.Min)
 				.vertexWeight(v->(double)v.nc())
 				.edgeWeight(e->e.weight())
 				.heuristic(Heuristica::heuristic)
@@ -38,11 +37,13 @@ public class TestBT {
 		System.out.println("Valor voraz = "+nc);
 		System.out.println("Heuristica = "+Heuristica.heuristic(e1, v->v.goal(), null));
 		
-		BT<PackVertex, PackEdge,SolucionPack> ms = BT.of(
-				graph,
-				SolucionPack::of,
-				(double) nc,
-				path, false);	
+		BT<PackVertex, PackEdge,SolucionPack> ms = 
+				BTBuilder.<PackVertex, PackEdge,SolucionPack>of()
+				.graph(graph)
+				.type(BT.Type.Min)
+				.bestValue(path.getWeight())
+				.optimalPath(path)
+				.build();
 		
 		System.out.println(String.format("Volumen contenedor = %d,Numero de Objetos = %d",
 				Data.volumenContenedor,Data.n));

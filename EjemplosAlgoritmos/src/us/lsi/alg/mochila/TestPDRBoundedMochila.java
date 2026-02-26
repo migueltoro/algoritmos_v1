@@ -15,8 +15,8 @@ import us.lsi.colors.GraphColors.Color;
 import us.lsi.colors.GraphColors.Style;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.alg.PDRB;
+import us.lsi.graphs.alg.PDRBBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.mochila.datos.DatosMochila;
 import us.lsi.path.EGraphPath.PathType;
 
@@ -32,7 +32,6 @@ public class TestPDRBoundedMochila {
 		EGraph<MochilaVertex, MochilaEdge> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.heuristic(MochilaHeuristic::heuristic1)
 				.build();	
 		
@@ -44,8 +43,13 @@ public class TestPDRBoundedMochila {
 		System.out.println("1 = "+bv);
 		
 		PDRB<MochilaVertex, MochilaEdge, SolucionMochila> ms = 
-				PDRB.of(graph,null,bv,path,true);
-		
+				PDRBBuilder.<MochilaVertex, MochilaEdge,SolucionMochila>of()
+				.graph(graph)
+				.type(PDRB.Type.Max)
+				.bestValue(path.getWeight())
+				.optimalPath(path)
+				.withGraph(true)
+				.build();
 		
 		Optional<GraphPath<MochilaVertex, MochilaEdge>>  sp = ms.search();
 		GraphPath<MochilaVertex, MochilaEdge> s1 = sp.get();

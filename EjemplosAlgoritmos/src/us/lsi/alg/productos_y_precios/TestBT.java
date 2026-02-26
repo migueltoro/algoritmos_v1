@@ -7,9 +7,11 @@ import java.util.function.Predicate;
 
 import org.jgrapht.GraphPath;
 
+
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.virtual.EGraph;
 
 public class TestBT {
@@ -39,7 +41,13 @@ public class TestBT {
 
 			// Algoritmo BT
 			BT<ProductosVertex, ProductosEdge,SolucionProductos> bta = 
-					BT.of(graph,SolucionProductos::of,path.getWeight(),path,true);
+					BTBuilder.<ProductosVertex, ProductosEdge,SolucionProductos>of()
+					.graph(graph)
+					.bestValue(path.getWeight())
+					.optimalPath(path)
+					.type(BT.Type.Max)
+					.withGraph(true)
+					.build();
 			
 //			GraphPath<ProductosVertex, ProductosEdge> gp = bta.optimalPath!=null?bta.optimalPath:path;
 			

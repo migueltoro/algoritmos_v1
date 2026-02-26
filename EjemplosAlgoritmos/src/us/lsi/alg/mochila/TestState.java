@@ -5,7 +5,6 @@ import java.util.Locale;
 import us.lsi.mochila.datos.DatosMochila;
 import us.lsi.path.EGraphPath.PathType;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.graphs.alg.BT.State;
 import us.lsi.graphs.alg.BT.StatePath;
 
@@ -22,7 +21,6 @@ public class TestState {
 		EGraph<MochilaVertex, MochilaEdge> graph = 
 				EGraph.virtual(v1)
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.heuristic(MochilaHeuristic::heuristic1)
 				.build();
 		

@@ -1,10 +1,9 @@
 package us.lsi.alg.festival;
 
 import org.jgrapht.GraphPath;
-
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestAStar {
@@ -16,13 +15,18 @@ public class TestAStar {
 		EGraph<FestivalVertex, FestivalEdge> graph = 
 				EGraph.virtual(v1)
 				.pathType(PathType.Sum)
-				.type(Type.Min)
 				.heuristic(Greedy::heuristic)
 				.build();		
 		GraphPath<FestivalVertex, FestivalEdge> path = Greedy.greedy(v1,graph);
 		System.out.println("G1 "+path.getWeight());
 		AStar<FestivalVertex,FestivalEdge,GraphPath<FestivalVertex, FestivalEdge>> ms = 
-				AStar.ofGreedy(graph);	
+				ASBuilder.<FestivalVertex,FestivalEdge,GraphPath<FestivalVertex, FestivalEdge>>of()
+				.graph(graph)
+				.type(AStar.Type.Min)
+				.bestValue(path.getWeight())
+				.optimalPath(path)
+				.build();
+				
 		GraphPath<FestivalVertex, FestivalEdge> gp = ms.search().get();
 		System.out.println("AS "+gp.getWeight());
 	}

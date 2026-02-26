@@ -1,10 +1,11 @@
 package us.lsi.alg.investigadores;
 
 import org.jgrapht.GraphPath;
+
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 
@@ -16,7 +17,6 @@ public class TestAStar {
 			
 			EGraph<InvVertex, InvEdge> graph = EGraph.virtual(InvVertexI.first())
 						.pathType(PathType.Last)
-						.type(Type.Max)
 						.vertexWeight(v->v.fo().doubleValue())
 						.heuristic(InvHeuristic::heuristic).build();
 			
@@ -24,7 +24,14 @@ public class TestAStar {
 			GraphPath<InvVertex, InvEdge> pgd = gd.path();
 			System.out.println(pgd.getEndVertex());
 			
-			AStar<InvVertex, InvEdge,SolucionInv> ms = AStar.of(graph,pgd.getWeight(),pgd);
+			AStar<InvVertex, InvEdge,SolucionInv> ms = 
+					ASBuilder.<InvVertex, InvEdge,SolucionInv>of()
+					.graph(graph)
+					.type(AStar.Type.Max)
+					.bestValue(pgd.getWeight())
+					.optimalPath(pgd)
+					.build();
+					
 			
 			GraphPath<InvVertex,InvEdge> path = ms.search().get();
 			SolucionInv s = SolucionInv.of(path);

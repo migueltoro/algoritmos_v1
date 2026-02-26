@@ -1,11 +1,10 @@
 package us.lsi.alg.investigadores;
 
 import org.jgrapht.GraphPath;
-
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestBT {
@@ -16,7 +15,6 @@ public class TestBT {
 		
 		EGraph<InvVertex, InvEdge> graph = EGraph.virtual(InvVertex.first())
 				.pathType(PathType.Last)
-				.type(Type.Max)
 				.vertexWeight(v->v.fo().doubleValue())
 				.heuristic(InvHeuristic::heuristic).build();
 		
@@ -24,7 +22,14 @@ public class TestBT {
 		GraphPath<InvVertex, InvEdge> pgd = gd.path();
 		System.out.println(pgd.getWeight());
 	
-		BT<InvVertex, InvEdge, Integer> ms = BT.of(graph,pgd.getWeight(),pgd);
+		BT<InvVertex, InvEdge,SolucionInv> ms = 
+				BTBuilder.<InvVertex, InvEdge,SolucionInv>of()
+				.graph(graph)
+				.type(BT.Type.Max)
+				.bestValue(pgd.getWeight())
+				.optimalPath(pgd)
+				.build();
+			
 		
 		GraphPath<InvVertex,InvEdge> path = ms.search().get();
 		SolucionInv s = SolucionInv.of(path);

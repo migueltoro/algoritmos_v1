@@ -8,7 +8,6 @@ import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestGreedy {
@@ -33,7 +32,6 @@ public class TestGreedy {
 			//		MonedaVertex e2 = MonedaVertex.last();
 			EGraph<MonedasVertex, MonedasEdge> graph = EGraph.virtual(e1)
 					.pathType(PathType.Sum)
-					.type(Type.Max)
 					.heuristic(MonedasHeuristica::heuristic)
 					.build();
 		
@@ -49,7 +47,6 @@ public class TestGreedy {
 			e1 = MonedasVertex.first(400+i);
 			graph = EGraph.virtual(e1)
 					.pathType(PathType.Sum)
-					.type(Type.Min)
 					.heuristic(MonedasHeuristica::heuristic)
 					.build();	
 			rr = GreedyOnGraph.of(graph, MonedasVertex::greedyEdge);

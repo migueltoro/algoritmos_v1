@@ -5,9 +5,9 @@ import java.util.Locale;
 
 import org.jgrapht.GraphPath;
 
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 
@@ -32,14 +32,16 @@ public class TestMainPuzzle {
 		EGraph<VertexPuzzle, EdgePuzzle> graph = 
 				EGraph.virtual(start)
 				.pathType(PathType.Sum)
-				.type(Type.Min)
 				.edgeWeight(x->x.weight())
 				.endVertex(VertexPuzzleI.end)
 				.heuristic(HeuristicaPuzzle::heuristica)
 				.build();		
 		
 		AStar<VertexPuzzle, EdgePuzzle,?> ms = 
-				AStar.ofGreedy(graph);
+				ASBuilder.<VertexPuzzle, EdgePuzzle,VertexPuzzle>of()
+				.graph(graph)
+				.type(AStar.Type.Min)
+				.build();
 		
 		GraphPath<VertexPuzzle,EdgePuzzle> path = ms.search().orElse(null);
 		List<VertexPuzzle> vertices = path.getVertexList();

@@ -14,9 +14,9 @@ import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
 import us.lsi.colors.GraphColors.Style;
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.mochila.datos.DatosMochila;
 import us.lsi.path.EGraphPath.PathType;
 
@@ -34,7 +34,6 @@ public class TestPDRMochila {
 		EGraph<MochilaVertex, MochilaEdge> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.heuristic(MochilaHeuristic::heuristic1)
 				.build();	
 		
@@ -45,8 +44,12 @@ public class TestPDRMochila {
 		
 		System.out.println("1 = "+bv);
 		
-		PDR<MochilaVertex, MochilaEdge, SolucionMochila> ms = 
-				PDR.of(graph,null,true);
+		PDR<MochilaVertex, MochilaEdge, SolucionMochila> ms = 				
+				PDRBuilder.<MochilaVertex, MochilaEdge,SolucionMochila>of()
+				.graph(graph)
+				.type(PDR.Type.Max)
+				.withGraph(true)
+				.build();
 		
 		
 		Optional<GraphPath<MochilaVertex, MochilaEdge>>  sp = ms.search();

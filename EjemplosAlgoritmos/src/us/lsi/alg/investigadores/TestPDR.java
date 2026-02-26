@@ -4,9 +4,9 @@ import org.jgrapht.GraphPath;
 
 
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestPDR {
@@ -17,7 +17,6 @@ public class TestPDR {
 		
 		EGraph<InvVertex, InvEdge> graph = EGraph.virtual(InvVertexI.first())
 				.pathType(PathType.Last)
-				.type(Type.Max)
 				.vertexWeight(v->v.fo().doubleValue())
 				.heuristic(InvHeuristic::heuristic).build();
 		
@@ -25,7 +24,11 @@ public class TestPDR {
 		GraphPath<InvVertex, InvEdge> pgd = gd.path();
 		System.out.println(pgd.getEndVertex().fo());
 	
-		PDR<InvVertex, InvEdge, Object> ms = PDR.of(graph);
+		PDR<InvVertex, InvEdge, SolucionInv> ms = 
+				PDRBuilder.<InvVertex, InvEdge,SolucionInv>of()
+				.graph(graph)
+				.type(PDR.Type.Max)
+				.build();
 		
 		GraphPath<InvVertex,InvEdge> path = ms.search().get();
 		SolucionInv s = SolucionInv.of(path);

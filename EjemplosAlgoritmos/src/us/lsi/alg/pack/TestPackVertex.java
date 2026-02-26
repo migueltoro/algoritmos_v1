@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestPackVertex {
@@ -18,7 +17,6 @@ public class TestPackVertex {
 		EGraph<PackVertex,PackEdge> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Sum)
-				.type(Type.Min)
 				.vertexWeight(v->(double)v.nc())
 				.edgeWeight(e->e.weight())
 				.heuristic(Heuristica::heuristic)

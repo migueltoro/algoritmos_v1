@@ -5,12 +5,12 @@ import java.util.Locale;
 
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.SimpleDirectedGraph;
-
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
+import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.mochila.datos.DatosMochila;
 import us.lsi.path.EGraphPath.PathType;
 
@@ -29,18 +29,24 @@ public class TestAStarMochila {
 		EGraph<MochilaVertex, MochilaEdge> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.heuristic(MochilaHeuristic::heuristic1)
 				.build();
 		
 		
-//		GreedyOnGraph<MochilaVertex, MochilaEdge> rr = GreedyOnGraph.of(graph);
+		GreedyOnGraph<MochilaVertex, MochilaEdge> rr = GreedyOnGraph.of(graph);
 		
-//		GraphPath<MochilaVertex, MochilaEdge> gp = rr.path();
+		GraphPath<MochilaVertex, MochilaEdge> gp = rr.path();
 		
-//		System.out.println(gp.getWeight());
+		System.out.println(gp.getWeight());
 	
-		AStar<MochilaVertex, MochilaEdge,SolucionMochila> ms = AStar.ofGreedy(graph);
+		AStar<MochilaVertex, MochilaEdge,SolucionMochila> ms = 
+				ASBuilder.<MochilaVertex, MochilaEdge,SolucionMochila>of()
+				.graph(graph)
+				.type(AStar.Type.Max)
+				.bestValue(gp.getWeight())
+				.optimalPath(gp)
+				.build();
+				
 		
 		GraphPath<MochilaVertex, MochilaEdge> path = ms.search().get();
 		SolucionMochila s = MochilaVertex.getSolucion(path);

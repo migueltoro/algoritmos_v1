@@ -12,9 +12,9 @@ import org.jgrapht.graph.SimpleDirectedGraph;
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestMonedasBT {
@@ -29,7 +29,6 @@ public class TestMonedasBT {
 		EGraph<MonedasVertex, MonedasEdge> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.heuristic(MonedasHeuristica::heuristic)
 				.build();
 
@@ -41,9 +40,19 @@ public class TestMonedasBT {
 
 		if (rr.isSolution(path1)) {
 			System.out.println("Hay solucion voraz 1"+path1.getWeight());
-			ms1 = BT.of(graph,SolucionMonedas::of,path1.getWeight(),path1,true);
+			ms1 = BTBuilder.<MonedasVertex, MonedasEdge, SolucionMonedas>of()
+					.graph(graph)
+					.type(BT.Type.Max)
+					.bestValue(path1.getWeight())
+					.optimalPath(path1)
+					.withGraph(true)
+					.build();
 		} else {
-			ms1 = BT.of(graph,SolucionMonedas::of,null,null,true);
+			ms1 = BTBuilder.<MonedasVertex, MonedasEdge, SolucionMonedas>of()
+					.graph(graph)
+					.type(BT.Type.Max)
+					.withGraph(true)
+					.build();
 		}
 		
 		ms1.search();
@@ -67,7 +76,6 @@ public class TestMonedasBT {
 
 		graph = EGraph.virtual(e3)
 				.pathType(PathType.Sum)
-				.type(Type.Min)
 				.heuristic(MonedasHeuristica::heuristic)
 				.build();
 
@@ -77,9 +85,19 @@ public class TestMonedasBT {
 
 		if (rr.isSolution(path1)) {
 			System.out.println("Hay solucion voraz 1"+path1.getWeight());
-			ms1 = BT.of(graph,SolucionMonedas::of,path2.getWeight(),path2,true);
+			ms1 = BTBuilder.<MonedasVertex, MonedasEdge, SolucionMonedas>of()
+					.graph(graph)
+					.type(BT.Type.Min)
+					.bestValue(path2.getWeight())
+					.optimalPath(path2)
+					.withGraph(true)
+					.build();
 		} else {
-			ms1 = BT.of(graph,SolucionMonedas::of,null,null,true);
+			ms1 = BTBuilder.<MonedasVertex, MonedasEdge, SolucionMonedas>of()
+					.graph(graph)
+					.type(BT.Type.Min)
+					.withGraph(true)
+					.build();
 		}
 		
 		Optional<GraphPath<MonedasVertex, MonedasEdge>> gp = ms1.search();
