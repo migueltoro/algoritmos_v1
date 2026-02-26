@@ -9,7 +9,9 @@ import org.jgrapht.GraphPath;
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
+import us.lsi.graphs.alg.BT.Type;
 import us.lsi.graphs.virtual.EGraph;
 
 public class TestBT {
@@ -53,9 +55,20 @@ public class TestBT {
 				System.out.println("Sv = "+sv);
 			}
 			if(gp.isPresent()) 
-				bta = BT.of(graph,SolucionSubconjuntos::of,gp.get().getWeight(),gp.get(),true);
+				bta = BTBuilder.<SubconjuntosVertex,SubconjuntosEdge,SolucionSubconjuntos>of()
+						.graph(graph)
+						.type(Type.Min)
+						.bestValue(gp.get().getWeight())
+						.optimalPath(gp.get())
+						.withGraph(true)
+						.fsolution(SolucionSubconjuntos::of)
+						.build();
 			else 
-				bta = BT.of(graph, null, null, null, true);
+				bta = BTBuilder.<SubconjuntosVertex,SubconjuntosEdge,SolucionSubconjuntos>of()
+						.graph(graph)
+						.type(Type.Min)
+						.withGraph(true)
+						.build();
 			bta.search();
 			
 			sv = SolucionSubconjuntos.of(bta.optimalPath().orElse(null));

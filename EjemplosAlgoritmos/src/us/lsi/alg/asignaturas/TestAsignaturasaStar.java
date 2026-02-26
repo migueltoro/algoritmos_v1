@@ -5,11 +5,13 @@ import java.util.Locale;
 import java.util.Optional;
 import org.jgrapht.GraphPath;
 
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 
@@ -27,12 +29,15 @@ public class TestAsignaturasaStar {
 		EGraph<AsignaturasVertice,AsignaturasEdge> grafo = 
 				EGraph.<AsignaturasVertice,AsignaturasEdge>virtual(v0)
 				.pathType(PathType.Last)
-				.type(Type.Max)
 				.vertexWeight(v->(double)v.getPeso())
 				.heuristic(Heuristica::heuristic)
 				.build();
 		
-		AStar<AsignaturasVertice, AsignaturasEdge, SolucionAsignaturas> as = AStar.ofGreedy(grafo);
+		AStar<AsignaturasVertice, AsignaturasEdge, SolucionAsignaturas> as = 
+				ASBuilder.<AsignaturasVertice,AsignaturasEdge,SolucionAsignaturas>of()
+				.graph(grafo)
+				.type(AStar.Type.Max)
+				.build();
 		
 		GraphPath<AsignaturasVertice, AsignaturasEdge> s1 = as.search().get();
 		
@@ -41,7 +46,12 @@ public class TestAsignaturasaStar {
 		System.out.println("___________________");
 
 		PDR<AsignaturasVertice,AsignaturasEdge,SolucionAsignaturas> pd = 
-				PDR.of(grafo);
+				PDRBuilder.<AsignaturasVertice,AsignaturasEdge,SolucionAsignaturas>of()
+				.graph(grafo)
+				.type(PDR.Type.Max)
+				.withGraph(true)
+				.fsolution(SolucionAsignaturas::of)
+				.build();
 
 		
 		GraphPath<AsignaturasVertice, AsignaturasEdge> s2 = pd.search().get();
@@ -50,8 +60,12 @@ public class TestAsignaturasaStar {
 		
 		System.out.println("___________________");
 
-		BT<AsignaturasVertice, AsignaturasEdge,SolucionAsignaturas> bt = BT.ofGreedy(
-				grafo);
+		BT<AsignaturasVertice, AsignaturasEdge,SolucionAsignaturas> bt = 
+				BTBuilder.<AsignaturasVertice,AsignaturasEdge,SolucionAsignaturas>of()
+				.graph(grafo)
+				.type(BT.Type.Max)
+				.build();
+		
 		Optional<GraphPath<AsignaturasVertice, AsignaturasEdge>> gp = bt.search();
 		System.out.println(SolucionAsignaturas.of(gp.get()));
 		System.out.println("___________________");

@@ -8,8 +8,9 @@ import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDR.Type;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestPD {
@@ -22,7 +23,6 @@ public class TestPD {
 		EGraph<AlumnosVertex, AlumnosEdge> graph = //(AlumnosVertex v_inicial, Predicate<AlumnosVertex> es_terminal) { 
 			EGraph.virtual(vInicial)
 					.pathType(PathType.Sum)
-					.type(Type.Max)
 					.heuristic(AlumnosHeuristic::heuristic)
 					.build();
 
@@ -30,8 +30,11 @@ public class TestPD {
 		GraphPath<AlumnosVertex, AlumnosEdge> path = alg_voraz.path();
 		path = alg_voraz.isSolution(path)? path: null;
 
-		PDR<AlumnosVertex,AlumnosEdge,SolucionAlumnos> alg_pdr = path==null? PDR.of(graph):
-			PDR.of(graph, null, true);
+		PDR<AlumnosVertex, AlumnosEdge, SolucionAlumnos> alg_pdr = 
+		   PDRBuilder.<AlumnosVertex, AlumnosEdge, SolucionAlumnos>of()
+			.graph(graph)
+			.type(Type.Max)
+			.build();
 		
 		var res = alg_pdr.search().orElse(null);
 		var outGraph = alg_pdr.outGraph();

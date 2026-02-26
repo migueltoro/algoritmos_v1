@@ -4,10 +4,9 @@ import java.util.Locale;
 import java.util.Optional;
 
 import org.jgrapht.GraphPath;
-
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestPD {
@@ -30,7 +29,6 @@ public class TestPD {
 			
 			EGraph<VertexCandidatos, EdgeCandidatos> graph = EGraph.virtual(start)
 					.pathType(PathType.Sum)
-					.type(Type.Max)
 					.edgeWeight(x -> x.weight())
 					.heuristic(CandidatosHeuristic::heuristic)
 					.build();
@@ -39,7 +37,10 @@ public class TestPD {
 
 			// Algoritmo PD
 			PDR<VertexCandidatos, EdgeCandidatos, SolucionCandidatos> pdr = 
-					PDR.of(graph);
+					PDRBuilder.<VertexCandidatos,EdgeCandidatos,SolucionCandidatos>of()
+					.graph(graph)
+					.type(PDR.Type.Max)
+					.build();
 			/*
 			pdr.bestValue = SubconjuntoHeuristic.voraz(start,DatosSubconjunto.getNumSubconjuntos());
 			System.out.println("Best = "+pdr.bestValue);

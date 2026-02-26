@@ -5,7 +5,6 @@ import java.util.Locale;
 import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestVoraz {
@@ -27,7 +26,6 @@ public class TestVoraz {
 			EGraph<VertexContenedores, EdgeContenedores> graph = 
 					EGraph.virtual(start)
 					.pathType(PathType.Last)
-					.type(Type.Max)
 					.vertexWeight(x -> (double)x.contenedoresCompletos().size())
 					.heuristic(ContenedoresHeuristic::heuristic)
 					.build();
@@ -41,7 +39,6 @@ public class TestVoraz {
 			
 			graph = EGraph.virtual(start.neighbor(start.greedyAction()))
 					.pathType(PathType.Last)
-					.type(Type.Max)
 					.vertexWeight(x -> (double)x.contenedoresCompletos().size())
 					.heuristic(ContenedoresHeuristic::heuristic)
 					.build();

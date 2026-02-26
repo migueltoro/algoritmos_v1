@@ -6,7 +6,6 @@ import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestGreedy {
@@ -19,8 +18,6 @@ public class TestGreedy {
 		EGraph<CursosVertex, CursosEdge> graph = 
 				EGraph.virtual(CursosVertexI.first())
 				.pathType(PathType.Sum)
-				.type(Type.Min)
-				.heuristic(CursosHeuristic::heuristic)
 				.build();
 		
 		System.out.println(CursosVertexI.first());

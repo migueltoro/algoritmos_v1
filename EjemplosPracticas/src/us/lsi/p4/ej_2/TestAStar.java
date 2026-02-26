@@ -3,7 +3,10 @@ package us.lsi.p4.ej_2;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
+import us.lsi.graphs.alg.AStar.Type;
 import us.lsi.graphs.virtual.EGraph;
 
 public class TestAStar {
@@ -21,7 +24,7 @@ public class TestAStar {
 
 		// V�rtices clave
 
-		SubconjuntosVertex start = SubconjuntosVertexI.initial();
+		SubconjuntosVertex start = SubconjuntosVertex.initial();
 
 		// Grafo
 		
@@ -33,7 +36,11 @@ public class TestAStar {
 
 		System.out.println("\n\n#### Ej3 Algoritmo Astar ####");
 		
-		AStar<SubconjuntosVertex, SubconjuntosEdge,?> aStar = AStar.ofGreedy(graph);
+		AStar<SubconjuntosVertex, SubconjuntosEdge,?> aStar = 
+				ASBuilder.<SubconjuntosVertex,SubconjuntosEdge,Integer>of()
+				.graph(graph)
+				.type(Type.Min)
+				.build();
 		
 		List<Integer> gp_as = aStar.search().get().getEdgeList().stream().map(x -> x.action())
 				.collect(Collectors.toList()); // getEdgeList();

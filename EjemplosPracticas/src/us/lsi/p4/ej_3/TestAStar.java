@@ -2,15 +2,17 @@ package us.lsi.p4.ej_3;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.jgrapht.GraphPath;
 
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
+import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestAStar {
@@ -35,12 +37,20 @@ public class TestAStar {
 		EGraph<AlumnosVertex, AlumnosEdge> graph =
 					EGraph.virtual(start)
 					.pathType(PathType.Sum)
-					.type(Type.Max)
 					.edgeWeight(x -> x.weight())
 					.heuristic(AlumnosHeuristic::heuristic)
 					.build();
 					
-		AStar<AlumnosVertex, AlumnosEdge,?> aStar = AStar.ofGreedy(graph);
+		GreedyOnGraph<AlumnosVertex, AlumnosEdge> gd = GreedyOnGraph.of(graph);
+		
+		Optional<GraphPath<AlumnosVertex, AlumnosEdge>> gdp = gd.search();
+		
+		AStar<AlumnosVertex, AlumnosEdge,Integer> aStar = 
+				ASBuilder.<AlumnosVertex,AlumnosEdge,Integer>of()
+				.graph(graph)
+				.bestValue(gdp.get().getWeight())
+				.optimalPath(gdp.get())
+				.build();
 			
 		GraphPath<AlumnosVertex, AlumnosEdge> gp = aStar.search().get();
 			

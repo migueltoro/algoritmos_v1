@@ -3,12 +3,10 @@ package us.lsi.alg.cursos;
 import java.util.Locale;
 
 import org.jgrapht.GraphPath;
-
-
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestBT {
@@ -21,7 +19,6 @@ public class TestBT {
 		EGraph<CursosVertex, CursosEdge> graph = 
 				EGraph.virtual(CursosVertex.first())
 				.pathType(PathType.Sum)
-				.type(Type.Min)
 				.heuristic(CursosHeuristic::heuristic)
 				.build();
 		
@@ -32,7 +29,11 @@ public class TestBT {
 		
 		System.out.println("_________________________________");
 		
-		BT<CursosVertex, CursosEdge, Integer> bt = BT.of(graph,path.getWeight(),path);
+		BT<CursosVertex, CursosEdge, SolucionCursos> bt = 
+				BTBuilder.<CursosVertex,CursosEdge,SolucionCursos>of()
+				.graph(graph)
+				.type(BT.Type.Min)
+				.build();
 		
 		GraphPath<CursosVertex,CursosEdge> btp = bt.search().get();
 		SolucionCursos s = SolucionCursos.of(btp);

@@ -7,9 +7,9 @@ import java.util.Optional;
 import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestPD {
@@ -32,7 +32,6 @@ public class TestPD {
 			
 			EGraph<BufeteVertex, BufeteEdge> graph = EGraph.virtual(start)
 					.pathType(PathType.Last)
-					.type(Type.Min)
 					.vertexWeight(v -> (double) v.maxCarga())
 					.heuristic(Heuristica::heuristic)
 					.build();
@@ -48,9 +47,10 @@ public class TestPD {
 			
 			// Algoritmo PD
 			PDR<BufeteVertex, BufeteEdge, SolucionBufete> pdr = 
-					PDR.of(graph,
-					SolucionBufete::of,
-					false);
+					PDRBuilder.<BufeteVertex,BufeteEdge,SolucionBufete>of()
+					.graph(graph)
+					.type(PDR.Type.Min)
+					.build();
 
 			Optional<GraphPath<BufeteVertex, BufeteEdge>> gp_pdr = pdr.search(); // getEdgeList();
 			if (gp_pdr.isPresent()) {

@@ -5,9 +5,9 @@ import java.util.Locale;
 
 import org.jgrapht.GraphPath;
 
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestAStar {
@@ -28,7 +28,6 @@ public class TestAStar {
 			 */
 			EGraph<BufeteVertex, BufeteEdge> graph = EGraph.virtual(start)
 					.pathType(PathType.Last)
-					.type(Type.Min)
 					.vertexWeight(v -> (double) v.maxCarga())
 					.heuristic(Heuristica::heuristic)
 					.build();
@@ -37,7 +36,12 @@ public class TestAStar {
 
 			// Algoritmo A*
 
-			AStar<BufeteVertex, BufeteEdge, SolucionBufete> aStar = AStar.ofGreedy(graph);
+			AStar<BufeteVertex, BufeteEdge, SolucionBufete> aStar = 
+					ASBuilder.<BufeteVertex,BufeteEdge,SolucionBufete>of()
+					.graph(graph)
+					.type(AStar.Type.Min)
+					.build();
+
 			GraphPath<BufeteVertex, BufeteEdge> gp_as = aStar.search().get(); // getEdgeList();
 			
 			SolucionBufete s_as = SolucionBufete.of(gp_as);

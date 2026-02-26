@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestBT {
@@ -33,7 +33,6 @@ public class TestBT {
 			EGraph<VertexContenedores, EdgeContenedores> graph = 
 					EGraph.virtual(start)
 					.pathType(PathType.Last)
-					.type(Type.Max)
 					.vertexWeight(x -> (double)x.contenedoresCompletos().size())
 					.heuristic(ContenedoresHeuristic::heuristic)
 					.build();
@@ -48,8 +47,10 @@ public class TestBT {
 			System.out.println("Heuristica ="+ContenedoresHeuristic.heuristic(start,v->v.goal(), null));
 			// Algoritmo BT
 			BT<VertexContenedores, EdgeContenedores, SolucionContenedores> bta = 
-					BT.ofGreedy(graph);
-			
+					BTBuilder.<VertexContenedores,EdgeContenedores,SolucionContenedores>of()
+					.graph(graph)
+					.type(BT.Type.Max)
+					.build();			
 
 			Optional<GraphPath<VertexContenedores, EdgeContenedores>> gp = bta.search();
 			

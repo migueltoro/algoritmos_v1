@@ -9,7 +9,6 @@ import org.jgrapht.GraphPath;
 import org.jgrapht.graph.GraphWalk;
 
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class Greedy {
@@ -77,7 +76,6 @@ public class Greedy {
 		EGraph<FestivalVertex, FestivalEdge> graph = 
 				EGraph.virtual(v1)
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.build();
 		
 		GraphPath<FestivalVertex, FestivalEdge> gpm = greedy(v1,graph);

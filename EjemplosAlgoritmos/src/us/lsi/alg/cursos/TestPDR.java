@@ -3,11 +3,10 @@ package us.lsi.alg.cursos;
 import java.util.Locale;
 
 import org.jgrapht.GraphPath;
-
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestPDR {
@@ -21,7 +20,6 @@ Locale.setDefault(Locale.of("en", "US"));
 		EGraph<CursosVertex, CursosEdge> graph = 
 				EGraph.virtual(CursosVertex.first())
 				.pathType(PathType.Sum)
-				.type(Type.Min)
 				.heuristic(CursosHeuristic::heuristic)
 				.build();
 		
@@ -32,7 +30,11 @@ Locale.setDefault(Locale.of("en", "US"));
 		
 		System.out.println("_________________________________");
 		
-		PDR<CursosVertex, CursosEdge, SolucionCursos> pdr = PDR.of(graph);
+		PDR<CursosVertex, CursosEdge, SolucionCursos> pdr = 
+				PDRBuilder.<CursosVertex,CursosEdge,SolucionCursos>of()
+				.graph(graph)
+				.type(PDR.Type.Min)
+				.build();
 		
 		GraphPath<CursosVertex,CursosEdge> gp = pdr.search().get();
 		SolucionCursos s = SolucionCursos.of(gp);

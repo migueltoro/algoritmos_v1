@@ -10,8 +10,9 @@ import org.jgrapht.GraphPath;
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
+import us.lsi.graphs.alg.PDR.Type;
 import us.lsi.graphs.virtual.EGraph;
-
 import us.lsi.graphs.alg.GreedyOnGraph;
 
 
@@ -59,9 +60,19 @@ public class TestPD {
 					System.out.println("Sv = "+sv);
 				}
 				if(gpv.isPresent()) 
-					pdr = PDR.of(graph,SolucionSubconjuntos::of,true);
+					pdr = PDRBuilder.<SubconjuntosVertex,SubconjuntosEdge,SolucionSubconjuntos>of()
+							.graph(graph)
+							.type(Type.Min)
+							.withGraph(true)
+							.fsolution(SolucionSubconjuntos::of)
+							.build();
 				else 
-					pdr = PDR.of(graph, null, true);
+					pdr = PDRBuilder.<SubconjuntosVertex,SubconjuntosEdge,SolucionSubconjuntos>of()
+							.graph(graph)
+							.type(Type.Min)
+							.withGraph(true)
+							.fsolution(SolucionSubconjuntos::of)
+							.build();
 				
 				Optional<GraphPath<SubconjuntosVertex, SubconjuntosEdge>> gp = pdr.search();
 				List<SubconjuntosEdge> le = lev;

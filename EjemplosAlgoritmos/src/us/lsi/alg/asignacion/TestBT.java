@@ -5,9 +5,10 @@ import java.util.Locale;
 import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
+import us.lsi.graphs.alg.BT.Type;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestBT {
@@ -19,7 +20,6 @@ public class TestBT {
 		
 		EGraph<AsignacionVertex, AsignacionEdge> graph = EGraph.virtual(v0)
 				.pathType(PathType.Sum)
-				.type(Type.Min)
 				.heuristic(Heuristica::heuristic)
 				.build();
 		
@@ -34,10 +34,14 @@ public class TestBT {
 		System.out.println("\n\n#### Algoritmo BT ####");
 
 		BT<AsignacionVertex, AsignacionEdge, AsignacionSolucion> bt = 
-				BT.of(graph, AsignacionSolucion::of, 
-						path.getWeight(),
-						path,
-						false);
+				BTBuilder.<AsignacionVertex,AsignacionEdge,AsignacionSolucion>of()
+				.graph(graph)
+				.type(Type.Min)
+				.bestValue(path.getWeight())
+				.optimalPath(path)
+				.withGraph(true)
+				.fsolution(AsignacionSolucion::of)
+				.build();
 
 		GraphPath<AsignacionVertex, AsignacionEdge> s = bt.search().get();
 

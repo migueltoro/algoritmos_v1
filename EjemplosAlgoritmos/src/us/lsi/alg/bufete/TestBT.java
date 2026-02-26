@@ -4,11 +4,10 @@ import java.util.Locale;
 import java.util.Optional;
 
 import org.jgrapht.GraphPath;
-
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestBT {
@@ -33,7 +32,6 @@ public class TestBT {
 			
 			EGraph<BufeteVertex, BufeteEdge> graph = EGraph.virtual(start)
 					.pathType(PathType.Last)
-					.type(Type.Min)
 					.vertexWeight(v -> (double) v.maxCarga())
 					.heuristic(Heuristica::heuristic)
 					.build();
@@ -47,11 +45,13 @@ public class TestBT {
 			System.out.println(bv);
 			
 			// Algoritmo BT
-			BT<BufeteVertex, BufeteEdge, SolucionBufete> bta = BT.of(graph, 
-					SolucionBufete::of, 
-					path.getWeight(),
-					path,
-					false);
+			BT<BufeteVertex, BufeteEdge, SolucionBufete> bta = 
+					BTBuilder.<BufeteVertex,BufeteEdge,SolucionBufete>of()
+					.graph(graph)
+					.bestValue(bv)
+					.optimalPath(path)
+					.type(BT.Type.Min)
+					.build();
 
 			
 			Optional<GraphPath<BufeteVertex, BufeteEdge>> gp = bta.search();

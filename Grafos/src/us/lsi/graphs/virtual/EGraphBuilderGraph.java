@@ -24,7 +24,6 @@ public class EGraphBuilderGraph<G extends Graph<V,E>, V, E> implements EGraphBui
 	Function<V,E> greedyEdge = v -> this.graph.edgesOf(v).isEmpty() ? null : 
 		List2.randomUnitary(this.graph.edgesOf(v)).get(0);
 	TriFunction<V, Predicate<V>, V, Double> heuristic = (v1,p,v2) -> 0.;
-	Integer solutionNumber = 1;
 	
 	public EGraphBuilderGraph(G graph) {
 		super();
@@ -67,6 +66,12 @@ public class EGraphBuilderGraph<G extends Graph<V,E>, V, E> implements EGraphBui
 	@Override
 	public EGraphBuilder<V, E> startVertex(V startVertex) {
 		this.startVertex = startVertex;
+		return this;
+	}
+	
+	@Override
+	public EGraphBuilder<V, E> goalVertex(Predicate<V> goal) {
+		this.goal = goal;
 		return this;
 	}
 	

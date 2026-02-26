@@ -6,9 +6,9 @@ import java.util.Optional;
 
 import org.jgrapht.GraphPath;
 
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
@@ -40,13 +40,16 @@ public class TestAStart {
 			// Algoritmo A*
 			EGraph<VertexCandidatos, EdgeCandidatos> graph = EGraph.virtual(start)
 					.pathType(PathType.Sum)
-					.type(Type.Max)
 					.edgeWeight(x -> x.weight())
 					.heuristic(CandidatosHeuristic::heuristic)
 					.build();
 			
 			
-			AStar<VertexCandidatos, EdgeCandidatos, SolucionCandidatos> aStar = AStar.ofGreedy(graph);
+			AStar<VertexCandidatos, EdgeCandidatos, SolucionCandidatos> aStar = 
+					ASBuilder.<VertexCandidatos,EdgeCandidatos,SolucionCandidatos>of()
+					.graph(graph)
+					.type(AStar.Type.Max)
+					.build();
 			
 			Optional<GraphPath<VertexCandidatos, EdgeCandidatos>> gp = aStar.search();
 

@@ -7,8 +7,8 @@ import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.alg.PDRB;
+import us.lsi.graphs.alg.PDRBBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestPDRB {
@@ -31,7 +31,6 @@ public class TestPDRB {
 			
 			EGraph<BufeteVertex, BufeteEdge> graph = EGraph.virtual(start)
 					.pathType(PathType.Last)
-					.type(Type.Min)
 					.vertexWeight(v -> (double) v.maxCarga())
 					.heuristic(Heuristica::heuristic)
 					.build();
@@ -47,7 +46,12 @@ public class TestPDRB {
 			
 			// Algoritmo PD
 			PDRB<BufeteVertex, BufeteEdge, SolucionBufete> pdr = 
-					PDRB.ofGreedy(graph);
+					PDRBBuilder.<BufeteVertex,BufeteEdge,SolucionBufete>of()
+					.graph(graph)
+					.type(PDRB.Type.Min)
+					.bestValue(bv)
+					.optimalPath(path)
+					.build();
 
 			Optional<GraphPath<BufeteVertex, BufeteEdge>> gp_pdr = pdr.search(); // getEdgeList();
 			if (gp_pdr.isPresent()) {

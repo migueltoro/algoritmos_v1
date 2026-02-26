@@ -4,10 +4,9 @@ import java.util.Locale;
 import java.util.Optional;
 
 import org.jgrapht.GraphPath;
-
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestBT {
@@ -32,7 +31,6 @@ public class TestBT {
 			
 			EGraph<VertexCandidatos, EdgeCandidatos> graph = EGraph.virtual(start)
 					.pathType(PathType.Sum)
-					.type(Type.Max)
 					.edgeWeight(x -> x.weight())
 					.heuristic(CandidatosHeuristic::heuristic)
 					.build();
@@ -40,7 +38,11 @@ public class TestBT {
 			System.out.println("\n\n#### PI-7 Ej3 Algoritmo BT ####");
 
 			// Algoritmo BT
-			BT<VertexCandidatos, EdgeCandidatos, SolucionCandidatos> bta = BT.ofGreedy(graph);
+			BT<VertexCandidatos, EdgeCandidatos, SolucionCandidatos> bta = 
+					BTBuilder.<VertexCandidatos,EdgeCandidatos,SolucionCandidatos>of()
+					.graph(graph)
+					.type(BT.Type.Max)
+					.build();
 /*
 			bta.withGraph = true;
 			bta.bestValue = SubconjuntoHeuristic.voraz(start,DatosSubconjunto.getNumSubconjuntos());

@@ -9,9 +9,10 @@ import org.jgrapht.GraphPath;
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
+import us.lsi.graphs.alg.BT.Type;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestBT {
@@ -25,18 +26,27 @@ public class TestBT {
 		EGraph<AlumnosVertex, AlumnosEdge> graph = //(AlumnosVertex v_inicial, Predicate<AlumnosVertex> es_terminal) { 
 			EGraph.virtual(vInicial)
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.heuristic(AlumnosHeuristic::heuristic)
 				.build();
 
 		GreedyOnGraph<AlumnosVertex, AlumnosEdge> alg_voraz = GreedyOnGraph.of(graph);		
 		GraphPath<AlumnosVertex, AlumnosEdge> path = alg_voraz.path();
-		path = alg_voraz.isSolution(path)? path: null;
 
-		path = null;
+		BT<AlumnosVertex, AlumnosEdge, SolucionAlumnos> alg_bt = null;
 		
-		BT<AlumnosVertex,AlumnosEdge,SolucionAlumnos>alg_bt = path==null? BT.of(graph):
-			BT.of(graph, null, path.getWeight(), path, true);
+		if (path != null) {
+			alg_bt = BTBuilder.<AlumnosVertex, AlumnosEdge, SolucionAlumnos>of()
+			.graph(graph)
+			.type(Type.Max)
+			.bestValue(path.getWeight())
+			.optimalPath(path)
+			.build();
+		} else {
+			BTBuilder.<AlumnosVertex, AlumnosEdge, SolucionAlumnos>of()
+			.graph(graph)
+			.type(Type.Max)
+			.build();
+		}
 		
 		var res = alg_bt.search().orElse(null);
 		var outGraph = alg_bt.outGraph();

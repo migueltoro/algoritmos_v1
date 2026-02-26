@@ -3,11 +3,10 @@ package us.lsi.alg.cursos;
 import java.util.Locale;
 
 import org.jgrapht.GraphPath;
-
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestAStar {
@@ -20,7 +19,6 @@ public class TestAStar {
 		EGraph<CursosVertex, CursosEdge> graph = 
 				EGraph.virtual(CursosVertex.first())
 				.pathType(PathType.Sum)
-				.type(Type.Min)
 				.heuristic(CursosHeuristic::heuristic)
 				.build();
 		
@@ -31,7 +29,12 @@ public class TestAStar {
 		
 		System.out.println("_________________________________");
 		
-		AStar<CursosVertex, CursosEdge,SolucionCursos> msa = AStar.of(graph,path.getWeight(),path);
+		AStar<CursosVertex, CursosEdge,SolucionCursos> msa = 
+				ASBuilder.<CursosVertex,CursosEdge,SolucionCursos>of()
+				.graph(graph)
+				.type(AStar.Type.Min)
+				.build();
+
 		
 		GraphPath<CursosVertex, CursosEdge> gp = msa.search().get();
 		SolucionCursos s = SolucionCursos.of(gp);

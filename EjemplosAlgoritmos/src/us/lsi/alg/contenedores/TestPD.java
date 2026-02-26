@@ -6,10 +6,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.jgrapht.GraphPath;
-
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestPD {
@@ -33,7 +32,6 @@ public class TestPD {
 			EGraph<VertexContenedores, EdgeContenedores> graph = 
 					EGraph.virtual(start)
 					.pathType(PathType.Last)
-					.type(Type.Max)
 					.vertexWeight(x -> (double)x.contenedoresCompletos().size())
 					.heuristic(ContenedoresHeuristic::heuristic)
 					.build();
@@ -51,8 +49,10 @@ public class TestPD {
 
 			// Algoritmo PD
 			PDR<VertexContenedores, EdgeContenedores, ?> pdr = 
-					PDR.of(graph);
-
+					PDRBuilder.<VertexContenedores,EdgeContenedores,SolucionContenedores>of()
+					.graph(graph)
+					.type(PDR.Type.Max)
+					.build();
 
 			Optional<GraphPath<VertexContenedores, EdgeContenedores>> gp = pdr.search();
 			SolucionContenedores s_pdr;

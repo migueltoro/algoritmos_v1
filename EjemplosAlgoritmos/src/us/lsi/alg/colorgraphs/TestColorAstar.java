@@ -2,12 +2,11 @@ package us.lsi.alg.colorgraphs;
 
 
 import org.jgrapht.GraphPath;
-
 import us.lsi.common.List2;
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestColorAstar {
@@ -22,7 +21,6 @@ public class TestColorAstar {
 		EGraph<ColorVertex, ColorEdge> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Last)
-				.type(Type.Min)
 				.vertexWeight(v->v.nc().doubleValue())
 				.heuristic((v1,p,v2)->(double) v1.nc())
 				.build();
@@ -32,7 +30,13 @@ public class TestColorAstar {
 		System.out.println("Voraz = "+m);
 		
 		Long p1 = System.nanoTime();
-		AStar<ColorVertex, ColorEdge,?> ms = AStar.ofGreedy(graph);
+		AStar<ColorVertex, ColorEdge,?> ms = 
+				ASBuilder.<ColorVertex,ColorEdge,SolucionColor>of()
+				.graph(graph)
+				.type(AStar.Type.Min)
+				.bestValue(p.getWeight())
+				.optimalPath(p)
+				.build();
 		
 		GraphPath<ColorVertex, ColorEdge> path = ms.search().get();
 		Long p2 = System.nanoTime();

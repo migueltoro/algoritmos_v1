@@ -5,15 +5,19 @@ import java.util.Optional;
 
 import org.jgrapht.GraphPath;
 
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class Tests {
+	
+	
 	public static void main(String[] args) {
 		Locale.setDefault(Locale.of("en", "US"));
 		
@@ -23,12 +27,12 @@ public class Tests {
 	}
 
 	private static void tests(String fichero) {
+		
 		DatosEquipo.iniDatos(fichero);
 		
 		EGraph<EquipoVertex, EquipoEdge> g = 
 				EGraph.virtual(EquipoVertex.first())
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.heuristic((v1,p,v2)->1000.)
 				.build();
 		
@@ -42,7 +46,10 @@ public class Tests {
 		System.out.println("======================== PDR ======================== ");
 //		GraphPath<EquipoVertex, EquipoEdge> gp = GreedyOnGraph.random(grafo).path();
 		PDR<EquipoVertex, EquipoEdge, ?> alg_pdr = 
-				PDR.of(grafo,null,false);
+			PDRBuilder.<EquipoVertex,EquipoEdge,SolucionEquipo>of()
+				.graph(grafo)
+				.type(PDR.Type.Max)
+				.build();
 		
 		Optional<GraphPath<EquipoVertex, EquipoEdge>> p = alg_pdr.search();
 		System.out.println(EquipoVertex.getSolucion(p.get()));
@@ -51,10 +58,14 @@ public class Tests {
 	private static void testBT(EGraph<EquipoVertex, EquipoEdge> grafo) {
 		System.out.println("======================== BT ======================== ");
 		GraphPath<EquipoVertex, EquipoEdge> gp = GreedyOnGraph.random(grafo).path();
-		BT<EquipoVertex, EquipoEdge,SolucionEquipo> alg_bt = BT.of(
-			grafo,
-			EquipoVertex::getSolucion,
-			gp.getWeight(),gp,false);
+		BT<EquipoVertex, EquipoEdge,SolucionEquipo> alg_bt = 
+				BTBuilder.<EquipoVertex,EquipoEdge,SolucionEquipo>of()
+				.graph(grafo)
+				.type(BT.Type.Max)
+				.bestValue(gp.getWeight())
+				.optimalPath(gp)
+				.build();
+			
 		Optional<GraphPath<EquipoVertex, EquipoEdge>> p = alg_bt.search();
 	    System.out.println(EquipoVertex.getSolucion(p.get()));
 	}
@@ -62,10 +73,14 @@ public class Tests {
 	private static void testAStar(EGraph<EquipoVertex, EquipoEdge> grafo) {
 		System.out.println("======================== A* ======================== ");
 		GraphPath<EquipoVertex, EquipoEdge> gp = GreedyOnGraph.random(grafo).path();
-		AStar<EquipoVertex, EquipoEdge,?> alg_star = AStar.of(
-			grafo,
-			null,
-			gp.getWeight(),gp);
+		AStar<EquipoVertex, EquipoEdge,?> alg_star = 
+				ASBuilder.<EquipoVertex,EquipoEdge,SolucionEquipo>of()
+				.graph(grafo)
+				.type(AStar.Type.Max)
+				.bestValue(gp.getWeight())
+				.optimalPath(gp)
+				.build();
+
 		Optional<GraphPath<EquipoVertex, EquipoEdge>> p = alg_star.search();
 		System.out.println(EquipoVertex.getSolucion(p.get()));
 	}

@@ -13,9 +13,10 @@ import us.lsi.grafos.datos.Carretera;
 import us.lsi.grafos.datos.Ciudad;
 import us.lsi.graphs.Graphs2;
 import us.lsi.graphs.GraphsReader;
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
+import us.lsi.graphs.alg.AStar.Type;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 
@@ -39,13 +40,22 @@ public class AStarTest {
 		
 		Ciudad start = ciudad(graph,"Sevilla");
 		Ciudad end = ciudad(graph,"Almeria");
-		
+
 		EGraph<Ciudad,Carretera> g = 
-				EGraph.ofGraph(graph,start,v->v.equals(end),PathType.Sum,Type.Min)
-				.edgeWeight(e->e.km()).build();
-		
+				EGraph.ofGraph(graph)
+				.startVertex(start)
+				.goalVertex(v->v.equals(end))
+				.endVertex(end)
+				.pathType(PathType.Sum)
+				.edgeWeight(x->x.km())
+				.build();
+					
 				
-		AStar<Ciudad, Carretera,?> ra = AStar.ofGreedy(g);
+		AStar<Ciudad, Carretera, ?> ra = 
+				ASBuilder.<Ciudad,Carretera,Integer>of()
+				.graph(g)
+				.type(Type.Min)
+				.build();
 		
 		List<Carretera> carreteras = ra.search().orElse(null).getEdgeList();
 		

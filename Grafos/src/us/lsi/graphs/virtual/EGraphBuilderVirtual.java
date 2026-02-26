@@ -10,7 +10,8 @@ public class EGraphBuilderVirtual<V extends VirtualVertex<V,E,?>, E extends Simp
 	implements EGraphBuilder<V, E> {
 	
 
-	V startVertex = null;	
+	V startVertex = null;
+	Predicate<V> goal = null;	
 	Function<E,Double> edgeWeight = e -> e.weight();
 	Function<V,Double> vertexWeight = e -> 0.;
 	TriFunction<V,E,E,Double> vertexPassWeight= (v,e1,e2)->0.;
@@ -53,6 +54,12 @@ public class EGraphBuilderVirtual<V extends VirtualVertex<V,E,?>, E extends Simp
 	}
 	public EGraphBuilderVirtual<V, E> endVertex(V endVertex) {
 		this.endVertex = endVertex;
+		return this;
+	}
+	
+	@Override
+	public EGraphBuilderVirtual<V, E> goalVertex(Predicate<V> goal) {
+		this.goal = goal;
 		return this;
 	}
 

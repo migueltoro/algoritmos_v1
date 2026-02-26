@@ -4,7 +4,6 @@ import java.util.Locale;
 
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestGreedyColor {
@@ -22,7 +21,6 @@ public class TestGreedyColor {
 		EGraph<ColorVertex, ColorEdge> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Last)
-				.type(Type.Min)
 				.vertexWeight(v->v.nc().doubleValue())
 				.build();
 		

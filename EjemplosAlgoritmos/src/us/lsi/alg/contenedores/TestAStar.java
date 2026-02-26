@@ -4,12 +4,11 @@ import java.util.Locale;
 import java.util.Optional;
 
 import org.jgrapht.GraphPath;
-
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestAStar {
@@ -38,12 +37,15 @@ public class TestAStar {
 			EGraph<VertexContenedores, EdgeContenedores> graph = 
 					EGraph.virtual(start)
 					.pathType(PathType.Last)
-					.type(Type.Max)
 					.vertexWeight(x -> (double)x.contenedoresCompletos().size())
 					.heuristic(ContenedoresHeuristic::heuristic)
 					.build();
 			
-			AStar<VertexContenedores, EdgeContenedores, ?> aStar = AStar.ofGreedy(graph);
+			AStar<VertexContenedores, EdgeContenedores,SolucionContenedores> aStar = 
+					ASBuilder.<VertexContenedores,EdgeContenedores,SolucionContenedores>of()
+					.graph(graph)
+					.type(AStar.Type.Max)
+					.build();
 			
 			Optional<GraphPath<VertexContenedores, EdgeContenedores>> gp = aStar.search();
 			
