@@ -17,7 +17,6 @@ import org.jgrapht.graph.DirectedMultigraph;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 import org.jgrapht.graph.SimpleDirectedGraph;
 
-
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
 import us.lsi.colors.GraphColors.Style;
@@ -25,11 +24,13 @@ import us.lsi.common.LocalDateTime2;
 import us.lsi.common.Pair;
 import us.lsi.graphs.Graphs2;
 import us.lsi.graphs.GraphsReader;
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestVuelos {
@@ -93,14 +94,19 @@ public class TestVuelos {
 		String end = "Malaga";
 		
 		EGraph<Pair<String,Integer>, Vuelo> gv = EGraph.ofGraph(gs,Pair.of("Sevilla",-1),
-						v->v.first().equals(end),PathType.Sum,Type.Min)
+						v->v.first().equals(end),PathType.Sum)
 				.edgeWeight(v->v.getDuracion().doubleValue())
 				.vertexPassWeight((v,e1,e2)-> getVertexPassWeight(v,e1,e2))
 				.heuristic((p1,v,p2)->0.)
 				.build();
 		
 		System.out.println("AStar");
-		AStar<Pair<String,Integer>,Vuelo,GraphPath<Pair<String,Integer>,Vuelo>> ms = AStar.of(gv,p->p,null,null);
+		AStar<Pair<String,Integer>,Vuelo,GraphPath<Pair<String,Integer>,Vuelo>> ms = 
+				ASBuilder.<Pair<String,Integer>,Vuelo,GraphPath<Pair<String,Integer>,Vuelo>>of()
+				.graph(gv)
+				.type(AStar.Type.Max)
+				.build();
+				
 		
 		GraphPath<Pair<String,Integer>,Vuelo> path = ms.search().orElse(null);
 		System.out.printf("Aeropuertos = %s\n",path.getVertexList());
@@ -108,7 +114,11 @@ public class TestVuelos {
 		System.out.printf("Tiempo de Recorrido = %.2f\n",path.getWeight());
 		System.out.println("__________________");
 		System.out.println("Backtracking");
-		BT<Pair<String,Integer>,Vuelo,GraphPath<Pair<String,Integer>,Vuelo>> bt = BT.of(gv);
+		BT<Pair<String,Integer>,Vuelo,GraphPath<Pair<String,Integer>,Vuelo>> bt = 
+				BTBuilder.<Pair<String,Integer>,Vuelo,GraphPath<Pair<String,Integer>,Vuelo>>of()
+				.graph(gv)
+				.type(BT.Type.Max)
+				.build();
 		
 		GraphPath<Pair<String,Integer>,Vuelo> btp = bt.search().orElse(null);
 		System.out.printf("Aeropuertos = %s\n",btp.getVertexList());
@@ -116,7 +126,11 @@ public class TestVuelos {
 		System.out.printf("Tiempo de Recorrido = %.2f\n",btp.getWeight());
 		System.out.println("__________________");
 		System.out.println("PDR");
-		PDR<Pair<String,Integer>,Vuelo,GraphPath<String,Vuelo>> pd = PDR.of(gv,null,true);
+		PDR<Pair<String,Integer>,Vuelo,GraphPath<String,Vuelo>> pd = 
+				PDRBuilder.<Pair<String,Integer>,Vuelo,GraphPath<String,Vuelo>>of()
+				.graph(gv)
+				.type(PDR.Type.Max)
+				.build();
 		
 		GraphPath<Pair<String,Integer>,Vuelo> pdp = pd.search().orElse(null);
 		System.out.printf("Aeropuertos = %s\n",pdp.getVertexList());

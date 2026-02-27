@@ -8,12 +8,12 @@ import org.jgrapht.GraphPath;
 
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.SimpleEdgeAction;
 import us.lsi.path.EGraphPath.PathType;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 
 public class TestAStarTyP {
 
@@ -26,7 +26,6 @@ public class TestAStarTyP {
 		EGraph<TyPVertex,SimpleEdgeAction<TyPVertex,Integer>> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Last)
-				.type(Type.Min)
 				.vertexWeight(v->v.maxCarga())
 				.heuristic(Heuristica::heuristic)
 				.build();	
@@ -38,11 +37,16 @@ public class TestAStarTyP {
 		System.out.println(bv);
 		
 		Long p1 = System.nanoTime();
-		AStar<TyPVertex,SimpleEdgeAction<TyPVertex, Integer>,SolucionTyP> ms = AStar.ofGreedy(graph);
+		AStar<TyPVertex,SimpleEdgeAction<TyPVertex, Integer>,SolucionTyP> ms = 
+				ASBuilder.<TyPVertex,SimpleEdgeAction<TyPVertex, Integer>,SolucionTyP>of()
+				.graph(graph)
+				.type(AStar.Type.Min)
+				.build();
 		
 //		ms.stream().forEach(v->System.out.println(v));
 		
-		Optional<GraphPath<TyPVertex, SimpleEdgeAction<TyPVertex, Integer>>> path = ms.search();
+		Optional<GraphPath<TyPVertex, SimpleEdgeAction<TyPVertex, Integer>>> path = 
+				ms.search();
 //		List<MochilaEdge> edges = path.getEdgeList();
 //		System.out.println(path);
 		Long p2 = System.nanoTime();

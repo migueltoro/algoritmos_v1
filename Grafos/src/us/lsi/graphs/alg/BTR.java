@@ -14,7 +14,8 @@ import us.lsi.math.Math2;
 public class BTR<V,E,S extends Comparable<S>> extends BT<V,E,S> {
 	
 	public static <V, E, S extends Comparable<S>> BTR<V, E, S> of(
-			EGraph<V, E> graph, Type type,
+			EGraph<V, E> graph, 
+			Type type,
 			Function<GraphPath<V, E>, S> solution, 
 			Function<V, Integer> size,
 			Integer threshold) {
@@ -22,7 +23,8 @@ public class BTR<V,E,S extends Comparable<S>> extends BT<V,E,S> {
 	}
 	
 
-	BTR(EGraph<V, E> graph, Type type,
+	BTR(EGraph<V, E> graph, 
+			Type type,
 			Function<GraphPath<V, E>, S> solution,
 			Function<V,Integer> size,
 			Integer threshold) {

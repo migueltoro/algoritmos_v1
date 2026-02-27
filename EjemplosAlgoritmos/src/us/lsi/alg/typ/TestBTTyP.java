@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.SimpleEdgeAction;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 import us.lsi.graphs.virtual.EGraph;
 
@@ -23,7 +23,6 @@ public class TestBTTyP {
 		EGraph<TyPVertex,SimpleEdgeAction<TyPVertex,Integer>> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Last)
-				.type(Type.Min)
 				.vertexWeight(v->v.maxCarga())
 				.heuristic(Heuristica::heuristic)
 				.build();
@@ -35,7 +34,11 @@ public class TestBTTyP {
 		System.out.println(bv);
 		
 		Long p1 = System.nanoTime();
-		BT<TyPVertex, SimpleEdgeAction<TyPVertex, Integer>, SolucionTyP> ms = BT.ofGreedy(graph);		
+		BT<TyPVertex, SimpleEdgeAction<TyPVertex, Integer>, SolucionTyP> ms = 
+				BTBuilder.<TyPVertex, SimpleEdgeAction<TyPVertex, Integer>, SolucionTyP>of()
+				.graph(graph)
+				.type(BT.Type.Min)
+				.build();	
 		
 		Optional<GraphPath<TyPVertex, SimpleEdgeAction<TyPVertex, Integer>>> gp = ms.search();
 		Long p2 = System.nanoTime();

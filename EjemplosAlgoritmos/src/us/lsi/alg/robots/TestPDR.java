@@ -6,10 +6,9 @@ import java.util.Optional;
 
 import org.jgrapht.GraphPath;
 
-
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 
@@ -22,13 +21,16 @@ public class TestPDR {
 		EGraph<RobotVertex, RobotEdge> graph = 
 				EGraph.virtual(v0)	
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.edgeWeight(e->e.weight())
 				.heuristic((v1,p,v2)->3.*(RobotVertex.N-v1.t()))
 				.build();
 		
 		
-		PDR<RobotVertex,RobotEdge,RobotSolution> ms = PDR.of(graph,RobotSolution::of, true);
+		PDR<RobotVertex,RobotEdge,RobotSolution> ms = 
+				PDRBuilder.<RobotVertex,RobotEdge,RobotSolution>of()
+				.graph(graph)
+				.type(PDR.Type.Max)
+				.build();
 		
 		Long t0 = System.nanoTime();
 		Optional<GraphPath<RobotVertex,RobotEdge>> path = ms.search();

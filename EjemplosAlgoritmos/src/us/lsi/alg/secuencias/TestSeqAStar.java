@@ -3,8 +3,8 @@ package us.lsi.alg.secuencias;
 import java.util.Locale;
 
 import org.jgrapht.GraphPath;
-
 import us.lsi.common.List2;
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.virtual.EGraph;
 
@@ -26,7 +26,10 @@ public class TestSeqAStar {
 				.heuristic(SeqHeuristic::heuristic)
 				.build();	
 		
-		AStar<SeqVertex, SeqEdge, ?> ms = AStar.ofGreedy(graph);
+		AStar<SeqVertex, SeqEdge,SeqSolution> ms = 
+				ASBuilder.<SeqVertex, SeqEdge,SeqSolution>of()
+				.graph(graph)
+				.build();
 		
 		GraphPath<SeqVertex, SeqEdge> path = ms.search().orElse(null);
 		SeqSolution s = SeqSolution.of(path);

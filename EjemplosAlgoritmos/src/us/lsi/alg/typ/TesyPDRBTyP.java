@@ -4,9 +4,9 @@ import java.util.Locale;
 
 import org.jgrapht.GraphPath;
 import us.lsi.graphs.alg.PDRB;
+import us.lsi.graphs.alg.PDRBBuilder;
 import us.lsi.graphs.virtual.EGraph;
 import us.lsi.graphs.virtual.SimpleEdgeAction;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TesyPDRBTyP {
@@ -19,12 +19,15 @@ public class TesyPDRBTyP {
 		EGraph<TyPVertex,SimpleEdgeAction<TyPVertex,Integer>> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Last)
-				.type(Type.Min)
 				.vertexWeight(v->v.maxCarga())
 				.heuristic(Heuristica::heuristic)
 				.build();	
 		Long p1 = System.nanoTime();
-		PDRB<TyPVertex,SimpleEdgeAction<TyPVertex,Integer>,?> ms = PDRB.ofGreedy(graph);
+		PDRB<TyPVertex,SimpleEdgeAction<TyPVertex,Integer>,SolucionTyP> ms = 
+				PDRBBuilder.<TyPVertex,SimpleEdgeAction<TyPVertex,Integer>,SolucionTyP>of()
+				.graph(graph)
+				.type(PDRB.Type.Min)
+				.build();
 		
 		ms.search();
 		Long p2 = System.nanoTime();

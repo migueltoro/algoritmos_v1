@@ -3,10 +3,9 @@ package us.lsi.alg.sudoku;
 import java.util.Optional;
 
 import org.jgrapht.GraphPath;
-
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class Test {
@@ -25,12 +24,14 @@ public class Test {
 		EGraph<SudokuVertex,SudokuEdge> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Last)
-				.type(Type.One)
 				.vertexWeight(v->v.sd().conflictos().doubleValue())
 				.build();
 
 		BT<SudokuVertex,SudokuEdge,SudokuSolucion> ms = 
-				BT.of(graph,SudokuSolucion::of,null,null,false);
+				BTBuilder.<SudokuVertex,SudokuEdge,SudokuSolucion>of()
+				.graph(graph)
+				.type(BT.Type.One)
+				.build();
 
 		Optional<GraphPath<SudokuVertex,SudokuEdge>> gp = 
 				ms.search();

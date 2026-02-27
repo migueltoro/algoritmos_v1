@@ -4,9 +4,10 @@ import java.util.Locale;
 import java.util.Optional;
 
 import org.jgrapht.GraphPath;
+
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestAStar {
@@ -18,12 +19,16 @@ public class TestAStar {
 		EGraph<RobotVertex, RobotEdge> graph = 
 				EGraph.virtual(v0)
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.edgeWeight(e->e.weight())
 				.heuristic((v1,p,v2)->3.*(RobotVertex.N-v1.t()))
 				.build();
 		
-		AStar<RobotVertex,RobotEdge,RobotSolution> ms = AStar.of(graph);
+		AStar<RobotVertex,RobotEdge,RobotSolution> ms = 
+				ASBuilder.<RobotVertex,RobotEdge,RobotSolution>of()
+				.graph(graph)
+				.type(AStar.Type.Max)
+				.build();
+				
 		Long t0 = System.nanoTime();
 		Optional<GraphPath<RobotVertex,RobotEdge>> path = ms.search();
 		Long t1 = System.nanoTime();

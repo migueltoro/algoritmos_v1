@@ -5,9 +5,9 @@ import java.util.Optional;
 import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.virtual.EGraph;
 import us.lsi.graphs.virtual.SimpleEdgeAction;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestPDR {
@@ -19,13 +19,14 @@ public class TestPDR {
 		EGraph<ReinasVertex,SimpleEdgeAction<ReinasVertex,Integer>> graph = 
 				EGraph.virtual(v1)
 				.pathType(PathType.Last)
-				.type(Type.All)
 				.vertexWeight(v->v.errores().doubleValue())
-				.solutionNumber(1000)
 				.build();			
 		
 		PDR<ReinasVertex, SimpleEdgeAction<ReinasVertex, Integer>, SolucionReinas> ms = 
-				PDR.of(graph,SolucionReinas::of,false);
+				PDRBuilder.<ReinasVertex, SimpleEdgeAction<ReinasVertex,Integer>,SolucionReinas>of()
+				.graph(graph)
+				.type(PDR.Type.Min)
+				.build();
 		
 		Optional<GraphPath<ReinasVertex, SimpleEdgeAction<ReinasVertex, Integer>>> path = ms.search();
 		System.out.println(SolucionReinas.of(path.get()));

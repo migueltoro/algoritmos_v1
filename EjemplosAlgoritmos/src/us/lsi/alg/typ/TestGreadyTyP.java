@@ -10,7 +10,6 @@ import org.jgrapht.GraphPath;
 import us.lsi.alg.typ.DatosTyP.Tarea;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.SimpleEdgeAction;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 import us.lsi.graphs.virtual.EGraph;
 
@@ -27,7 +26,6 @@ public class TestGreadyTyP {
 		EGraph<TyPVertex,SimpleEdgeAction<TyPVertex,Integer>> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Last)
-				.type(Type.Min)
 				.vertexWeight(v->v.maxCarga())
 				.build();	
 		

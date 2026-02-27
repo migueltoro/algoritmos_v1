@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class TestBT {
@@ -20,14 +20,16 @@ public class TestBT {
 		EGraph<RobotVertex, RobotEdge> graph = 
 				EGraph.virtual(v0)
 				.pathType(PathType.Sum)
-				.type(Type.Max)
 				.edgeWeight(e->e.weight())
 				.heuristic((v1,p,v2)->3.*(RobotVertex.N-v1.t()))
-				.solutionNumber(4)
 				.build();
 
 		
-		BT<RobotVertex, RobotEdge,RobotSolution> ms = BT.of(graph,RobotSolution::of,null, null,true);	
+		BT<RobotVertex, RobotEdge,RobotSolution> ms = 
+				BTBuilder.<RobotVertex,RobotEdge,RobotSolution>of()
+				.graph(graph)
+				.type(BT.Type.Max)
+				.build();
 		
 		Long t0 = System.nanoTime();
 		Optional<GraphPath<RobotVertex,RobotEdge>> path = ms.search();

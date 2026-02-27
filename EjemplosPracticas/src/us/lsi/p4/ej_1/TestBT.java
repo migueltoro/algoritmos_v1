@@ -55,6 +55,7 @@ public class TestBT {
 			BT<MulticonjuntoVertex, MulticonjuntoEdge, SolucionMulticonjunto> bta = 
 					new BTBuilder<MulticonjuntoVertex, MulticonjuntoEdge, SolucionMulticonjunto>()
 					.graph(graph)
+					.type(BT.Type.Min)
 					.fsolution(SolucionMulticonjunto::of)
 					.withGraph(true)
 					.build();

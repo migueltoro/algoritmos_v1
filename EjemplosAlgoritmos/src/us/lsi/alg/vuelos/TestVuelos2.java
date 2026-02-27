@@ -5,13 +5,16 @@ import java.util.Locale;
 
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
+
 import us.lsi.graphs.Graphs2;
 import us.lsi.graphs.GraphsReader;
+import us.lsi.graphs.alg.ASBuilder;
 import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.alg.BT;
+import us.lsi.graphs.alg.BTBuilder;
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.graphs.virtual.VirtualEdgeMG;
 import us.lsi.graphs.virtual.VirtualVertexMG;
 import us.lsi.path.EGraphPath.PathType;
@@ -39,7 +42,7 @@ public class TestVuelos2 {
 		
 		EGraph<VirtualVertexMG<String, Vuelo>, VirtualEdgeMG<String, Vuelo>> gv = 
 				EGraph.virtualMG(graph,"Sevilla",
-						v->v.equals(end),PathType.Sum,Type.Min)
+						v->v.equals(end),PathType.Sum)
 				.edgeWeight(e->e.action().getDuracion().doubleValue())
 				.vertexPassWeight((v,e1,e2)-> Vuelo.getVertexPassWeight(v.vertex(),e1.action(),e2.action()))
 				.heuristic((p1,v,p2)->0.)
@@ -47,7 +50,11 @@ public class TestVuelos2 {
 		
 		System.out.println("AStar");
 		AStar<VirtualVertexMG<String, Vuelo>, VirtualEdgeMG<String, Vuelo>, Object> ms = 
-				AStar.of(gv,p->p,null,null);
+				ASBuilder.<VirtualVertexMG<String, Vuelo>, VirtualEdgeMG<String, Vuelo>, Object>of()
+				.graph(gv)
+				.type(AStar.Type.Min)
+				.build();
+			
 		
 		GraphPath<String, Vuelo> path = 
 				EGraph.pathMG(ms.search().orElse(null),graph);
@@ -56,7 +63,11 @@ public class TestVuelos2 {
 		System.out.printf("Tiempo de Recorrido = %.2f\n",path.getWeight());
 		System.out.println("__________________");
 		System.out.println("Backtracking");
-		BT<VirtualVertexMG<String, Vuelo>, VirtualEdgeMG<String, Vuelo>, Object> bt = BT.of(gv);
+		BT<VirtualVertexMG<String, Vuelo>, VirtualEdgeMG<String, Vuelo>, Object> bt = 
+				BTBuilder.<VirtualVertexMG<String, Vuelo>, VirtualEdgeMG<String, Vuelo>, Object>of()
+				.graph(gv)
+				.type(BT.Type.Min)
+				.build();
 		
 		GraphPath<String,Vuelo> btp = 
 				EGraph.pathMG(bt.search().orElse(null),graph);
@@ -65,7 +76,11 @@ public class TestVuelos2 {
 		System.out.printf("Tiempo de Recorrido = %.2f\n",btp.getWeight());
 		System.out.println("__________________");
 		System.out.println("PDR");
-		PDR<VirtualVertexMG<String, Vuelo>, VirtualEdgeMG<String, Vuelo>, Object> pd = PDR.of(gv,null,true);
+		PDR<VirtualVertexMG<String, Vuelo>, VirtualEdgeMG<String, Vuelo>, Object> pd = 
+				PDRBuilder.<VirtualVertexMG<String, Vuelo>, VirtualEdgeMG<String, Vuelo>, Object>of()
+				.graph(gv)
+				.type(PDR.Type.Min)
+				.build();
 		
 		GraphPath<String, Vuelo> pdp = 
 				EGraph.pathMG(pd.search().orElse(null),graph);

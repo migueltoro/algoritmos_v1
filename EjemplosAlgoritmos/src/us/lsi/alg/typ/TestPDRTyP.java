@@ -5,8 +5,8 @@ import java.util.Locale;
 import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.PDR;
+import us.lsi.graphs.alg.PDRBuilder;
 import us.lsi.graphs.virtual.SimpleEdgeAction;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 import us.lsi.graphs.virtual.EGraph;
 
@@ -20,7 +20,6 @@ public class TestPDRTyP {
 		EGraph<TyPVertex,SimpleEdgeAction<TyPVertex,Integer>> graph = 
 				EGraph.virtual(e1)
 				.pathType(PathType.Last)
-				.type(Type.Min)
 				.vertexWeight(v->v.maxCarga())
 				.heuristic(Heuristica::heuristic)
 				.build();	
@@ -30,8 +29,11 @@ public class TestPDRTyP {
 //		GraphPath<TyPVertex, SimpleEdgeAction<TyPVertex, Integer>> path = rr.path();
 //		Double bv = path.getWeight();
 		
-		PDR<TyPVertex,SimpleEdgeAction<TyPVertex,Integer>,?> ms = 
-				PDR.of(graph,null,true);
+		PDR<TyPVertex,SimpleEdgeAction<TyPVertex,Integer>,SolucionTyP> ms = 
+				PDRBuilder.<TyPVertex,SimpleEdgeAction<TyPVertex,Integer>,SolucionTyP>of()
+				.graph(graph)
+				.type(PDR.Type.Min)
+				.build();
 		
 		ms.search();
 //		System.out.println(ms.search());

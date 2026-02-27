@@ -12,7 +12,6 @@ import org.jgrapht.graph.DirectedWeightedMultigraph;
 import us.lsi.graphs.Graphs2;
 import us.lsi.graphs.GraphsReader;
 import us.lsi.graphs.virtual.EGraph;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
 public class Test {
@@ -48,7 +47,7 @@ public class Test {
 		DirectedWeightedMultigraph<String,Vuelo> graph = leeGrafo("ficheros/vuelos2.txt");
 		System.out.println(graph);
 		String end = "Malaga";
-		EGraph<String, Vuelo> g = EGraph.ofGraph(graph,"Sevilla",v->v.equals(end),PathType.Sum,Type.Min)
+		EGraph<String, Vuelo> g = EGraph.ofGraph(graph,"Sevilla",v->v.equals(end),PathType.Sum)
 				.edgeWeight(v->v.getDuracion().doubleValue())
 				.vertexPassWeight((v,e1,e2)-> Vuelo.getVertexPassWeight(v,e1,e2))
 				.heuristic((p1,v,p2)->0.)

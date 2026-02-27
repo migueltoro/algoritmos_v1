@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.BTR;
+import us.lsi.graphs.alg.BT.Type;
 import us.lsi.graphs.virtual.SimpleEdgeAction;
-import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 import us.lsi.graphs.virtual.EGraph;
 
@@ -22,14 +22,13 @@ public class TestBTRandom {
 			EGraph<ReinasVertex,SimpleEdgeAction<ReinasVertex,Integer>> graph = 
 					EGraph.virtual(e1)
 					.pathType(PathType.Last)
-					.type(Type.All)
-					.solutionNumber(2)
 					.vertexWeight(v->v.errores().doubleValue())
 					.build();		
 			
 			BTR<ReinasVertex,SimpleEdgeAction<ReinasVertex,Integer>, SolucionReinas> ms = 
-					BTR.of(
+					BTR.<ReinasVertex,SimpleEdgeAction<ReinasVertex,Integer>, SolucionReinas>of(
 					graph, 
+					Type.All,
 					SolucionReinas::of, 
 					v->ReinasVertexI.n-v.index(),
 					15);	

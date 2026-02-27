@@ -48,6 +48,7 @@ public class TestAStar {
 		AStar<AlumnosVertex, AlumnosEdge,Integer> aStar = 
 				ASBuilder.<AlumnosVertex,AlumnosEdge,Integer>of()
 				.graph(graph)
+				.type(AStar.Type.Max)
 				.bestValue(gdp.get().getWeight())
 				.optimalPath(gdp.get())
 				.build();
