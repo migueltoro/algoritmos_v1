@@ -54,8 +54,8 @@ public class BTCursos {
 		} else {
 			List<Integer> alternativas = this.estado.vertice().actions();
 			for(Integer a:alternativas) {	
-				Double wp = this.estado.valorAcumulado()+GreedyCursos.cota(this.estado.vertice(),a);
-				if(this.minValue != null && wp >= this.minValue) continue;
+				Double pec = this.estado.valorAcumulado()+GreedyCursos.cota(this.estado.vertice(),a);
+				if(this.minValue != null && pec >= this.minValue) continue;
 				this.estado.forward(a);
 				btm();  
 				this.estado.back(a);

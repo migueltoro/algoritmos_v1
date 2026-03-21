@@ -51,8 +51,8 @@ public class BTInv {
 		} else {
 			List<Integer> alternativas = this.estado.vertice().actions();
 			for(Integer a:alternativas) {	
-				Integer cota = this.estado.vertice().neighbor(a).fo();
-				if(this.maxValue != null && cota <= this.maxValue) continue;
+				Integer pec = this.estado.vertice().neighbor(a).fo();
+				if(this.maxValue != null && pec <= this.maxValue) continue;
 				this.estado.forward(a);
 				btm();  
 				this.estado.back(a);
